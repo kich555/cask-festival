@@ -41,6 +41,11 @@ export default function FloorPlanSection() {
         <div className="text-center mb-8">
           <h2 className="text-[28px] md:text-[36px] font-extrabold text-[#ea5514]">부스배치도</h2>
           <p className="text-[20px] md:text-[28px] font-medium">FLOOR PLAN</p>
+          <div className="mt-4 inline-block">
+            <p className="text-[14px] md:text-[16px] text-amber-400/80 bg-amber-500/10 border border-amber-500/30 rounded-lg px-4 py-2">
+              ※ 부스 배치도는 행사 준비 상황에 따라 변경될 수 있습니다
+            </p>
+          </div>
         </div>
 
         <Image
