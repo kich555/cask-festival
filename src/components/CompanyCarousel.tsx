@@ -43,9 +43,9 @@ export default function CompanyCarousel({ companies }: CompanyCarouselProps) {
               className="flex-[0_0_100%] sm:flex-[0_0_50%] lg:flex-[0_0_20%] min-w-0 pl-4 md:pl-6"
             >
               <div className="group flex h-full flex-col rounded-2xl border border-white/15 bg-[#121212]/70 shadow-md transition-[transform,border-color] duration-300 hover:-translate-y-1 hover:border-[#ea5514]/70">
-                <div className="relative h-[280px] md:h-[282px] overflow-hidden">
+                <div className="relative h-[280px] md:h-[282px] overflow-hidden bg-[#1a1a1a] flex items-center justify-center p-4">
                   <Image
-                    className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                    className="h-full w-full object-contain transition-transform duration-300 group-hover:scale-105"
                     src={company.image}
                     alt={company.name}
                     width={272}
