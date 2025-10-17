@@ -41,17 +41,29 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "ko_KR",
+    alternateLocale: ["en_US", "ja_JP"],
     url: siteUrl,
     title: "CASK CARNIVAL 2025",
     description:
       "2025년 11월 1일 개최되는 CASK CARNIVAL. 세계 각국의 Cask 숙성 증류주들을 만나보세요.",
     siteName: "CASK CARNIVAL 2025",
+    countryName: "South Korea",
+    ttl: 86400, // 24 hours
     images: [
       {
         url: "/og-image.png",
+        secureUrl: "/og-image.png",
         width: 1200,
         height: 630,
         alt: "CASK CARNIVAL 2025",
+        type: "image/png",
+      },
+      {
+        url: "/apple-touch-icon.png",
+        width: 180,
+        height: 180,
+        alt: "CASK CARNIVAL App Icon",
+        type: "image/png",
       },
     ],
   },
