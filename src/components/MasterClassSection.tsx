@@ -41,10 +41,10 @@ const SESSIONS: Sessions = [
     },
     sun: {
       loungeA: {
-        title: "황 종 민",
-        subtitle: "화심주조",
-        imageSrc: "/class/hwasim-class.png",
-        alt: "hwasim-class",
+        title: "황 동 민",
+        subtitle: "다농바이오",
+        imageSrc: "/class/hwang_danong_bio.png",
+        alt: "hwang_danong_bio",
       },
       loungeB: {
         title: "천 관 호",
@@ -58,7 +58,7 @@ const SESSIONS: Sessions = [
     time: "12:30",
     sat: {
       loungeA: {
-        title: "테이스팅 세션",
+        title: "Nakamura Nobuyuki",
         subtitle: "캠벨타운 로호",
         imageSrc: "/class/roch-class.png",
         alt: "navi-class",
@@ -89,7 +89,7 @@ const SESSIONS: Sessions = [
     time: "15:30",
     sat: {
       loungeA: {
-        title: "테이스팅 세션",
+        title: "Tsuyoshi Kitakaji",
         subtitle: "Rudder LTD",
         imageSrc: "/class/rudder-class.png",
         alt: "navi-class",
@@ -140,7 +140,7 @@ const SESSIONS: Sessions = [
         alt: "navi-class",
       },
       loungeB: {
-        title: "테이스팅 세션",
+        title: "Nakamura Nobuyuki",
         subtitle: "캠벨타운 로호",
         imageSrc: "/class/roch-class.png",
         alt: "navi-class",

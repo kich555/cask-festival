@@ -7,7 +7,7 @@ export interface Company {
 
 const companies: Company[] = [
   { name: "안동진맥소주", image: "/lineup/andong-jinmaek-soju0.png" },
-  { name: "ANT 인터내셔널", image: "/lineup/ant-international0.png" },
+  { name: "앤트 인터내셔널", image: "/lineup/ant-international0.png" },
   { name: "캐스크 트레이드", image: "/lineup/cask-trade0.png" },
   { name: "코아베스트", image: "/lineup/corevest0.png" },
   { name: "크래프트브로스", image: "/lineup/craftbros0.png" },
@@ -18,7 +18,7 @@ const companies: Company[] = [
   { name: "화심주조", image: "/lineup/hwasim-jujo0.png" },
   { name: "카메다 증류소", image: "/lineup/kameda-distillery0.png" },
   { name: "김창수 위스키 증류소", image: "/lineup/kim-chang-soo0.png" },
-  { name: "한국 버번 위스키 클럽", image: "/lineup/korea-bourbon-club0.png" },
+  { name: "한국버번위스키클럽", image: "/lineup/korea-bourbon-club0.png" },
   { name: "쿠주 증류소", image: "/lineup/kuju-distillery0.png" },
   { name: "메타베브", image: "/lineup/metabev0.png" },
   { name: "온 증류소", image: "/lineup/on-distillery0.png" },
