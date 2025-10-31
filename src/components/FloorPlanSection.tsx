@@ -50,7 +50,7 @@ export default function FloorPlanSection() {
         </div>
 
         <Image
-          src="/map.png"
+          src="/mapv2.png"
           alt="floor plan"
           width={1280}
           height={865}
