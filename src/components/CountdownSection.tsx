@@ -31,14 +31,14 @@ export default function CountdownSection() {
         </div>
       </div>
 
-      <a
+      {/* <a
         href="https://smartstore.naver.com/whiskynavi"
         target="_blank"
         rel="noopener noreferrer"
         className="bg-[#ea5514] cursor-pointer text-black px-8 md:px-12 py-3 md:py-4 text-[20px] md:text-[24px] font-medium rounded hover:bg-[#bf3b0b] transition-colors mt-10"
       >
         티켓 구매
-      </a>
+      </a> */}
     </section>
   )
 }

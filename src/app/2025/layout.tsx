@@ -1,6 +1,6 @@
 import type { Metadata } from "next"
 import { Geist, Geist_Mono } from "next/font/google"
-import "./globals.css"
+// import "./globals.css"
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -17,17 +17,17 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://www.caskcarnival.co
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "CASK CARNIVAL 2026",
-    template: "%s | CASK CARNIVAL 2026",
+    default: "CASK CARNIVAL 2025",
+    template: "%s | CASK CARNIVAL 2025",
   },
   description:
-    "2026년 11월 21일 개최되는 CASK CARNIVAL. 세계 각국의 Cask 숙성 증류주들을 만나보세요.",
+    "2025년 11월 1일 개최되는 CASK CARNIVAL. 세계 각국의 Cask 숙성 증류주들을 만나보세요.",
   keywords: [
     '캐스크카니발',
     '캐스크 카니발',
-    '캐스크 카니발 2026',
+    '캐스크 카니발 2025',
     'cask carnival',
-    'cask carnival 2026',
+    'cask carnival 2025',
     "whiskynavi",
     "위스키",
     "숙성 증류주",
@@ -38,7 +38,7 @@ export const metadata: Metadata = {
     "IB",
     "위스키내비",
     "위스키 축제",
-    "2026",
+    "2025",
   ],
   authors: [{ name: "Whiskynavi" }],
   creator: "Whiskynavi",
@@ -48,10 +48,10 @@ export const metadata: Metadata = {
     locale: "ko_KR",
     alternateLocale: ["en_US", "ja_JP"],
     url: siteUrl,
-    title: "CASK CARNIVAL 2026",
+    title: "CASK CARNIVAL 2025",
     description:
-      "2026년 11월 21일 개최되는 CASK CARNIVAL. 세계 각국의 Cask 숙성 증류주들을 만나보세요.",
-    siteName: "CASK CARNIVAL 2026",
+      "2025년 11월 1일 개최되는 CASK CARNIVAL. 세계 각국의 Cask 숙성 증류주들을 만나보세요.",
+    siteName: "CASK CARNIVAL 2025",
     countryName: "South Korea",
     ttl: 86400, // 24 hours
     images: [
@@ -60,7 +60,7 @@ export const metadata: Metadata = {
         secureUrl: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "CASK CARNIVAL 2026",
+        alt: "CASK CARNIVAL 2025",
         type: "image/png",
       },
       {
@@ -74,9 +74,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "CASK CARNIVAL 2026",
+    title: "CASK CARNIVAL 2025",
     description:
-      "2026년 11월 21일 개최되는 CASK CARNIVAL. 세계 각국의 Cask 숙성 증류주들을 만나보세요.",
+      "2025년 11월 1일 개최되는 CASK CARNIVAL. 세계 각국의 Cask 숙성 증류주들을 만나보세요.",
     images: ["/og-image.png"],
   },
   icons: {

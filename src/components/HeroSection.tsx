@@ -1,4 +1,5 @@
 import Image from "next/image"
+import Link from "next/link"
 
 export default function HeroSection() {
   return (
@@ -37,22 +38,31 @@ export default function HeroSection() {
         </h2>
 
         <div className="text-[24px] md:text-[40px] font-semibold text-white mt-[36px]">
-          <p>2025. 11. 01(토) - 02(일)</p>
-          <p>JBK 컨벤션홀</p>
+          <p>2026. 11. 21(토) - 22(일)</p>
+          <p>서울 SETEC</p>
           <p className="text-[16px] md:text-[25px] text-gray-400">
-            서울특별시 강남구 봉은사로 619, B1층
+            서울 강남구 대치동 514 SETEC 3관 (학여울역)
           </p>
         </div>
 
         <div className="flex flex-col md:flex-row justify-center gap-4 md:space-x-8 text-[24px] md:text-[35px] font-semibold mt-[42px]">
           <div className="flex justify-center gap-7">
-            <div>
+            {/* <div>
               <div>1부 / 3부</div>
               <div>2부 / 4부</div>
             </div>
             <div className="flex flex-col items-end">
               <div className="text-[#ea5514]">10AM ~ 2PM</div>
               <div className="text-[#ea5514]">3PM ~ 7PM</div>
+            </div> */}
+            <div className="flex items-center justify-center gap-4">
+              <Link href="/2025" className="text-[#ea5514]">
+                Check 2025 Event
+              </Link>
+              |
+              <Link href="/2025" className="text-[#ea5514]">
+                <div className="text-[#ea5514]">Apply for a Booth</div>
+              </Link>
             </div>
           </div>
         </div>

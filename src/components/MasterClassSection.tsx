@@ -28,13 +28,13 @@ const SESSIONS: Sessions = [
     sat: {
       loungeA: {
         title: "Hitomi Kato",
-        subtitle: "사쿠라오 증류소",
+        subtitle: "Sakurao Distillery",
         imageSrc: "/class/sakurao-class.png",
         alt: "sakurao-class",
       },
       loungeB: {
         title: "Mark Abram",
-        subtitle: "하트 브라더스",
+        subtitle: "Hart Brothers",
         imageSrc: "/class/hart-brothers-class.png",
         alt: "hart-brothers-class",
       },
@@ -42,13 +42,13 @@ const SESSIONS: Sessions = [
     sun: {
       loungeA: {
         title: "황 동 민",
-        subtitle: "다농바이오",
+        subtitle: "Danong Bio",
         imageSrc: "/class/hwang_danong_bio.png",
         alt: "hwang_danong_bio",
       },
       loungeB: {
         title: "천 관 호",
-        subtitle: "위스키내비",
+        subtitle: "WhiskyNavi",
         imageSrc: "/class/navi-class.png",
         alt: "navi-class",
       },
@@ -59,13 +59,13 @@ const SESSIONS: Sessions = [
     sat: {
       loungeA: {
         title: "Nakamura Nobuyuki",
-        subtitle: "캠벨타운 로호",
+        subtitle: "Campbelltown Loch",
         imageSrc: "/class/roch-class.png",
         alt: "navi-class",
       },
       loungeB: {
         title: "Jordan Edwards",
-        subtitle: "캐스크 트레이드",
+        subtitle: "Cask Trade",
         imageSrc: "/class/cask-trade-class.png",
         alt: "cask-trade-class",
       },
@@ -73,13 +73,13 @@ const SESSIONS: Sessions = [
     sun: {
       loungeA: {
         title: "Odin Chou",
-        subtitle: "더 위스키파인드",
+        subtitle: "The Whiskyfind",
         imageSrc: "/class/whisky-find-class.png",
         alt: "whisky-find-class",
       },
       loungeB: {
         title: "Yu Takeishi",
-        subtitle: "쿠주 증류소",
+        subtitle: "KUJU Distillery",
         imageSrc: "/class/kuzu-class.png",
         alt: "kuzu-class",
       },
@@ -96,7 +96,7 @@ const SESSIONS: Sessions = [
       },
       loungeB: {
         title: "오 수 민",
-        subtitle: "화심주조",
+        subtitle: "Hwasim Jujo",
         imageSrc: "/class/hwasim-class.png",
         alt: "hwasim-class",
       },
@@ -104,13 +104,13 @@ const SESSIONS: Sessions = [
     sun: {
       loungeA: {
         title: "Rex Weng",
-        subtitle: "위스키에이지",
+        subtitle: "Whisky Age",
         imageSrc: "/class/whisky-age-class.png",
         alt: "whisky-age-class",
       },
       loungeB: {
         title: "Hiroyuki Doda",
-        subtitle: "카메다 증류소",
+        subtitle: "Kameda Distillery",
         imageSrc: "/class/kameda-class.png",
         alt: "kameda-class",
       },
@@ -121,13 +121,13 @@ const SESSIONS: Sessions = [
     sat: {
       loungeA: {
         title: "천 관 호",
-        subtitle: "위스키내비",
+        subtitle: "WhiskyNavi",
         imageSrc: "/class/navi-class.png",
         alt: "navi-class",
       },
       loungeB: {
         title: "Kenny Macdonald",
-        subtitle: "드램모어",
+        subtitle: "Dram mor",
         imageSrc: "/class/dram-mor-class.png",
         alt: "dram-mor-class",
       },
@@ -135,13 +135,13 @@ const SESSIONS: Sessions = [
     sun: {
       loungeA: {
         title: "Vincent Flint-Hill",
-        subtitle: "더 싱글캐스크",
+        subtitle: "The Single Cask",
         imageSrc: "/class/single-cask-class.png",
         alt: "navi-class",
       },
       loungeB: {
         title: "Nakamura Nobuyuki",
-        subtitle: "캠벨타운 로호",
+        subtitle: "Campbelltown Loch",
         imageSrc: "/class/roch-class.png",
         alt: "navi-class",
       },

@@ -10,7 +10,7 @@ interface TimeLeft {
 const useTimeLeft = () => {
   const calculateTimeLeft = (): TimeLeft => {
     // 한국 시간 기준 2025년 11월 1일 오전 10시
-    const targetDate = new Date("2025-11-01T10:00:00+09:00")
+    const targetDate = new Date("2026-11-21T10:00:00+09:00")
     const now = new Date()
     const difference = targetDate.getTime() - now.getTime()
 
