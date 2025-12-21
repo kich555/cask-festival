@@ -1,10 +1,12 @@
 "use client"
 
+import { useTranslation } from "@/i18n"
 import Image from "next/image"
-import { useState } from "react"
+import { Suspense, useState } from "react"
 
-export default function MasterClassMobile() {
+function MasterClassMobileContent() {
   const [activeDay, setActiveDay] = useState<"sat" | "sun">("sat")
+  const { t } = useTranslation()
 
   return (
     <div className="lg:hidden relative px-4">
@@ -19,7 +21,7 @@ export default function MasterClassMobile() {
               : "bg-gray-800 text-gray-400 hover:bg-gray-700"
           }`}
         >
-          11.01 (SAT)
+          {t.masterClass.sat}
         </button>
         <button
           type="button"
@@ -30,7 +32,7 @@ export default function MasterClassMobile() {
               : "bg-gray-800 text-gray-400 hover:bg-gray-700"
           }`}
         >
-          11.02 (SUN)
+          {t.masterClass.sun}
         </button>
       </div>
 
@@ -45,5 +47,13 @@ export default function MasterClassMobile() {
         />
       </div>
     </div>
+  )
+}
+
+export default function MasterClassMobile() {
+  return (
+    <Suspense fallback={null}>
+      <MasterClassMobileContent />
+    </Suspense>
   )
 }

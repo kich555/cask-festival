@@ -53,7 +53,7 @@ export default function CompanyCarousel({ companies }: CompanyCarouselProps) {
                   />
                 </div>
                 <div className="bg-[#121212]/90 my-3 md:my-4">
-                  <h3 className="text-[18px] md:text-[24px] font-bold text-[#ea5514] text-center">
+                  <h3 className="text-[18px] md:text-[24px] font-bold text-[#ea5514] text-center px-2 truncate">
                     {company.name}
                   </h3>
                 </div>

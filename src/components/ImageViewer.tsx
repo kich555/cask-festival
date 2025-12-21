@@ -101,3 +101,4 @@ export default function ImageViewer({ images, currentIndex, onClose, onNavigate 
   )
 }
 
+

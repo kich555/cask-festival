@@ -1,5 +1,7 @@
+import LanguageSync from "@/components/LanguageSync"
 import type { Metadata } from "next"
 import { Geist, Geist_Mono } from "next/font/google"
+import { Suspense } from "react"
 import "./globals.css"
 
 const geistSans = Geist({
@@ -113,7 +115,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>{children}</body>
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+        <Suspense fallback={null}>
+          <LanguageSync />
+        </Suspense>
+        {children}
+      </body>
     </html>
   )
 }

@@ -13,7 +13,6 @@ const images = [
   "/2025/DSC_7454.jpg",
   "/2025/DSC_7550.jpg",
   "/2025/DSC_8063.jpg",
-  "/2025/DSC_8091.jpg",
   "/2025/DSC_8319.jpg",
   "/2025/DSC_8810.jpg",
   "/2025/DSC_9034.jpg",
@@ -55,4 +54,5 @@ export default function ImageList() {
     </div>
   )
 }
+
 

@@ -1,5 +1,7 @@
 "use client"
 
+import { useTranslation } from "@/i18n"
+import { Suspense } from "react"
 import MasterClassDesktop from "./MasterClassDesktop"
 import MasterClassMobile from "./MasterClassMobile"
 
@@ -41,13 +43,13 @@ const SESSIONS: Sessions = [
     },
     sun: {
       loungeA: {
-        title: "황 동 민",
+        title: "Dongmin Hwang",
         subtitle: "Danong Bio",
         imageSrc: "/class/hwang_danong_bio.png",
         alt: "hwang_danong_bio",
       },
       loungeB: {
-        title: "천 관 호",
+        title: "Kwanho Chun",
         subtitle: "WhiskyNavi",
         imageSrc: "/class/navi-class.png",
         alt: "navi-class",
@@ -95,7 +97,7 @@ const SESSIONS: Sessions = [
         alt: "navi-class",
       },
       loungeB: {
-        title: "오 수 민",
+        title: "Soomin Oh",
         subtitle: "Hwasim Jujo",
         imageSrc: "/class/hwasim-class.png",
         alt: "hwasim-class",
@@ -120,7 +122,7 @@ const SESSIONS: Sessions = [
     time: "17:30",
     sat: {
       loungeA: {
-        title: "천 관 호",
+        title: "Kwanho Chun",
         subtitle: "WhiskyNavi",
         imageSrc: "/class/navi-class.png",
         alt: "navi-class",
@@ -149,18 +151,20 @@ const SESSIONS: Sessions = [
   },
 ]
 
-export default function MasterClassSection() {
+function MasterClassContent() {
+  const { t } = useTranslation()
+
   return (
     <section id="master-class" className="px-4 md:px-8 mt-28">
       <div className="max-w-[1440px] mx-auto">
         <div className="text-center mb-8">
           <h2 className="text-[28px] md:text-[36px] font-extrabold text-[#ea5514]">
-            마스터클래스 & 테이스팅 세션
+            {t.masterClass.title}
           </h2>
-          <p className="text-[20px] md:text-[28px] font-medium">Master Class & Tasting Session</p>
+          <p className="text-[20px] md:text-[28px] font-medium">{t.masterClass.subtitle}</p>
           <div className="mt-4 inline-block">
             <p className="text-[14px] md:text-[16px] text-amber-400/80 bg-amber-500/10 border border-amber-500/30 rounded-lg px-4 py-2">
-              ※ 세션 일정 및 내용은 행사 준비 상황에 따라 변경될 수 있습니다
+              {t.masterClass.notice}
             </p>
           </div>
         </div>
@@ -169,5 +173,13 @@ export default function MasterClassSection() {
         <MasterClassMobile />
       </div>
     </section>
+  )
+}
+
+export default function MasterClassSection() {
+  return (
+    <Suspense fallback={null}>
+      <MasterClassContent />
+    </Suspense>
   )
 }

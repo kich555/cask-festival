@@ -1,16 +1,4 @@
 import type { Metadata } from "next"
-import { Geist, Geist_Mono } from "next/font/google"
-// import "./globals.css"
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-})
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-})
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://www.caskcarnival.com"
 
@@ -23,11 +11,11 @@ export const metadata: Metadata = {
   description:
     "2025년 11월 1일 개최되는 CASK CARNIVAL. 세계 각국의 Cask 숙성 증류주들을 만나보세요.",
   keywords: [
-    '캐스크카니발',
-    '캐스크 카니발',
-    '캐스크 카니발 2025',
-    'cask carnival',
-    'cask carnival 2025',
+    "캐스크카니발",
+    "캐스크 카니발",
+    "캐스크 카니발 2025",
+    "cask carnival",
+    "cask carnival 2025",
     "whiskynavi",
     "위스키",
     "숙성 증류주",
@@ -103,17 +91,13 @@ export const metadata: Metadata = {
       "max-snippet": -1,
     },
   },
-  
 }
 
-export default function RootLayout({
+export default function Layout2025({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
-  return (
-    <html lang="ko">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>{children}</body>
-    </html>
-  )
+  // Nested layout - only wraps children, no <html> or <body> tags
+  return <>{children}</>
 }
