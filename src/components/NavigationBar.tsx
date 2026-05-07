@@ -25,11 +25,12 @@ function NavigationBarContent() {
         <div className="flex items-center justify-between">
           <Link href={homeLinkHref}>
             <Image
-              src="/header_icon.svg"
+              src="/Header_Logo2.png"
               alt="logo"
               width={330}
               height={54}
-              className="w-[165px] h-[27px] md:w-[244px] md:h-[40px]"
+              className="w-[165px] h-[15px] md:w-[244px] md:h-[22px]"
+              // className="w-[165px] h-[27px] md:w-[244px] md:h-[40px]"
             />
           </Link>
           <div className="hidden md:flex items-center gap-8">
