@@ -19,7 +19,7 @@ function HeroContent() {
   const boothFormUrl = BOOTH_FORM_URLS[lang]
 
   return (
-    <section id="hero" className="relative min-h-screen flex items-center justify-center mt-[40px]">
+    <section id="hero" className="relative min-h-screen flex items-center justify-center mt-[40px] bg-[#1a1a1a]">
       <div
         className="absolute inset-0 bg-cover bg-center"
         style={{ backgroundImage: "url('/hero.png')" }}
@@ -46,10 +46,15 @@ function HeroContent() {
             width={236}
             height={278}
             className="mx-auto mb-6 md:mb-8 w-[153px] h-[180px] md:w-[236px] md:h-[278px]"
+            // 색상 필터 변경
+            style={{
+              filter: 'invert(13%) sepia(58%) saturate(5003%) hue-rotate(356deg) brightness(99%) contrast(83%)'
+            }}
           />
         </div>
 
-        <h2 className="text-[28px] md:text-[48px] mt-[42px] font-extrabold text-[#ea5514] leading-tight">
+        <h2 className="text-[28px] md:text-[48px] mt-[42px] font-extrabold text-[#e71621] leading-tight">
+        {/* <h2 className="text-[28px] md:text-[48px] mt-[42px] font-extrabold text-[#ea5514] leading-tight"> */}
           {t.hero.coming}
         </h2>
 
@@ -62,7 +67,7 @@ function HeroContent() {
         <div className="flex flex-col md:flex-row justify-center gap-4 md:space-x-8 text-[24px] md:text-[35px] font-semibold mt-[42px]">
           <div className="flex justify-center gap-7">
             <div className="flex items-center justify-center gap-4">
-              <Link href={link2025} className="text-[#ea5514]">
+              <Link href={link2025} className="text-[#e71621]">
                 {t.hero.check2025}
               </Link>
               |
@@ -70,7 +75,7 @@ function HeroContent() {
                 href={boothFormUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-[#ea5514]"
+                className="text-[#e71621]"
               >
                 {t.hero.applyBooth}
               </a>

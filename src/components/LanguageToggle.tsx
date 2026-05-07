@@ -32,15 +32,25 @@ export default function LanguageToggle() {
   }, [currentLang, pathname, searchParams, router])
 
   return (
+    // <button
+    //   type="button"
+    //   onClick={toggleLanguage}
+    //   className="flex items-center gap-1 px-3 py-1.5 text-[14px] font-semibold rounded-md border border-white/30 hover:border-[#ea5514] hover:text-[#ea5514] transition-colors"
+    //   aria-label={currentLang === "ko" ? "Switch to English" : "한국어로 전환"}
+    // >
+    //   <span className={currentLang === "ko" ? "text-[#ea5514]" : "text-white/60"}>한</span>
+    //   <span className="text-white/40">/</span>
+    //   <span className={currentLang === "en" ? "text-[#ea5514]" : "text-white/60"}>EN</span>
+    // </button>
     <button
       type="button"
       onClick={toggleLanguage}
-      className="flex items-center gap-1 px-3 py-1.5 text-[14px] font-semibold rounded-md border border-white/30 hover:border-[#ea5514] hover:text-[#ea5514] transition-colors"
+      className="flex items-center gap-1 px-3 py-1.5 text-[14px] font-semibold rounded-md border border-white/30 hover:border-[#e71621] hover:text-[#e71621] transition-colors"
       aria-label={currentLang === "ko" ? "Switch to English" : "한국어로 전환"}
     >
-      <span className={currentLang === "ko" ? "text-[#ea5514]" : "text-white/60"}>한</span>
+      <span className={currentLang === "ko" ? "text-[#e71621]" : "text-white/60"}>한</span>
       <span className="text-white/40">/</span>
-      <span className={currentLang === "en" ? "text-[#ea5514]" : "text-white/60"}>EN</span>
+      <span className={currentLang === "en" ? "text-[#e71621]" : "text-white/60"}>EN</span>
     </button>
   )
 }
