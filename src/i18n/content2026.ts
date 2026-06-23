@@ -225,7 +225,7 @@ export const content2026: Record<"ko" | "en", Content2026> = {
     },
     masterclass: {
       eyebrow: "Master Class & Tasting Session",
-      title: "Master Class & Tasting",
+      title: "Master Class & Tasting Session",
       tbd: "2026 Master Class lineup — coming soon",
     },
     exhibitor: {

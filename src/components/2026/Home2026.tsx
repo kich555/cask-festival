@@ -113,19 +113,21 @@ function HomeContent() {
         </div>
       </section>
 
-      {/* MASTER CLASS TEASER */}
+      {/* MASTER CLASS TEASER — Coming Soon 박스(프로그램 페이지와 동일 디자인) */}
       <section className="py-20 md:py-24 text-center">
-        <div className="max-w-[1440px] mx-auto px-5 md:px-10">
-          <p className="tracking-wide text-[13px] text-[#999] mb-3">{c.masterclass.eyebrow}</p>
-          <h2 className="text-[clamp(24px,4vw,32px)] font-extrabold">{c.masterclass.title}</h2>
-          <div className="mt-9 border border-dashed border-black/15 rounded-lg py-14 text-[#888]">{c.masterclass.tbd}</div>
+        <div className="max-w-[1100px] mx-auto px-5 md:px-10">
+          <h2 className="text-[clamp(24px,4vw,32px)] font-extrabold mb-9">{c.masterclass.title}</h2>
+          <div className="border border-[#7d0b1c]/30 rounded-xl py-16 md:py-24 px-6 bg-[#faf8f6]">
+            <p className="text-[#e7a000] tracking-[2px] text-[13px] font-semibold">{c.programP.comingEyebrow}</p>
+            <h3 className="text-[clamp(22px,4vw,28px)] font-extrabold mt-4">{c.programP.comingTitle}</h3>
+            <p className="text-[#888] mt-3">{c.programP.comingBody}</p>
+          </div>
         </div>
       </section>
 
       {/* EXHIBITOR TEASER */}
       <section className="bg-white py-20 md:py-28">
         <div className="max-w-[1440px] mx-auto px-5 md:px-10">
-          <p className="tracking-wide text-[13px] text-[#999] mb-3">{c.exhibitor.eyebrow}</p>
           <h2 className="text-[clamp(26px,4vw,40px)] font-extrabold mb-8">{c.exhibitor.title}</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 border-t border-black/10">
             {[
