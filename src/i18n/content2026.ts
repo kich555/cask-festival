@@ -13,7 +13,42 @@ export interface Content2026 {
     infoVenue: string; infoVenueV: string; infoHost: string; infoHostV: string
     catsTitle: string; moreBtn: string; applyBtn: string
   }
+  themeP: {
+    title: string; subtitle: string
+    archiveEyebrow: string; archiveTitle: string; notesTitle: string
+  }
+  programP: {
+    title: string; subtitle: string
+    comingEyebrow: string; comingTitle: string; comingBody: string
+  }
+  registerP: {
+    title: string; subtitle: string
+    brochureBtn: string
+    ctaTitle: string; ctaHl: string; applyBtn: string
+    processEyebrow: string; processTitle: string
+    process: { n: string; title: string; desc: string }[]
+    forecastEyebrow: string; forecastTitle: string
+    forecast: { big: string; title: string; desc: string }[]
+    boothEyebrow: string; boothTitle: string
+    boothSize: string; boothWas: string; boothNow: string; boothVat: string; boothTag: string
+    boothImgNote: string
+    boothIncludes: { label: string; value: string }[]
+    catsEyebrow: string; catsTitle: string
+    cats: { name: string; desc: string }[]
+    contactNote: string; contactOffice: string
+  }
   footer: { brand: string; copy: string }
+  aboutP: {
+    title: string; subtitle: string
+    recapEyebrow: string; recapTitle: string; recapBody1: string; recapBody2: string; recapBtn: string
+    overviewTitle: string
+    rowName: string; rowNameV: string
+    rowTheme: string
+    rowDate: string; rowDateV: string
+    rowVenue: string; rowVenueV: string
+    rowHost: string
+    rowSns: string
+  }
 }
 
 export const content2026: Record<"ko" | "en", Content2026> = {
@@ -73,6 +108,88 @@ export const content2026: Record<"ko" | "en", Content2026> = {
       brand: "Global Cask-Aged Drinks Festa · 2026 · Seoul",
       copy: "© 2026 Whiskynavi · caskcarnival@whiskynavi.com · @caskcarnival",
     },
+    aboutP: {
+      title: "행사 소개",
+      subtitle: "Global Cask-Aged Drinks Festa, Cask Carnival",
+      recapEyebrow: "2025 Cask Carnival",
+      recapTitle: "2025 RECAP",
+      recapBody1: "다채로운 즐거움이 가득했던 Cask Carnival 2025의",
+      recapBody2: "브랜드 라인업과 타임라인, 현장 사진을 확인해보세요!",
+      recapBtn: "2025 다시보기 →",
+      overviewTitle: "2026 캐스크 카니발 개요",
+      rowName: "명칭",
+      rowNameV: "캐스크 카니발 2026",
+      rowTheme: "테마",
+      rowDate: "일시",
+      rowDateV: "2026년 11월 21일(토) ~ 11월 22일(일)",
+      rowVenue: "장소",
+      rowVenueV: "SETEC 제3전시실 / 서울 강남구 학여울역",
+      rowHost: "주최·주관",
+      rowSns: "공식 SNS",
+    },
+    themeP: {
+      title: "테마 소개",
+      subtitle: "캐스크 카니발은 매년 하나의 캐스크를 '올해의 테마'로 선정해 깊이 있게 조명합니다.",
+      archiveEyebrow: "Theme Archive",
+      archiveTitle: "목록",
+      notesTitle: "TASTING NOTES",
+    },
+    programP: {
+      title: "프로그램",
+      subtitle: "마스터클래스와 테이스팅 세션으로 구성된 캐스크 카니발 2026의 프로그램 일정을 안내합니다.",
+      comingEyebrow: "Coming Soon",
+      comingTitle: "2026 마스터클래스 라인업",
+      comingBody: "추후 공개 예정",
+    },
+    registerP: {
+      title: "참가 업체 모집",
+      subtitle: "캐스크 카니발 2026과 함께할 브랜드를 모집합니다. 부스 신청 안내와 참가 혜택을 확인하세요.",
+      brochureBtn: "행사 소개 자료 다운로드",
+      ctaTitle: "지금 바로 캐스크 카니발 2026에 참여하세요!",
+      ctaHl: "6월 30일까지 신청 및 입금 완료 시 부스비 할인",
+      applyBtn: "부스 신청하기 →",
+      processEyebrow: "Join Us in 4 Steps",
+      processTitle: "참가 신청 절차",
+      process: [
+        { n: "01", title: "온라인 참가신청", desc: "구글폼을 통한 신청 접수" },
+        { n: "02", title: "세금계산서 발행", desc: "부스비 납부" },
+        { n: "03", title: "운영사무국 승인", desc: "접수 검토 및 승인" },
+        { n: "04", title: "부스 운영", desc: "성공적인 비즈니스의 무대" },
+      ],
+      forecastEyebrow: "What to Expect",
+      forecastTitle: "행사 전망",
+      forecast: [
+        { big: "60–70", title: "예상 참여 브랜드", desc: "국내외 숙성 관련 브랜드" },
+        { big: "4,000+", title: "예상 방문객", desc: "고관여 위스키·스피릿 애호가" },
+        { big: "24", title: "마스터클래스", desc: "약 700명 이상 참석 예정" },
+      ],
+      boothEyebrow: "What's Included",
+      boothTitle: "부스 패키지",
+      boothSize: "3m × 3m (9sqm)",
+      boothWas: "정상가 ₩750,000",
+      boothNow: "₩600,000",
+      boothVat: "(VAT 별도)",
+      boothTag: "EARLY BIRD DISCOUNT ~ 6월 30일",
+      boothImgNote: "3m × 3m 부스 공간 및 1000×500×1000(mm) 테이블 제공",
+      boothIncludes: [
+        { label: "· 시음잔", value: "1,000ea" },
+        { label: "· 생수", value: "부스 인원당 지급" },
+        { label: "· 기본 세팅", value: "테이블 / 배너 각 1개" },
+        { label: "· 주차권", value: "일 3시간 지원" },
+      ],
+      catsEyebrow: "Who Can Join",
+      catsTitle: "참가 카테고리",
+      cats: [
+        { name: "주류", desc: "모든 종류의 캐스크 숙성 주류" },
+        { name: "BAR & 독립병입", desc: "IB 브랜드 및 커스텀 캐스크 셀렉션 병입자" },
+        { name: "주류 용품", desc: "글라스웨어, 코스터, 오프너, 전용 케이스, 행사 굿즈" },
+        { name: "푸드", desc: "페어링용 다크 초콜릿, 건과일, 치즈, 하몽" },
+        { name: "비즈니스", desc: "수입/도매사 및 주류 테크 기업" },
+        { name: "미디어", desc: "위스키 커뮤니티, 전문 잡지 및 인플루언서" },
+      ],
+      contactNote: "* 기타 문의 사항이 있으시면 운영사무국으로 연락바랍니다.",
+      contactOffice: "운영사무국",
+    },
   },
   en: {
     nav: {
@@ -129,6 +246,88 @@ export const content2026: Record<"ko" | "en", Content2026> = {
     footer: {
       brand: "Global Cask-Aged Drinks Festa · 2026 · Seoul",
       copy: "© 2026 Whiskynavi · caskcarnival@whiskynavi.com · @caskcarnival",
+    },
+    aboutP: {
+      title: "About",
+      subtitle: "Global Cask-Aged Drinks Festa, Cask Carnival",
+      recapEyebrow: "2025 Cask Carnival",
+      recapTitle: "2025 RECAP",
+      recapBody1: "Relive the highlights of Cask Carnival 2025 —",
+      recapBody2: "explore the brand lineup, timeline, and event photos!",
+      recapBtn: "Revisit 2025 →",
+      overviewTitle: "Cask Carnival 2026 Overview",
+      rowName: "Event",
+      rowNameV: "Cask Carnival 2026",
+      rowTheme: "Theme",
+      rowDate: "Dates",
+      rowDateV: "Sat, Nov 21 – Sun, Nov 22, 2026",
+      rowVenue: "Venue",
+      rowVenueV: "SETEC Hall 3, Hagyeoul Stn., Gangnam-gu, Seoul",
+      rowHost: "Organizer",
+      rowSns: "Official SNS",
+    },
+    themeP: {
+      title: "Themes",
+      subtitle: "Each year, Cask Carnival selects a single cask as its Theme of the Year and explores it in depth.",
+      archiveEyebrow: "Theme Archive",
+      archiveTitle: "Archive",
+      notesTitle: "TASTING NOTES",
+    },
+    programP: {
+      title: "Program",
+      subtitle: "Explore the Cask Carnival 2026 schedule of master classes and tasting sessions.",
+      comingEyebrow: "Coming Soon",
+      comingTitle: "2026 Master Class Lineup",
+      comingBody: "To be announced",
+    },
+    registerP: {
+      title: "Register",
+      subtitle: "We're inviting brands to join Cask Carnival 2026. Discover how to apply for a booth and the benefits of taking part.",
+      brochureBtn: "Download Event Brochure",
+      ctaTitle: "Join Cask Carnival 2026 today!",
+      ctaHl: "Apply and complete payment by June 30 for a discounted booth fee",
+      applyBtn: "Apply for a Booth →",
+      processEyebrow: "Join Us in 4 Steps",
+      processTitle: "How to Apply",
+      process: [
+        { n: "01", title: "Online Application", desc: "Apply via Google Form" },
+        { n: "02", title: "Invoice Issued", desc: "Booth fee payment" },
+        { n: "03", title: "Organizer Approval", desc: "Review & confirmation" },
+        { n: "04", title: "Run Your Booth", desc: "Your stage for great business" },
+      ],
+      forecastEyebrow: "What to Expect",
+      forecastTitle: "Event Forecast",
+      forecast: [
+        { big: "60–70", title: "Expected Brands", desc: "Cask-aged brands from Korea & abroad" },
+        { big: "4,000+", title: "Expected Visitors", desc: "Dedicated whisky & spirits enthusiasts" },
+        { big: "24", title: "Master Classes", desc: "700+ attendees expected" },
+      ],
+      boothEyebrow: "What's Included",
+      boothTitle: "Booth Package",
+      boothSize: "3m × 3m (9sqm)",
+      boothWas: "Regular ₩750,000",
+      boothNow: "₩600,000",
+      boothVat: "(excl. VAT)",
+      boothTag: "EARLY BIRD DISCOUNT ~ Jun 30",
+      boothImgNote: "3m × 3m booth space with a 1000×500×1000(mm) table provided",
+      boothIncludes: [
+        { label: "· Tasting glasses", value: "1,000ea" },
+        { label: "· Bottled water", value: "Per booth staff" },
+        { label: "· Basic setup", value: "1 table / 1 banner" },
+        { label: "· Parking pass", value: "3 hours per day" },
+      ],
+      catsEyebrow: "Who Can Join",
+      catsTitle: "Exhibitor Categories",
+      cats: [
+        { name: "Spirits", desc: "All kinds of cask-aged spirits" },
+        { name: "Bars & Independent Bottlers", desc: "IB brands and custom cask-selection bottlers" },
+        { name: "Barware & Goods", desc: "Glassware, coasters, openers, cases, and event goods" },
+        { name: "Food", desc: "Dark chocolate, dried fruit, cheese, and jamón for pairing" },
+        { name: "Business", desc: "Importers, distributors, and drinks-tech companies" },
+        { name: "Media", desc: "Whisky communities, trade magazines, and influencers" },
+      ],
+      contactNote: "* For any other inquiries, please contact the organizing office.",
+      contactOffice: "Organizing Office",
     },
   },
 }
