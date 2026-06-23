@@ -15,7 +15,7 @@ export const metadata: Metadata = {
 
 export default function ThemePage() {
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white pt-[70px]">
       <Nav2026 />
       <main>
         <ThemeContent />

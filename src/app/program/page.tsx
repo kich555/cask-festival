@@ -15,7 +15,7 @@ export const metadata: Metadata = {
 
 export default function ProgramPage() {
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white pt-[70px]">
       <Nav2026 />
       <main>
         <ProgramContent />
