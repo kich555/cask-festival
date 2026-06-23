@@ -17,8 +17,9 @@
 
 ### 성공 기준
 - `/`(2026 메인) + `/about` `/theme` `/program` `/register`가 2026 디자인으로 동작.
-- 한/영 전환이 `?lang=` 방식으로 동작(기존 미들웨어 그대로).
+- 2026은 한국어 기본으로 뜨고, `?lang=en`으로 영어 전환 동작. `/2025`는 기존(영어 기본) 그대로.
 - `/2025`의 화면·동작이 이식 전과 100% 동일.
+- 각 2026 페이지가 페이지별 SEO 메타데이터(title/description/OG)를 가진다.
 - `npm run build` / `biome check` 통과.
 
 ---
@@ -44,8 +45,10 @@
 | `/register` | `src/app/register/page.tsx` (신규) | 참가 업체 모집 |
 | `/2025` | `src/app/2025/**` | **동결** |
 
-- 각 신규 라우트는 `/2025` 라우트 패턴(필요 시 route-level `layout.tsx`로 페이지별 메타데이터)을 따른다.
-- 루트 `layout.tsx`의 메타데이터는 이미 "CASK CARNIVAL 2026" 기준 → 메인 메타데이터는 그대로 사용하거나 보강.
+- 각 신규 라우트는 `/2025` 라우트 패턴을 따르며, **라우트별 `layout.tsx`(또는 page의 `metadata` export)로 페이지별 SEO 메타데이터를 지정한다.**
+  - 예: `/about` → "행사 소개 | CASK CARNIVAL 2026", `/register` → "참가 업체 모집 | CASK CARNIVAL 2026" 등 (title 템플릿 `%s | CASK CARNIVAL 2026` 활용)
+  - 각 페이지에 맞는 `description`·`openGraph.title`/`description` 지정. 공유 썸네일(og-image)은 공통 사용(별도 이미지 없으면).
+- 루트 `layout.tsx`의 메타데이터는 이미 "CASK CARNIVAL 2026" 기준 → 메인(`/`) 메타데이터로 그대로 사용하거나 보강.
 
 ### 3.2 컴포넌트 (격리 원칙)
 - 2026 전용 컴포넌트는 `src/components/2026/`에 신규 작성한다. 예시:
@@ -54,7 +57,11 @@
 - 단, i18n 엔진·훅(`useTranslation`, `useBodyScrollLock` 등 부수효과 없는 공용 유틸)은 재사용 가능.
 
 ### 3.3 i18n
-- 엔진: 기존 `src/i18n`(`useTranslation()` → `?lang` 읽어 `translations[lang]` 반환) + `middleware.ts`(`?lang` 자동 부여) 그대로 사용.
+- 엔진: 기존 `src/i18n`(`useTranslation()` → `?lang` 읽어 `translations[lang]` 반환) + `middleware.ts`(`?lang` 자동 부여) 사용.
+- **기본 언어 = 한국어(`ko`)** (2026). 미들웨어는 `lang` 미지정 시 기본값을 부여하는데, 현재 전역 기본이 `en`이다. `/2025`의 기존 동작(영어 기본)을 보존하기 위해 **경로별 기본값 분기**를 도입한다:
+  - 2026 경로(`/`, `/about`, `/theme`, `/program`, `/register`) → 쿠키/Accept-Language 없을 때 기본 `ko`
+  - `/2025` → 기존대로 기본 `en`
+  - 쿠키(`preferred-lang`)·Accept-Language 우선 로직은 그대로. 이는 미들웨어에 분기 로직을 **추가**하는 변경으로, `/2025`의 결과는 이전과 동일하게 유지한다.
 - `src/i18n/translations.ts`의 `ko`/`en` 객체에 **2026 네임스페이스만 추가**한다. 추가 키(예): `home`, `aboutPage`, `themePage`, `programPage`, `registerPage`, `nav2026`, `footer2026`.
   - **기존 키(`nav`, `hero`, `lineup`, `page2025`, `masterClass` 등)는 추가/수정/삭제하지 않는다.** (`/2025` 및 타입 안정성 보존)
 - 정적 사이트의 `data-en`/`data-en-href` 콘텐츠는 모두 번역 키로 이관:
@@ -103,7 +110,7 @@
 - 기존 `translations.ts` 키
 - 기존 `public/` 자산
 - `globals.css` / 루트 `layout.tsx`의 기존 규칙(추가만 허용)
-- `middleware.ts`
+- `middleware.ts` — **경로별 기본 언어 분기 로직 추가만 허용**. `/2025` 경로의 결과(영어 기본)는 이전과 동일해야 함.
 
 ### 회귀 검증
 - 이식 전 `/2025?lang=ko`, `/2025?lang=en` 스크린샷/동작과 이식 후가 동일한지 확인.
@@ -127,6 +134,6 @@
 
 - **공유 자원 오염**: 기존 컴포넌트/번역/글로벌을 건드리면 `/2025`가 깨진다 → 신규 파일·추가 전용 원칙 엄수.
 - **다크모드 플래시**: 2026 페이지 배경 미지정 시 글로벌 다크 배경이 비친다 → 래퍼 배경 명시.
-- **i18n 기본값 en**: 미들웨어 기본 언어가 `en`(2025 설정). 2026도 동일 정책 유지(필요 시 별도 논의).
+- **i18n 기본값**: 2026은 **한국어(ko) 기본**, `/2025`는 영어(en) 기본 유지 → 미들웨어 경로별 분기. 분기 후 `/2025` 동작 회귀 확인 필요.
 - **폰트 용량**: Pretendard(@fontsource, 기존) + D-DIN 추가. D-DIN은 워터마크 전용이라 영향 적음.
 - **Hero iframe**: 초기엔 정적 html 임베드. SSR/이미지 최적화 이점은 포기(차후 컴포넌트화 별도 과제).
