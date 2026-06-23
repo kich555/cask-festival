@@ -1,10 +1,14 @@
 import { type NextRequest, NextResponse } from "next/server"
 
 const VALID_LANGS = ["ko", "en"] as const
-const DEFAULT_LANG = "en"
 const LANG_COOKIE_NAME = "preferred-lang"
 
-function getPreferredLanguage(request: NextRequest): string {
+// 경로별 기본 언어: 2025 아카이브는 영어 기본 유지, 그 외(2026)는 한국어 기본
+function getPathDefaultLang(pathname: string): "ko" | "en" {
+  return pathname === "/2025" || pathname.startsWith("/2025/") ? "en" : "ko"
+}
+
+function getPreferredLanguage(request: NextRequest, pathname: string): string {
   // 1. Check cookie for saved preference
   const cookieLang = request.cookies.get(LANG_COOKIE_NAME)?.value
   if (cookieLang && VALID_LANGS.includes(cookieLang as "ko" | "en")) {
@@ -31,8 +35,8 @@ function getPreferredLanguage(request: NextRequest): string {
     }
   }
 
-  // 3. Default to English
-  return DEFAULT_LANG
+  // 3. 경로별 기본 언어 (2026 → ko, /2025 → en)
+  return getPathDefaultLang(pathname)
 }
 
 export function middleware(request: NextRequest) {
@@ -55,7 +59,7 @@ export function middleware(request: NextRequest) {
   }
 
   // If lang param is missing or invalid, redirect with detected language
-  const preferredLang = getPreferredLanguage(request)
+  const preferredLang = getPreferredLanguage(request, pathname)
 
   const url = request.nextUrl.clone()
 

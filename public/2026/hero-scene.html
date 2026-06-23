@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>CASK CARNIVAL — Hero</title>
+<style>
+  *{ margin:0; padding:0; box-sizing:border-box; }
+  html,body{ height:100%; background:#07050a; overflow:hidden; }
+
+  /* fixed 1920x1080 canvas, scaled to COVER the viewport (crops sides when narrow) */
+  #stage{ position:fixed; inset:0; background:#07050a; }
+  #canvas{
+    position:absolute; left:50%; top:50%;
+    width:1920px; height:1080px;
+    transform-origin:50% 50%;
+    transform:translate(-50%,-50%) scale(1);
+    overflow:hidden;
+    background:
+      radial-gradient(78% 90% at 50% 50%, #2a0710 0%, #160810 40%, #0a0509 72%, #060409 100%);
+    font-family:"Helvetica Neue", Helvetica, Arial, sans-serif;
+  }
+  /* rich vignette */
+  #canvas::after{
+    content:""; position:absolute; inset:0; pointer-events:none; z-index:7;
+    background:radial-gradient(120% 100% at 50% 48%, transparent 50%, rgba(0,0,0,.66) 100%);
+  }
+
+  /* ---- soft crimson glow behind the logo (no hard edges → no alignment to fuss over) ---- */
+  .glow{
+    position:absolute; left:50%; top:50%;
+    width:1320px; height:1320px; transform:translate(-50%,-50%);
+    background:radial-gradient(circle,
+      rgba(180,30,55,.50) 0%,
+      rgba(140,16,34,.30) 24%,
+      rgba(120,12,28,.12) 44%,
+      transparent 64%);
+    filter:blur(10px); z-index:1;
+    animation:breathe 5.5s ease-in-out infinite;
+  }
+  .glow--2{
+    width:760px; height:760px;
+    background:radial-gradient(circle, rgba(255,120,140,.30) 0%, rgba(180,30,55,.14) 40%, transparent 66%);
+    filter:blur(16px); z-index:1;
+    animation:breathe 4s ease-in-out infinite reverse;
+  }
+  @keyframes breathe{
+    0%,100%{ transform:translate(-50%,-50%) scale(1);    opacity:.9; }
+    50%    { transform:translate(-50%,-50%) scale(1.06);  opacity:1;  }
+  }
+
+  /* ---- slow rotating light sweep (soft, blurred → no hard ring) ---- */
+  .rays{
+    position:absolute; left:50%; top:50%;
+    width:1700px; height:1700px; transform:translate(-50%,-50%);
+    z-index:1; border-radius:50%; opacity:.5;
+    background:conic-gradient(from 0deg,
+      transparent 0deg, rgba(190,44,66,.18) 14deg, transparent 30deg,
+      transparent 70deg, rgba(255,120,140,.12) 86deg, transparent 104deg,
+      transparent 150deg, rgba(190,44,66,.16) 166deg, transparent 184deg,
+      transparent 234deg, rgba(255,120,140,.10) 250deg, transparent 268deg,
+      transparent 318deg, rgba(190,44,66,.14) 334deg, transparent 352deg);
+    filter:blur(34px);
+    -webkit-mask:radial-gradient(circle, #000 22%, rgba(0,0,0,.5) 48%, transparent 72%);
+            mask:radial-gradient(circle, #000 22%, rgba(0,0,0,.5) 48%, transparent 72%);
+    animation:sweep 38s linear infinite;
+  }
+  @keyframes sweep{ to{ transform:translate(-50%,-50%) rotate(360deg); } }
+
+  /* ---- flowing amber/crimson liquid currents (cask-spirit feel) ---- */
+  .flow{ position:absolute; inset:-12%; z-index:1; pointer-events:none; filter:blur(64px); opacity:.6; }
+  .flow span{ position:absolute; border-radius:50%; mix-blend-mode:screen; will-change:transform; }
+  .flow .a{ width:900px; height:680px; left:16%; top:42%;
+    background:radial-gradient(circle, rgba(214,132,46,.55), transparent 66%); animation:flowA 18s ease-in-out infinite; }
+  .flow .b{ width:820px; height:820px; left:58%; top:54%;
+    background:radial-gradient(circle, rgba(176,32,58,.60), transparent 64%); animation:flowB 22s ease-in-out infinite; }
+  .flow .c{ width:640px; height:520px; left:44%; top:26%;
+    background:radial-gradient(circle, rgba(235,170,80,.45), transparent 66%); animation:flowC 26s ease-in-out infinite; }
+  @keyframes flowA{ 0%,100%{transform:translate(0,0) scale(1);} 30%{transform:translate(140px,-70px) scale(1.18);} 60%{transform:translate(-90px,50px) scale(.92);} }
+  @keyframes flowB{ 0%,100%{transform:translate(0,0) scale(1);} 35%{transform:translate(-130px,-40px) scale(1.12);} 70%{transform:translate(70px,70px) scale(.96);} }
+  @keyframes flowC{ 0%,100%{transform:translate(0,0) scale(1);} 40%{transform:translate(90px,80px) scale(1.2);} 75%{transform:translate(-60px,-50px) scale(.9);} }
+
+  /* ---- rising embers ---- */
+  .embers{ position:absolute; inset:0; z-index:3; pointer-events:none; }
+  .embers i{
+    position:absolute; width:5px; height:5px; border-radius:50%;
+    background:radial-gradient(circle, #ffd9a0 0%, #ff7a4a 45%, #b3203a 70%, transparent 78%);
+    box-shadow:0 0 8px rgba(255,140,90,.6);
+    opacity:0; animation:rise linear infinite;
+  }
+  @keyframes rise{
+    0%  { transform:translate(0,40px) scale(.6); opacity:0; }
+    12% { opacity:.95; }
+    82% { opacity:.85; }
+    100%{ transform:translate(var(--dx,0),-160px) scale(1.05); opacity:0; }
+  }
+
+  /* ---- 3D rotating logo (centered, no concentric dependencies) ---- */
+  .logo-scene{
+    position:absolute; left:500px; top:243px;
+    width:920px; height:594px;
+    perspective:1950px; perspective-origin:50% 48%;
+    z-index:4;
+    transform:translateY(-120px) scale(.68);   /* 데스크톱: 조금 크게 + 위로 */
+    transform-origin:50% 50%;
+  }
+  /* 데스크톱(가로형)에서 화면 세로가 짧아지면 플로팅을 줄여 하단 텍스트와 겹치지 않게 */
+  @media (min-aspect-ratio: 13/10) and (max-height: 860px){
+    .logo-scene{ transform:translateY(-96px) scale(.56); }
+  }
+  @media (min-aspect-ratio: 13/10) and (max-height: 720px){
+    .logo-scene{ transform:translateY(-72px) scale(.46); }
+  }
+  .tilt{
+    position:absolute; inset:0; transform-style:preserve-3d;
+    transform:rotateX(10deg);
+    animation:bob 6.5s ease-in-out infinite;   /* 은은한 부유 모션 */
+  }
+  @keyframes bob{
+    0%,100%{ transform:rotateX(10deg) translateY(0); }
+    50%    { transform:rotateX(10deg) translateY(-16px); }
+  }
+  .coin{ position:absolute; inset:0; transform-style:preserve-3d; animation:sway 7s ease-in-out infinite; will-change:transform; }
+  @keyframes sway{ 0%,100%{ transform:rotateY(-20deg);} 50%{ transform:rotateY(20deg);} }
+  .slice{ position:absolute; inset:0; }
+  .slice svg{ width:100%; height:100%; display:block; }
+  .slice.face svg{
+    filter:drop-shadow(0 0 16px rgba(190,40,62,.85)) drop-shadow(0 0 40px rgba(125,11,28,.55));
+  }
+
+  /* ---- 모바일(세로 화면): 원/로고가 잘리거나 넘치지 않도록 작게 + 위로 ---- */
+  @media (max-aspect-ratio: 13/10){
+    .logo-scene{ transform:translateY(-90px) scale(.58); }
+    .glow{ width:920px; height:920px; }
+    .glow--2{ width:560px; height:560px; }
+    .rays{ width:1160px; height:1160px; opacity:.42; }
+  }
+  @media (max-width: 560px){
+    .logo-scene{ transform:translateY(-120px) scale(.52); }
+    .glow{ width:780px; height:780px; }
+    .glow--2{ width:480px; height:480px; }
+  }
+</style>
+</head>
+<body>
+  <div id="stage">
+    <div id="canvas">
+      <div class="flow"><span class="a"></span><span class="b"></span><span class="c"></span></div>
+      <div class="rays"></div>
+      <div class="glow"></div>
+      <div class="glow glow--2"></div>
+      <div class="embers" id="embers"></div>
+
+      <div class="logo-scene">
+        <div class="tilt"><div class="coin" id="coin"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- logo as clean vector paths (one reusable template) -->
+  <template id="logoTpl">
+    <svg viewBox="0 0 775.77 500" xmlns="http://www.w3.org/2000/svg">
+      <g fill="var(--ink, #1c1c1c)">
+        <path d="M296.59,43.99c30.83-15.35,65.58-23.99,102.35-23.99,39.89,0,77.4,10.16,110.1,28.02l10.01-17.34C483.42,11.13,442.51,0,398.99,0c-40.43,0-78.61,9.61-112.4,26.65l10.01,17.34Z"/>
+        <path d="M169.18,240c3.38-78.93,46.52-147.55,109.91-186.33l-10-17.31c-69.35,42.25-116.49,117.33-119.89,203.64h19.97Z"/>
+        <path d="M526.17,58.38c59.35,39.48,99.3,105.79,102.55,181.62h20.05c-3.28-83.24-47.24-156.02-112.57-198.99l-10.03,17.37Z"/>
+        <path d="M279.09,446.33c-63.39-38.78-106.53-107.4-109.91-186.33h-19.97c3.4,86.32,50.54,161.39,119.89,203.64l10-17.31Z"/>
+        <path d="M509.05,451.98c-32.7,17.86-70.22,28.02-110.1,28.02-36.77,0-71.52-8.65-102.35-23.99l-10.01,17.34c33.79,17.04,71.97,26.65,112.4,26.65,43.52,0,84.44-11.13,120.08-30.68l-10.01-17.34Z"/>
+        <path d="M628.72,260c-3.25,75.83-43.2,142.14-102.55,181.62l10.03,17.37c65.33-42.98,109.3-115.75,112.57-198.99h-20.05Z"/>
+        <path d="M453.03,241.6c-34.2,0-48.62-14.56-48.62-39.69h25.82c0,13.73,5.36,18.82,23.35,18.82,12.22,0,17.44-2.47,17.44-8.52,0-3.43-2.75-6.04-8.24-7.42l-32.42-8.52c-16.76-4.53-21.98-14.29-21.98-26.51,0-18.82,14.01-28.84,39.42-28.84,30.22,0,45.19,14.29,45.19,35.3h-25.68c0-10.44-5.91-14.83-19.09-14.83-9.2,0-14.01,2.33-14.01,7.83,0,2.75,1.51,5.08,7.56,6.73l31.45,7.83c16.07,3.98,23.49,13.19,23.49,27.33,0,18.41-12.64,30.49-43.68,30.49Z"/>
+        <path d="M504.83,142.85h25v38.05l36.81-38.05h30.08l-44.91,46.42,45.88,50.41h-31.59l-36.26-40.79v40.79h-25v-96.83Z"/>
+        <polygon points="380.42 239.68 406.92 239.68 376.02 142.85 375.47 142.85 330.69 142.85 330.28 142.85 299.24 239.68 325.47 239.68 347.96 167.84 357.93 167.84 380.42 239.68"/>
+        <path d="M253.72,241.6c-28.48,0-51.56-23.09-51.56-51.56s23.09-51.56,51.56-51.56c24.58,0,45.13,17.21,50.3,40.23h-26.23c-4.26-9.03-13.42-15.3-24.07-15.3-14.71,0-26.63,11.92-26.63,26.63s11.92,26.63,26.63,26.63c10.65,0,19.81-6.27,24.07-15.3h26.23c-5.17,23.02-25.72,40.23-50.3,40.23Z"/>
+        <path d="M206.15,259.62h42.72c21.97,0,43.4,4.4,43.4,25.68,0,15.52-10.3,22.25-20.33,24.45h3.44c13.32,0,17.99,8.38,17.99,17.31v29.39h-24.86v-32.83h-37.22v32.83h-25.14v-96.83ZM248.87,301.92c11.12,0,18.54-.41,18.54-10.16s-7.97-10.3-18.54-10.3h-17.58v20.46h17.58Z"/>
+        <path d="M309.47,259.79h47.11l27.19,88.87v-88.87h25v96.83h-47.11l-27.2-88.87v88.87h-25v-96.83Z"/>
+        <path d="M493.96,259.62v21.84h-22.11v53.02h22.11v21.98h-69.09v-21.98h22.12v-53.02h-22.12v-21.84h69.09Z"/>
+        <polygon points="591.51 259.79 569.03 331.62 559.05 331.62 536.57 259.79 510.06 259.79 540.96 356.62 541.51 356.62 586.29 356.62 586.7 356.62 617.74 259.79 591.51 259.79"/>
+        <path d="M51.56,358.37c-28.48,0-51.56-23.09-51.56-51.56s23.09-51.56,51.56-51.56c24.58,0,45.13,17.21,50.3,40.23h-26.23c-4.26-9.03-13.42-15.3-24.07-15.3-14.71,0-26.63,11.92-26.63,26.63s11.92,26.63,26.63,26.63c10.65,0,19.81-6.27,24.07-15.3h26.23c-5.17,23.02-25.72,40.23-50.3,40.23Z"/>
+        <polygon points="129.89 259.96 129.48 259.96 98.55 356.45 124.69 356.45 147.1 284.87 152.2 284.87 152.2 259.96 129.89 259.96"/>
+        <polygon points="729.21 334.47 729.21 259.62 704.21 259.62 704.21 334.61 704.21 343.95 704.21 356.45 716.99 356.45 737.35 356.45 775.77 356.45 775.77 334.47 729.21 334.47"/>
+        <polygon points="668.08 259.96 668.49 259.96 699.42 356.45 673.28 356.45 650.88 284.87 645.77 284.87 645.77 259.96 668.08 259.96"/>
+        <path d="M375.23,403.79c0,3.27-1.58,6.08-7.09,11.78l-4.51,4.66h12.21v5.93h-22.45v-4l10.28-10.59c3.77-3.89,4.66-5.93,4.66-7.7,0-2.31-1.27-3.85-4.31-3.85-2.85,0-4.39,2.31-4.39,4.7h-6.89c0-6.16,4.66-10.78,11.28-10.78,7.05,0,11.21,4.16,11.21,9.86Z"/>
+        <path d="M402.22,410.45c0,10.97-5.16,16.48-12.01,16.48s-12.01-5.51-12.01-16.48,5.16-16.52,12.01-16.52,12.01,5.51,12.01,16.52ZM384.81,410.45c0,7.12,2.31,10.36,5.39,10.36s5.39-3.24,5.39-10.36-2.31-10.4-5.39-10.4-5.39,3.24-5.39,10.4Z"/>
+        <path d="M426.16,403.79c0,3.27-1.58,6.08-7.09,11.78l-4.51,4.66h12.21v5.93h-22.45v-4l10.28-10.59c3.77-3.89,4.66-5.93,4.66-7.7,0-2.31-1.27-3.85-4.31-3.85-2.85,0-4.39,2.31-4.39,4.7h-6.89c0-6.16,4.66-10.78,11.28-10.78,7.05,0,11.21,4.16,11.21,9.86Z"/>
+        <path d="M429.11,415.92c0-3.04,1-5.39,2.85-8.32l8.09-12.82h7.93l-7.12,10.63c.19-.08.54-.15.88-.15,6.12,0,11.17,4.27,11.17,10.63s-5.31,11.01-11.9,11.01-11.9-4.27-11.9-10.97ZM446.09,415.96c0-2.81-1.97-5.01-5.08-5.01s-5.08,2.19-5.08,5.01,1.96,5.01,5.08,5.01,5.08-2.19,5.08-5.01Z"/>
+      </g>
+    </svg>
+  </template>
+
+  <script>
+    // scale the fixed canvas to COVER the viewport (center stays put, sides crop when narrow)
+    (function(){
+      const canvas = document.getElementById('canvas');
+      function fit(){
+        const s = Math.max(innerWidth/1920, innerHeight/1080);
+        canvas.style.transform = `translate(-50%,-50%) scale(${s})`;
+      }
+      addEventListener('resize', fit); fit();
+    })();
+
+    // build the extruded 3D logo (ring + wordmark as one solid piece)
+    (function(){
+      const coin = document.getElementById('coin');
+      const tpl  = document.getElementById('logoTpl');
+      const RIM=22, DEPTH=34, half=DEPTH/2;
+      function makeSlice(z, ink, cls){
+        const s=document.createElement('div');
+        s.className='slice'+(cls?' '+cls:'');
+        s.appendChild(tpl.content.cloneNode(true));
+        if(ink) s.style.setProperty('--ink', ink);
+        s.style.transform=`translateZ(${z}px)`;
+        coin.appendChild(s);
+      }
+      const deep=[40,8,14], bright=[150,34,50];
+      for(let i=0;i<RIM;i++){
+        const t=i/(RIM-1), edge=Math.abs(t*2-1);
+        const c=deep.map((d,k)=>Math.round(d+(bright[k]-d)*edge));
+        makeSlice(-half+t*DEPTH, `rgb(${c[0]},${c[1]},${c[2]})`);
+      }
+      makeSlice(half, '#fff1ec', 'face'); // luminous readable front
+    })();
+
+    // rising embers
+    (function(){
+      const box=document.getElementById('embers'), N=30;
+      for(let i=0;i<N;i++){
+        const e=document.createElement('i');
+        const fast=Math.random()<0.3;                       // 일부는 빠른 불꽃
+        const dur=(fast?3+Math.random()*2:6+Math.random()*7), sc=0.5+Math.random()*1.1;
+        e.style.left=(6+Math.random()*88)+'%';
+        e.style.top =(55+Math.random()*42)+'%';
+        e.style.setProperty('--dx', (Math.random()*60-30).toFixed(0)+'px');
+        e.style.animationDuration=dur+'s';
+        e.style.animationDelay=(-Math.random()*dur)+'s';
+        e.style.width=e.style.height=(4*sc).toFixed(1)+'px';
+        box.appendChild(e);
+      }
+    })();
+  </script>
+</body>
+</html>

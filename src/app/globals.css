@@ -6,6 +6,22 @@
 @import '@fontsource/pretendard/800.css';
 @import '@fontsource/pretendard/900.css';
 
+/* 2026 전용: D-DIN Condensed (페이지 헤더 배경 워터마크 한정) — 추가만, 기존 영향 없음 */
+@font-face {
+  font-family: 'D-DIN Condensed';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('D-DIN Condensed'), url('/2026/fonts/D-DINCondensed.otf') format('opentype');
+}
+@font-face {
+  font-family: 'D-DIN Condensed';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('D-DIN Condensed Bold'), url('/2026/fonts/D-DINCondensed-Bold.otf') format('opentype');
+}
+
 :root {
   --background: #ffffff;
   --foreground: #171717;

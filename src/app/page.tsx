@@ -1,20 +1,15 @@
-/** biome-ignore-all lint/correctness/useUniqueElementIds: <explanation> */
-import HeroSection from "@/components/HeroSection"
-import NavigationBar from "@/components/NavigationBar"
+import Footer2026 from "@/components/2026/Footer2026"
+import Home2026 from "@/components/2026/Home2026"
+import Nav2026 from "@/components/2026/Nav2026"
 
-export default function CaskCarnival() {
+export default function CaskCarnival2026() {
   return (
-    <div className="text-white min-h-screen bg-[#121212]">
-      <NavigationBar />
+    <div className="min-h-screen bg-white">
+      <Nav2026 />
       <main>
-        <HeroSection />
-        {/* <CountdownSection /> */}
-        {/* <LineupSection />
-        <FloorPlanSection />
-        <MasterClassSection /> */}
-        {/* <LoungeSection /> */}
-        {/* <FooterSection /> */}
+        <Home2026 />
       </main>
+      <Footer2026 />
     </div>
   )
 }
