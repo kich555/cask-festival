@@ -12,6 +12,7 @@ export interface Content2026 {
     infoEvent: string; infoEventV: string; infoDate: string; infoDateV: string
     infoVenue: string; infoVenueV: string; infoHost: string; infoHostV: string
     catsTitle: string; moreBtn: string; applyBtn: string
+    ebTag: string; ebTitle: string; ebBody: string; ebUpto: string; ebOff: string
   }
   themeP: {
     title: string; subtitle: string
@@ -103,6 +104,11 @@ export const content2026: Record<"ko" | "en", Content2026> = {
       catsTitle: "모집 카테고리",
       moreBtn: "부스 신청 자세히보기",
       applyBtn: "부스 신청하기 →",
+      ebTag: "EARLY BIRD 진행중",
+      ebTitle: "지금 신청하면 부스비 할인 혜택",
+      ebBody: "6월 30일까지 얼리버드 할인가로 참가 신청하실 수 있습니다.",
+      ebUpto: "UP TO",
+      ebOff: "20% OFF",
     },
     footer: {
       brand: "Global Cask-Aged Drinks Festa · 2026 · Seoul",
@@ -242,6 +248,11 @@ export const content2026: Record<"ko" | "en", Content2026> = {
       catsTitle: "Recruiting Categories",
       moreBtn: "Booth Details",
       applyBtn: "Apply for a Booth →",
+      ebTag: "EARLY BIRD OPEN",
+      ebTitle: "Apply now for a booth-fee discount",
+      ebBody: "Early-bird pricing is available for applications through June 30.",
+      ebUpto: "UP TO",
+      ebOff: "20% OFF",
     },
     footer: {
       brand: "Global Cask-Aged Drinks Festa · 2026 · Seoul",
