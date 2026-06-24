@@ -87,8 +87,8 @@ function HomeContent() {
             <br />
             {c.teaser.lead2}
           </h2>
-          <p className="text-[#555] text-[clamp(16px,1.2vw,18px)] leading-[1.9] max-w-[760px]">{c.teaser.body1}</p>
-          <p className="text-[#555] text-[clamp(16px,1.2vw,18px)] leading-[1.9] max-w-[760px] mt-3">{c.teaser.body2}</p>
+          <p className="text-[#555] text-[clamp(16px,1.2vw,18px)] leading-[1.9] max-w-[760px] break-keep text-pretty">{c.teaser.body1}</p>
+          <p className="text-[#555] text-[clamp(16px,1.2vw,18px)] leading-[1.9] max-w-[760px] mt-3 break-keep text-pretty">{c.teaser.body2}</p>
           <Link href={`/about${qs}`} className="inline-block mt-9 text-[#7d0b1c] font-bold border-b-2 border-[#7d0b1c] pb-1.5">
             {c.teaser.more}
           </Link>
@@ -102,9 +102,9 @@ function HomeContent() {
             <p className="tracking-[3px] text-[13px] text-[#7d0b1c] mb-3">{c.themeBand.eyebrow}</p>
             <h2 className="text-[clamp(28px,6vw,52px)] font-extrabold">{c.themeBand.title}</h2>
             <div className="w-[clamp(160px,40vw,720px)] h-px bg-[#7d0b1c]/30 mx-auto my-7" />
-            <p className="text-[#444] max-w-[760px] mx-auto leading-relaxed text-[16px]">{c.themeBand.desc1}</p>
-            <p className="text-[#444] max-w-[760px] mx-auto leading-relaxed text-[16px] mt-2">{c.themeBand.desc2}</p>
-            <p className="text-[#444] max-w-[760px] mx-auto leading-relaxed text-[16px] mt-2">{c.themeBand.desc3}</p>
+            <p className="text-[#444] max-w-[760px] mx-auto leading-relaxed text-[16px] break-keep text-pretty">{c.themeBand.desc1}</p>
+            <p className="text-[#444] max-w-[760px] mx-auto leading-relaxed text-[16px] mt-2 break-keep text-pretty">{c.themeBand.desc2}</p>
+            <p className="text-[#444] max-w-[760px] mx-auto leading-relaxed text-[16px] mt-2 break-keep text-pretty">{c.themeBand.desc3}</p>
             <p className="tracking-[6px] text-[#7d0b1c] font-semibold mt-12 mb-8 text-[15px]">{c.themeBand.notesTitle}</p>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-5 max-w-[860px] mx-auto">
               {TASTING_NOTES.map((n) => (
