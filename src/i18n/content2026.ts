@@ -192,11 +192,11 @@ export const content2026: Record<"ko" | "en", Content2026> = {
       introItems: [
         {
           heading: "숙성의 가치를 조명하는 전문 박람회",
-          body: "캐스크 카니발은 한 잔의 음료가 완성되기까지 맛과 향을 결정짓는 핵심 요소, 캐스크의 가치를 조명하는 글로벌 숙성주 전문 박람회입니다. 시간과 나무가 결합하여 만들어내는 숙성의 과정을 탐구하고 음료 본연의 철학을 공유합니다.",
+          body: "캐스크 카니발은 한 잔의 음료가 완성되기까지 맛과 향을 결정짓는 핵심 요소, 캐스크의 가치를 조명하는 [[글로벌 숙성주 전문 박람회]]입니다. 숙성의 과정을 탐구하고 음료 본연의 철학을 공유합니다.",
         },
         {
           heading: "장르를 넘나드는 미각의 스펙트럼",
-          body: "위스키, 럼, 브랜디, 프리미엄 숙성 소주는 물론 특별한 숙성을 거친 스페셜티 커피에 이르기까지 폭넓은 카테고리를 다룹니다. 각기 다른 재료가 캐스크라는 매개체를 통해 어떻게 새로운 풍미를 얻는지 한자리에서 선보입니다.",
+          body: "위스키, 럼, 브랜디, 프리미엄 숙성 소주는 물론 커피에 이르기까지, 캐스크 숙성을 거친 다양한 제품을 폭넓게 다룹니다. 각기 다른 재료가 캐스크라는 매개체를 통해 어떻게 새로운 풍미를 얻는지 한자리에서 선보입니다.",
         },
         {
           heading: "깊이를 더하는 연간 테마 큐레이션",
@@ -207,7 +207,7 @@ export const content2026: Record<"ko" | "en", Content2026> = {
       valueItems: [
         {
           heading: "엄선된 글로벌 브랜드 라인업",
-          body: "전 세계 10개국 이상, 30여 개 이상의 증류소와 독립 병입자, 프리미엄 바가 참여하여 수준 높은 라인업을 완성합니다. 정규 라인업과 더불어 현장에서만 공개되는 '캐스크 카니발 익스클루시브 보틀'을 통해 차별화된 시음 경험을 제공합니다.",
+          body: "전 세계 5개국 이상, 30여 개 이상의 증류소와 독립 병입자, 프리미엄 바가 참여하여 수준 높은 라인업을 완성합니다. 정규 라인업과 더불어 현장에서만 공개되는 '캐스크 카니발 익스클루시브 보틀'을 통해 차별화된 시음 경험을 제공합니다.",
         },
         {
           heading: "경험의 깊이를 더하는 심화 프로그램",
@@ -387,11 +387,11 @@ export const content2026: Record<"ko" | "en", Content2026> = {
       introItems: [
         {
           heading: "A specialized expo spotlighting the value of maturation",
-          body: "Cask Carnival is a global expo for matured drinks that spotlights the cask — the key element shaping flavor and aroma until a drink is complete. We explore the maturation born from time and wood, and share the philosophy behind each drink.",
+          body: "Cask Carnival is a [[global expo for matured drinks]] that spotlights the cask — the key element shaping the flavor and aroma of every glass. We explore the maturation process and share the philosophy behind each drink.",
         },
         {
           heading: "A spectrum of taste across genres",
-          body: "From whisky, rum, brandy, and premium aged soju to specialty coffee with unique maturation, we cover a wide range of categories — showing how different ingredients gain new flavors through the cask.",
+          body: "From whisky, rum, brandy, and premium aged soju to coffee, we cover a wide range of products matured in casks — showing how different ingredients gain new flavors through the cask.",
         },
         {
           heading: "A yearly theme curation that adds depth",
@@ -402,7 +402,7 @@ export const content2026: Record<"ko" | "en", Content2026> = {
       valueItems: [
         {
           heading: "A curated global brand lineup",
-          body: "More than 30 distilleries, independent bottlers, and premium bars from over 10 countries complete a high-caliber lineup. Beyond the regular lineup, 'Cask Carnival Exclusive Bottles' revealed only on-site offer a distinctive tasting experience.",
+          body: "More than 30 distilleries, independent bottlers, and premium bars from over 5 countries complete a high-caliber lineup. Beyond the regular lineup, 'Cask Carnival Exclusive Bottles' revealed only on-site offer a distinctive tasting experience.",
         },
         {
           heading: "In-depth programs that deepen the experience",

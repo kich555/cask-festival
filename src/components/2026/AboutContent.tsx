@@ -7,6 +7,19 @@ import { Suspense } from "react"
 import { useContent2026 } from "@/i18n/useContent2026"
 import PageHeader2026 from "./PageHeader2026"
 
+// [[...]] 구간은 줄바꿈되지 않도록(핵심 문구 보호)
+function renderText(text: string) {
+  return text.split(/\[\[|\]\]/).map((part, i) =>
+    i % 2 === 1 ? (
+      <span key={`nw${i}`} className="whitespace-nowrap">
+        {part}
+      </span>
+    ) : (
+      part
+    ),
+  )
+}
+
 function Reveal({
   children,
   delay = 0,
@@ -61,7 +74,9 @@ function Inner() {
               <Reveal key={it.heading} delay={i * 0.08}>
                 <div>
                   <h3 className="text-[20px] md:text-[24px] font-bold mb-3 break-keep">{it.heading}</h3>
-                  <p className="text-[#555] text-[15px] md:text-[17px] leading-[1.9] break-keep">{it.body}</p>
+                  <p className="text-[#555] text-[15px] md:text-[17px] leading-[1.9] break-keep text-pretty">
+                    {renderText(it.body)}
+                  </p>
                 </div>
               </Reveal>
             ))}
@@ -85,7 +100,9 @@ function Inner() {
                     <span className="mt-[10px] w-2 h-2 rounded-full bg-[#7d0b1c] shrink-0" />
                     <span>{it.heading}</span>
                   </h3>
-                  <p className="text-[#555] text-[15px] md:text-[17px] leading-[1.9] break-keep pl-[18px]">{it.body}</p>
+                  <p className="text-[#555] text-[15px] md:text-[17px] leading-[1.9] break-keep text-pretty pl-[18px]">
+                    {renderText(it.body)}
+                  </p>
                 </div>
               </Reveal>
             ))}
