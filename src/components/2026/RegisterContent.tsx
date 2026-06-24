@@ -76,7 +76,7 @@ function Inner() {
 
         {/* BOOTH PACKAGE */}
         <Block title={r.boothTitle}>
-          <div className="grid grid-cols-1 md:grid-cols-3 bg-[#7d0b1c] text-white rounded-lg overflow-hidden shadow-xl border-t-4 border-[#e7c9a0]">
+          <div className="grid grid-cols-1 md:grid-cols-3 bg-[#7d0b1c] text-white rounded-lg overflow-hidden shadow-xl">
             {/* 가격 */}
             <div className="p-8 md:p-10 flex flex-col justify-center">
               <div className="text-[34px] font-extrabold leading-none">{r.boothSize}</div>

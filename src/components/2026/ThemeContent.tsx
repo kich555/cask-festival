@@ -68,10 +68,10 @@ function Inner() {
                 key={th.year}
                 href={`/theme?year=${th.year}${qs}`}
                 className={`w-full sm:w-[405px] max-w-full h-auto min-h-[180px] md:h-[280px] rounded p-6 md:p-8 flex flex-col bg-[#7d0b1c] text-white transition-transform hover:-translate-y-1 ${
-                  active ? "outline outline-2 outline-[#e7c9a0] outline-offset-[3px]" : ""
+                  active ? "outline outline-2 outline-white/70 outline-offset-[3px]" : ""
                 }`}
               >
-                <span className="text-[#e7c9a0] font-semibold tracking-[4px] text-[22px]">{th.year}</span>
+                <span className="text-white/80 font-semibold tracking-[4px] text-[22px]">{th.year}</span>
                 <strong className="text-[30px] mt-3 leading-tight">{th.name}</strong>
               </Link>
             )

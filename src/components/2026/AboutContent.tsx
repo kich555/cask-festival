@@ -26,7 +26,7 @@ function Inner() {
       <section className="bg-[#1a1a1a] text-white">
         <div className="max-w-[1440px] mx-auto px-5 md:px-10 py-16 md:py-20 flex flex-col md:flex-row md:items-center gap-7 md:gap-10">
           <div className="md:flex-1">
-            <p className="text-[#e7c9a0] tracking-wide text-[13px] mb-3">{a.recapEyebrow}</p>
+            <p className="text-white/60 tracking-wide text-[13px] mb-3">{a.recapEyebrow}</p>
             <h2 className="text-[30px] font-extrabold mb-4">{a.recapTitle}</h2>
             <p className="text-white/70 text-[16px]">{a.recapBody1}</p>
             <p className="text-white/70 text-[16px]">{a.recapBody2}</p>

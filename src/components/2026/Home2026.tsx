@@ -69,21 +69,21 @@ function HomeContent() {
       </section>
 
       {/* ABOUT TEASER */}
-      <section className="relative overflow-hidden py-20 md:py-28">
+      <section className="relative overflow-hidden py-24 md:py-36">
         <div className="absolute right-[-40px] top-1/2 -translate-y-1/2 w-[clamp(200px,36vw,520px)] opacity-[0.06] pointer-events-none select-none">
           <Image src="/2026/logo_background.png" alt="" width={601} height={706} className="w-full h-auto" />
         </div>
         <div className="relative max-w-[1440px] mx-auto px-5 md:px-10">
-          <Image src="/2026/logo-nav-dark.svg" alt="Cask Carnival" width={300} height={60} className="w-[min(58vw,240px)] md:w-[300px] h-auto mb-5" />
-          <p className="text-[#7d0b1c] tracking-wide text-[clamp(14px,4.4vw,18px)] font-semibold mb-6">{c.teaser.catch}</p>
-          <h2 className="text-[clamp(22px,5vw,36px)] font-extrabold leading-snug mb-7">
+          <Image src="/2026/logo-nav-dark.svg" alt="Cask Carnival" width={300} height={60} className="w-[min(58vw,240px)] md:w-[300px] h-auto mb-7" />
+          <p className="text-[#7d0b1c] tracking-wide text-[clamp(14px,4.4vw,18px)] font-semibold mb-8">{c.teaser.catch}</p>
+          <h2 className="text-[clamp(22px,5vw,36px)] font-extrabold leading-[1.45] mb-10">
             {c.teaser.lead1}
             <br />
             {c.teaser.lead2}
           </h2>
-          <p className="text-[#555] text-[16px] md:text-[17px] leading-relaxed max-w-[760px]">{c.teaser.body1}</p>
-          <p className="text-[#555] text-[16px] md:text-[17px] leading-relaxed max-w-[760px] mt-2">{c.teaser.body2}</p>
-          <Link href={`/about${qs}`} className="inline-block mt-9 text-[#7d0b1c] font-bold border-b-2 border-[#7d0b1c] pb-1.5">
+          <p className="text-[#555] text-[16px] md:text-[17px] leading-[1.9] max-w-[760px]">{c.teaser.body1}</p>
+          <p className="text-[#555] text-[16px] md:text-[17px] leading-[1.9] max-w-[760px] mt-3">{c.teaser.body2}</p>
+          <Link href={`/about${qs}`} className="inline-block mt-12 text-[#7d0b1c] font-bold border-b-2 border-[#7d0b1c] pb-1.5">
             {c.teaser.more}
           </Link>
         </div>
@@ -118,7 +118,7 @@ function HomeContent() {
         <div className="max-w-[1100px] mx-auto px-5 md:px-10">
           <h2 className="text-[clamp(24px,4vw,32px)] font-extrabold mb-9">{c.masterclass.title}</h2>
           <div className="border border-[#7d0b1c]/30 rounded-xl py-16 md:py-24 px-6 bg-[#faf8f6]">
-            <p className="text-[#e7a000] tracking-[2px] text-[13px] font-semibold">{c.programP.comingEyebrow}</p>
+            <p className="text-[#7d0b1c] tracking-[2px] text-[13px] font-semibold">{c.programP.comingEyebrow}</p>
             <h3 className="text-[clamp(22px,4vw,28px)] font-extrabold mt-4">{c.programP.comingTitle}</h3>
             <p className="text-[#888] mt-3">{c.programP.comingBody}</p>
           </div>
@@ -161,7 +161,7 @@ function HomeContent() {
             </div>
             <div className="text-center md:text-right shrink-0">
               <small className="block text-white/70 text-[12px] tracking-wide">{c.exhibitor.ebUpto}</small>
-              <strong className="text-[34px] md:text-[40px] font-extrabold text-[#e7c9a0]">{c.exhibitor.ebOff}</strong>
+              <strong className="text-[34px] md:text-[40px] font-extrabold text-white">{c.exhibitor.ebOff}</strong>
             </div>
           </div>
 
