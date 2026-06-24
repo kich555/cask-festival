@@ -49,7 +49,7 @@ function Inner() {
             alt={a.rowNameV}
             width={1080}
             height={1350}
-            className="hidden md:block w-full h-full object-cover rounded-md"
+            className="w-full max-w-[380px] mx-auto md:max-w-none h-auto md:h-full object-cover rounded-md"
           />
           <table className="w-full border-collapse">
             <tbody>
