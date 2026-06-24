@@ -1,25 +1,12 @@
 "use client"
 
 import { motion } from "framer-motion"
-import { Award, Globe2, GraduationCap, Target } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 import { Suspense } from "react"
 import { useContent2026 } from "@/i18n/useContent2026"
+import { CaskVenn, MaturationDiagram } from "./AboutDiagrams"
 import PageHeader2026 from "./PageHeader2026"
-
-// **bold** 마커를 <strong>으로 렌더링
-function renderBold(text: string) {
-  return text.split("**").map((part, i) =>
-    i % 2 === 1 ? (
-      <strong key={`b${i}`} className="font-bold text-[#1a1a1a]">
-        {part}
-      </strong>
-    ) : (
-      part
-    ),
-  )
-}
 
 function Reveal({
   children,
@@ -61,63 +48,77 @@ function Inner() {
     <div className="bg-white text-[#1a1a1a]">
       <PageHeader2026 title={a.title} subtitle={a.subtitle} watermark="ABOUT" />
 
-      {/* INTRO — 취지 (좌측 정렬 + 디자인 요소) */}
-      <section className="relative overflow-hidden">
-        {/* 배경 워터마크 로고 (은은한 그라데이션) */}
-        <div
-          className="hidden md:block absolute right-[-60px] top-1/2 -translate-y-1/2 w-[clamp(280px,40vw,560px)] opacity-[0.05] pointer-events-none select-none"
-          style={{
-            WebkitMaskImage: "linear-gradient(105deg, transparent 0%, #000 65%)",
-            maskImage: "linear-gradient(105deg, transparent 0%, #000 65%)",
-          }}
-        >
-          <Image src="/2026/logo_background.png" alt="" width={601} height={706} className="w-full h-auto" />
-        </div>
-
-        <div className="relative max-w-[940px] mx-auto px-5 md:px-10 pt-20 md:pt-28 pb-16 md:pb-24">
+      {/* INTRO — 캐스크가 빚어내는 풍미의 세계 */}
+      <section>
+        <div className="max-w-[1080px] mx-auto px-5 md:px-10 pt-20 md:pt-28 pb-16 md:pb-20">
           <Reveal>
-            <div className="flex items-start gap-4 md:gap-5">
-              <span className="mt-1.5 md:mt-2 w-[5px] h-[clamp(42px,5vw,64px)] bg-[#7d0b1c] rounded-full shrink-0" />
-              <h2 className="text-[clamp(20px,2.7vw,34px)] font-extrabold leading-[1.4] break-keep">
-                {a.introTagline}
-              </h2>
-            </div>
-            <div className="mt-9 md:mt-12 md:pl-9 max-w-[660px] space-y-5">
-              <p className="text-[#3f3f3f] text-[clamp(15px,1.3vw,18px)] leading-[1.95] break-keep text-balance">
-                {renderBold(a.introBody1)}
-              </p>
-              <p className="text-[#3f3f3f] text-[clamp(15px,1.3vw,18px)] leading-[1.95] break-keep text-balance">
-                {renderBold(a.introBody2)}
-              </p>
-              <p className="text-[#3f3f3f] text-[clamp(15px,1.3vw,18px)] leading-[1.95] break-keep text-balance">
-                {renderBold(a.introBody3)}
-              </p>
-            </div>
+            <h2 className="text-[clamp(24px,3.6vw,40px)] font-extrabold leading-[1.35] break-keep mb-14 md:mb-20">
+              {a.introTitle}
+            </h2>
           </Reveal>
+
+          <div className="space-y-16 md:space-y-24">
+            {/* 1. 숙성의 가치 + 숙성 원리 도식 */}
+            {a.introItems[0] && (
+              <Reveal>
+                <div className="grid md:grid-cols-2 gap-8 md:gap-14 items-center">
+                  <div className="max-w-[560px]">
+                    <h3 className="text-[20px] md:text-[24px] font-bold mb-3 break-keep">{a.introItems[0].heading}</h3>
+                    <p className="text-[#555] text-[15px] md:text-[17px] leading-[1.9] break-keep">{a.introItems[0].body}</p>
+                  </div>
+                  <MaturationDiagram lang={lang} />
+                </div>
+              </Reveal>
+            )}
+
+            {/* 2. 미각의 스펙트럼 + 벤다이어그램 */}
+            {a.introItems[1] && (
+              <Reveal>
+                <div className="grid md:grid-cols-2 gap-8 md:gap-14 items-center">
+                  <div className="md:order-2 max-w-[560px]">
+                    <h3 className="text-[20px] md:text-[24px] font-bold mb-3 break-keep">{a.introItems[1].heading}</h3>
+                    <p className="text-[#555] text-[15px] md:text-[17px] leading-[1.9] break-keep">{a.introItems[1].body}</p>
+                  </div>
+                  <div className="md:order-1">
+                    <CaskVenn lang={lang} />
+                  </div>
+                </div>
+              </Reveal>
+            )}
+
+            {/* 3. 연간 테마 큐레이션 */}
+            {a.introItems[2] && (
+              <Reveal>
+                <div className="max-w-[780px]">
+                  <h3 className="text-[20px] md:text-[24px] font-bold mb-3 break-keep">{a.introItems[2].heading}</h3>
+                  <p className="text-[#555] text-[15px] md:text-[17px] leading-[1.9] break-keep">{a.introItems[2].body}</p>
+                </div>
+              </Reveal>
+            )}
+          </div>
         </div>
       </section>
 
-      {/* WHY — 특장점 (에디토리얼 리스트) */}
-      <section className="border-t border-black/10">
-        <div className="max-w-[960px] mx-auto px-5 md:px-10 py-16 md:py-24">
+      {/* VALUE — 캐스크 카니발만의 고유한 가치 */}
+      <section className="bg-[#faf8f6]">
+        <div className="max-w-[1100px] mx-auto px-5 md:px-10 py-16 md:py-24">
           <Reveal>
-            <h2 className="text-[clamp(24px,3.4vw,38px)] font-extrabold mb-10 md:mb-14">{a.whyTitle}</h2>
+            <h2 className="text-[clamp(24px,3.4vw,38px)] font-extrabold leading-[1.35] break-keep mb-12 md:mb-16">
+              {a.valueTitle}
+            </h2>
           </Reveal>
-          <div className="divide-y divide-black/10">
-            {a.why.map((w, i) => {
-              const Icon = [Target, Globe2, GraduationCap, Award][i] ?? Target
-              return (
-                <Reveal key={w.title} delay={i * 0.08}>
-                  <div className="grid grid-cols-[auto_1fr] gap-5 md:gap-10 py-8 md:py-11">
-                    <Icon className="w-9 h-9 md:w-12 md:h-12 text-[#7d0b1c] shrink-0 mt-1" strokeWidth={1.5} />
-                    <div>
-                      <h3 className="text-[20px] md:text-[26px] font-bold mb-2.5 break-keep">{w.title}</h3>
-                      <p className="text-[#555] text-[16px] md:text-[18px] leading-[1.85] break-keep">{w.desc}</p>
-                    </div>
-                  </div>
-                </Reveal>
-              )
-            })}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 md:gap-x-16 gap-y-10 md:gap-y-14">
+            {a.valueItems.map((it, i) => (
+              <Reveal key={it.heading} delay={i * 0.08}>
+                <div>
+                  <h3 className="flex items-start gap-2.5 text-[19px] md:text-[23px] font-bold mb-3 break-keep">
+                    <span className="mt-[10px] w-2 h-2 rounded-full bg-[#7d0b1c] shrink-0" />
+                    <span>{it.heading}</span>
+                  </h3>
+                  <p className="text-[#555] text-[15px] md:text-[17px] leading-[1.9] break-keep pl-[18px]">{it.body}</p>
+                </div>
+              </Reveal>
+            ))}
           </div>
         </div>
       </section>
@@ -154,7 +155,7 @@ function Inner() {
       </section>
 
       {/* 2026 FORECAST */}
-      <section className="border-t border-black/10">
+      <section>
         <div className="max-w-[1000px] mx-auto px-5 md:px-10 py-16 md:py-24">
           <Reveal>
             <h2 className="text-[clamp(24px,3.4vw,38px)] font-extrabold text-center mb-12 md:mb-16">{a.forecastTitle}</h2>
@@ -173,7 +174,7 @@ function Inner() {
       </section>
 
       {/* OVERVIEW — 개요(맨 아래) */}
-      <section className="bg-[#faf8f6] border-t border-black/10">
+      <section className="bg-[#faf8f6]">
         <div className="max-w-[1440px] mx-auto px-5 md:px-10 py-16 md:py-24">
           <Reveal>
             <h2 className="text-[clamp(24px,3vw,32px)] font-extrabold">{a.overviewTitle}</h2>

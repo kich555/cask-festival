@@ -94,12 +94,10 @@ export interface Content2026 {
   aboutP: {
     title: string
     subtitle: string
-    introTagline: string
-    introBody1: string
-    introBody2: string
-    introBody3: string
-    whyTitle: string
-    why: { title: string; desc: string }[]
+    introTitle: string
+    introItems: { heading: string; body: string }[]
+    valueTitle: string
+    valueItems: { heading: string; body: string }[]
     recapEyebrow: string
     recapTitle: string
     recapBody1: string
@@ -190,19 +188,39 @@ export const content2026: Record<"ko" | "en", Content2026> = {
     aboutP: {
       title: "행사 소개",
       subtitle: "Global Cask-Aged Drinks Festa, Cask Carnival",
-      introTagline: "오직 '캐스크'에 집중한 단 하나의 글로벌 페스티벌",
-      introBody1:
-        "캐스크 카니발은 음료의 맛과 향을 좌우하는 핵심 요소, **오크통(Cask)**의 가치와 예술성을 조명하는 전문 박람회입니다.",
-      introBody2:
-        "위스키·럼·브랜디·숙성 소주 같은 증류주는 물론, 커피처럼 캐스크에서 숙성되는 다양한 음료까지 — 캐스크가 빚어내는 풍미의 세계를 폭넓게 다룹니다.",
-      introBody3:
-        "전 세계의 증류소와 독립병입업자, 프리미엄 바, 수입·유통사, 그리고 메이커가 한자리에 모이고, 마스터클래스·테이스팅 세션·부스를 통해 보고, 마시고, 배우는 모든 순간을 한 공간에 담았습니다.",
-      whyTitle: "캐스크 카니발이 특별한 이유",
-      why: [
-        { title: "캐스크라는 단 하나의 주제", desc: "수많은 음료 행사 중 오직 '캐스크 숙성'에 집중합니다. 캐스크가 만들어내는 맛의 차이를 가장 깊이 있게 탐구할 수 있습니다." },
-        { title: "글로벌 라인업", desc: "세계 각국의 증류소, 독립병입업자(IB), 프리미엄 바가 참여해 국내에서 만나기 어려운 숙성 원액을 선보입니다." },
-        { title: "심화된 프로그램", desc: "브랜드 관계자가 직접 이끄는 마스터클래스와 테마 캐스크 테이스팅 세션으로 한 단계 깊은 경험을 제공합니다." },
-        { title: "검증된 무대", desc: "2025년 전 회차 티켓과 마스터클래스 전석 매진. 고관여 애호가와 업계 관계자가 모이는 신뢰받는 플랫폼입니다." },
+      introTitle: "캐스크가 빚어내는 풍미의 세계, 캐스크 카니발",
+      introItems: [
+        {
+          heading: "숙성의 가치를 조명하는 전문 박람회",
+          body: "캐스크 카니발은 한 잔의 음료가 완성되기까지 맛과 향을 결정짓는 핵심 요소, 캐스크의 가치를 조명하는 글로벌 숙성주 전문 박람회입니다. 시간과 나무가 결합하여 만들어내는 숙성의 과정을 탐구하고 음료 본연의 철학을 공유합니다.",
+        },
+        {
+          heading: "장르를 넘나드는 미각의 스펙트럼",
+          body: "위스키, 럼, 브랜디, 프리미엄 숙성 소주는 물론 특별한 숙성을 거친 스페셜티 커피에 이르기까지 폭넓은 카테고리를 다룹니다. 각기 다른 재료가 캐스크라는 매개체를 통해 어떻게 새로운 풍미를 얻는지 한자리에서 선보입니다.",
+        },
+        {
+          heading: "깊이를 더하는 연간 테마 큐레이션",
+          body: "매년 단 하나의 캐스크를 메인 테마로 선정하여 심도 있는 큐레이션 전시를 진행합니다. 관람객은 오크통이 빚어내는 미세한 풍미의 변화를 하나의 테마 아래서 차분하고 몰입감 있게 경험할 수 있습니다.",
+        },
+      ],
+      valueTitle: "캐스크 카니발만의 고유한 가치",
+      valueItems: [
+        {
+          heading: "엄선된 글로벌 브랜드 라인업",
+          body: "전 세계 10개국 이상, 30여 개 이상의 증류소와 독립 병입자, 프리미엄 바가 참여하여 수준 높은 라인업을 완성합니다. 정규 라인업과 더불어 현장에서만 공개되는 '캐스크 카니발 익스클루시브 보틀'을 통해 차별화된 시음 경험을 제공합니다.",
+        },
+        {
+          heading: "경험의 깊이를 더하는 심화 프로그램",
+          body: "각 브랜드를 대표하는 마스터 디스틸러와 업계 전문가들이 이끄는 프리미엄 마스터클래스를 진행합니다. 소수 정예 예약제로 운영되는 클래스와 테마별 테이스팅 세션을 통해 숙성주에 대한 식견을 나눕니다.",
+        },
+        {
+          heading: "시간을 담아내는 캐스크 프로젝트",
+          body: "국내 유수 증류소들과 동일한 캐스크로 숙성을 진행해 각기 다른 개성을 담아내는 협업을 선보입니다. 또한, 매년 행사에서 남은 원액을 하나의 오크통에 모아 솔레라 방식으로 보존하는 '인피니티 캐스크' 프로젝트를 통해 행사의 고유한 역사를 기록해 나갑니다.",
+        },
+        {
+          heading: "업계와 애호가를 잇는 비즈니스 플랫폼",
+          body: "고관여 애호가들에게는 새로운 미식의 발견을, 수입 및 유통사에게는 B2B 매칭 서비스를 통해 실질적인 비즈니스 교류의 기회를 제공합니다. 전문가와 대중이 자연스럽게 소통하는 스피릿 네트워크의 장을 마련합니다.",
+        },
       ],
       recapEyebrow: "2025 Cask Carnival",
       recapTitle: "2025 RECAP",
@@ -365,19 +383,39 @@ export const content2026: Record<"ko" | "en", Content2026> = {
     aboutP: {
       title: "About",
       subtitle: "Global Cask-Aged Drinks Festa, Cask Carnival",
-      introTagline: "The one global festival devoted entirely to the cask",
-      introBody1:
-        "Cask Carnival is a specialized expo spotlighting the value and artistry of the **oak cask** — the single element that shapes the flavor and aroma of what we drink.",
-      introBody2:
-        "From spirits like whisky, rum, brandy, and aged soju to coffee and other drinks matured in casks, we explore the full world of flavor the cask creates.",
-      introBody3:
-        "Distilleries, independent bottlers, premium bars, importers & distributors, and makers from around the world gather here — and through master classes, tasting sessions, and booths, every moment to see, taste, and learn comes together in one place.",
-      whyTitle: "What Makes It Special",
-      why: [
-        { title: "A single focus: the cask", desc: "Among countless drinks events, we focus solely on cask maturation — the deepest way to explore the difference a cask makes." },
-        { title: "A global lineup", desc: "Distilleries, independent bottlers (IB), and premium bars from across the world present matured spirits rarely found in Korea." },
-        { title: "In-depth programs", desc: "Master classes led by the brands themselves and themed cask tasting sessions take the experience a step further." },
-        { title: "A proven stage", desc: "In 2025, every ticket and master class sold out — a trusted platform where dedicated enthusiasts and industry professionals meet." },
+      introTitle: "Cask Carnival — the world of flavor the cask creates",
+      introItems: [
+        {
+          heading: "A specialized expo spotlighting the value of maturation",
+          body: "Cask Carnival is a global expo for matured drinks that spotlights the cask — the key element shaping flavor and aroma until a drink is complete. We explore the maturation born from time and wood, and share the philosophy behind each drink.",
+        },
+        {
+          heading: "A spectrum of taste across genres",
+          body: "From whisky, rum, brandy, and premium aged soju to specialty coffee with unique maturation, we cover a wide range of categories — showing how different ingredients gain new flavors through the cask.",
+        },
+        {
+          heading: "A yearly theme curation that adds depth",
+          body: "Each year we select a single cask as the main theme for an in-depth curated exhibition. Visitors experience the subtle shifts in flavor the oak cask creates — calmly and immersively, under one theme.",
+        },
+      ],
+      valueTitle: "What only Cask Carnival offers",
+      valueItems: [
+        {
+          heading: "A curated global brand lineup",
+          body: "More than 30 distilleries, independent bottlers, and premium bars from over 10 countries complete a high-caliber lineup. Beyond the regular lineup, 'Cask Carnival Exclusive Bottles' revealed only on-site offer a distinctive tasting experience.",
+        },
+        {
+          heading: "In-depth programs that deepen the experience",
+          body: "Premium master classes led by each brand's master distillers and industry experts. Through reservation-only, small-group classes and themed tasting sessions, we share deeper insight into matured drinks.",
+        },
+        {
+          heading: "The Cask Project that captures time",
+          body: "We collaborate with leading Korean distilleries, maturing in the same cask to capture distinct characters. And through the 'Infinity Cask' project — gathering each year's remaining spirits into one cask preserved solera-style — we record the event's own history.",
+        },
+        {
+          heading: "A business platform linking industry and enthusiasts",
+          body: "New culinary discoveries for dedicated enthusiasts, and B2B matching for importers and distributors — creating a spirits network where experts and the public connect naturally.",
+        },
       ],
       recapEyebrow: "2025 Cask Carnival",
       recapTitle: "2025 RECAP",
