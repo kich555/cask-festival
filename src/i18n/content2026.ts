@@ -196,7 +196,7 @@ export const content2026: Record<"ko" | "en", Content2026> = {
         },
         {
           heading: "장르를 넘나드는 미각의 스펙트럼",
-          body: "위스키, 럼, 브랜디, 프리미엄 숙성 소주는 물론 커피에 이르기까지, 캐스크 숙성을 거친 다양한 제품을 폭넓게 다룹니다. 각기 다른 재료가 캐스크라는 매개체를 통해 어떻게 새로운 풍미를 얻는지 한자리에서 선보입니다.",
+          body: "위스키, 럼, 브랜디, 프리미엄 숙성 소주는 물론 커피에 이르기까지, 캐스크 숙성을 거친 다양한 제품을 폭넓게 다룹니다.||각기 다른 재료가 캐스크라는 매개체를 통해 어떻게 새로운 풍미를 얻는지 한자리에서 선보입니다.",
         },
         {
           heading: "깊이를 더하는 연간 테마 큐레이션",
@@ -207,15 +207,15 @@ export const content2026: Record<"ko" | "en", Content2026> = {
       valueItems: [
         {
           heading: "엄선된 글로벌 브랜드 라인업",
-          body: "전 세계 5개국 이상, 30여 개 이상의 증류소와 독립병입자, [[프리미엄 바]]가 참여하여 수준 높은 라인업을 완성합니다. 정규 라인업과 더불어 현장에서만 공개되는 '캐스크 카니발 익스클루시브 보틀'을 통해 차별화된 시음 경험을 제공합니다.",
+          body: "전 세계 5개국 이상, 30여 개 이상의 증류소와 독립병입자, [[프리미엄 바]]가 참여하여 수준 높은 라인업을 완성합니다.||정규 라인업과 더불어 현장에서만 공개되는 캐스크 카니발 익스클루시브를 통해 차별화된 시음 경험을 제공합니다.",
         },
         {
           heading: "경험의 깊이를 더하는 심화 프로그램",
-          body: "각 브랜드를 대표하는 마스터 디스틸러와 업계 전문가들이 이끄는 프리미엄 마스터클래스를 진행합니다. 소수 정예 예약제로 운영되는 클래스와 테마별 테이스팅 세션을 통해 숙성주에 대한 식견을 나눕니다.",
+          body: "각 브랜드를 대표하는 마스터 디스틸러와 업계 전문가들이 이끄는 프리미엄 마스터클래스를 진행합니다.||소수 정예 예약제로 운영되는 클래스와 테마별 테이스팅 세션을 통해 숙성주에 대한 식견을 나눕니다.",
         },
         {
           heading: "시간을 담아내는 캐스크 프로젝트",
-          body: "국내 유수 증류소들과 동일한 캐스크로 숙성을 진행해 각기 다른 개성을 담아내는 협업을 선보입니다. 또한, 매년 행사에서 남은 원액을 하나의 오크통에 모아 솔레라 방식으로 보존하는 '인피니티 캐스크' 프로젝트를 통해 행사의 고유한 역사를 기록해 나갑니다.",
+          body: "국내 유수 증류소들과 동일한 캐스크로 숙성을 진행해 각기 다른 개성을 담아내는 협업을 선보입니다.||또한 매년 행사에서 남은 원액을 하나의 오크통에 모아 솔레라 방식으로 보존하는 인피니티 캐스크 프로젝트를 통해 행사의 고유한 역사를 기록해 나갑니다.",
         },
         {
           heading: "업계와 애호가를 잇는 비즈니스 플랫폼",
@@ -402,7 +402,7 @@ export const content2026: Record<"ko" | "en", Content2026> = {
       valueItems: [
         {
           heading: "A curated global brand lineup",
-          body: "More than 30 distilleries, independent bottlers, and premium bars from over 5 countries complete a high-caliber lineup. Beyond the regular lineup, 'Cask Carnival Exclusive Bottles' revealed only on-site offer a distinctive tasting experience.",
+          body: "More than 30 distilleries, independent bottlers, and premium bars from over 5 countries complete a high-caliber lineup. Beyond the regular lineup, Cask Carnival Exclusive bottlings revealed only on-site offer a distinctive tasting experience.",
         },
         {
           heading: "In-depth programs that deepen the experience",
@@ -410,7 +410,7 @@ export const content2026: Record<"ko" | "en", Content2026> = {
         },
         {
           heading: "The Cask Project that captures time",
-          body: "We collaborate with leading Korean distilleries, maturing in the same cask to capture distinct characters. And through the 'Infinity Cask' project — gathering each year's remaining spirits into one cask preserved solera-style — we record the event's own history.",
+          body: "We collaborate with leading Korean distilleries, maturing in the same cask to capture distinct characters. And through the Infinity Cask project — gathering each year's remaining spirits into one cask preserved solera-style — we record the event's own history.",
         },
         {
           heading: "A business platform linking industry and enthusiasts",
