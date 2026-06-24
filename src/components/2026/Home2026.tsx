@@ -104,7 +104,7 @@ function HomeContent() {
           <p className="uppercase text-[#7d0b1c] font-extrabold tracking-tight leading-[1.15] text-[clamp(20px,2.4vw,30px)] mb-[clamp(28px,4.5vw,60px)]">
             {c.teaser.catch}
           </p>
-          <h2 className="text-[clamp(24px,3vw,36px)] font-extrabold leading-[1.45] mb-[clamp(22px,3.6vw,44px)]">
+          <h2 className="text-[clamp(17px,3vw,36px)] font-extrabold leading-[1.5] mb-[clamp(22px,3.6vw,44px)] break-keep">
             {c.teaser.lead1}
             <br />
             {c.teaser.lead2}
