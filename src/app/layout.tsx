@@ -58,8 +58,8 @@ export const metadata: Metadata = {
     ttl: 86400, // 24 hours
     images: [
       {
-        url: "/og-image.png",
-        secureUrl: "/og-image.png",
+        url: "/og-image-2026.png",
+        secureUrl: "/og-image-2026.png",
         width: 1200,
         height: 630,
         alt: "CASK CARNIVAL 2026",
@@ -79,7 +79,7 @@ export const metadata: Metadata = {
     title: "CASK CARNIVAL 2026",
     description:
       "2026년 11월 21일 개최되는 CASK CARNIVAL. 세계 각국의 Cask 숙성 증류주들을 만나보세요.",
-    images: ["/og-image.png"],
+    images: ["/og-image-2026.png"],
   },
   icons: {
     icon: [
