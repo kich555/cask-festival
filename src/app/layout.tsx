@@ -59,7 +59,7 @@ export const metadata: Metadata = {
     images: [
       {
         url: "/og-image-2026.png",
-        secureUrl: "/og-image-2026.png",
+        secureUrl: `${siteUrl}/og-image-2026.png`,
         width: 1200,
         height: 630,
         alt: "CASK CARNIVAL 2026",
