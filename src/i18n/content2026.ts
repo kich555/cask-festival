@@ -97,6 +97,7 @@ export interface Content2026 {
     introTagline: string
     introBody1: string
     introBody2: string
+    introBody3: string
     whyTitle: string
     why: { title: string; desc: string }[]
     recapEyebrow: string
@@ -194,6 +195,8 @@ export const content2026: Record<"ko" | "en", Content2026> = {
         "캐스크 카니발은 위스키의 맛과 향을 70% 이상 좌우하는 핵심 요소, '오크통(Cask)'의 가치와 예술성을 조명하는 전문 주류 박람회입니다.",
       introBody2:
         "전 세계의 유명 증류소와 인디펜던트 보틀러, 프리미엄 바가 한자리에 모여 각자의 철학이 담긴 다채로운 숙성 원액을 선보입니다. 단순한 시음을 넘어, 캐스크가 빚어내는 풍미의 깊이와 그 뒤의 이야기를 함께 경험하는 자리입니다.",
+      introBody3:
+        "브랜드 관계자가 직접 이끄는 마스터클래스, 테마 캐스크를 비교 시음하는 테이스팅 세션, 그리고 메이커와 마주 앉는 부스까지 — 보고, 마시고, 배우는 모든 순간을 한 공간에 담았습니다.",
       whyTitle: "왜 캐스크 카니발인가",
       why: [
         { title: "캐스크라는 단 하나의 주제", desc: "수많은 주류 행사 중 오직 '캐스크 숙성'에 집중합니다. 캐스크가 만들어내는 맛의 차이를 가장 깊이 있게 탐구할 수 있습니다." },
@@ -207,15 +210,17 @@ export const content2026: Record<"ko" | "en", Content2026> = {
       recapBody2: "브랜드 라인업과 타임라인, 현장 사진을 확인해보세요!",
       recapBtn: "2025 다시보기 →",
       recapStats: [
-        { value: "27+", label: "참가 브랜드" },
-        { value: "1,200+", label: "관람객" },
-        { value: "100%", label: "티켓 매진" },
+        { value: "27", label: "참가 부스" },
+        { value: "1,000+", label: "방문객" },
+        { value: "16", label: "마스터클래스" },
+        { value: "320+", label: "클래스 참관객" },
       ],
       forecastTitle: "2026, 이렇게 준비합니다",
       forecastStats: [
-        { value: "50~60", label: "참가 브랜드" },
-        { value: "3,000~4,000", label: "예상 방문객" },
-        { value: "24회", label: "마스터클래스" },
+        { value: "60+", label: "참가 부스" },
+        { value: "3,000+", label: "예상 방문객" },
+        { value: "24", label: "마스터클래스" },
+        { value: "700+", label: "예상 참관객" },
       ],
       overviewTitle: "캐스크 카니발 2026 개요",
       rowName: "명칭",
@@ -365,6 +370,8 @@ export const content2026: Record<"ko" | "en", Content2026> = {
         "Cask Carnival is a specialized drinks expo spotlighting the value and artistry of the oak cask — the single element that shapes over 70% of a whisky's flavor and aroma.",
       introBody2:
         "Renowned distilleries, independent bottlers, and premium bars from around the world gather to present matured spirits that embody their own philosophies. Beyond simple tasting, it is a place to experience the depth of flavor the cask creates — and the stories behind it.",
+      introBody3:
+        "Master classes led by the brands themselves, tasting sessions comparing themed casks, and booths where you sit down with the makers — every moment to see, taste, and learn, all in one place.",
       whyTitle: "Why Cask Carnival",
       why: [
         { title: "A single focus: the cask", desc: "Among countless drinks events, we focus solely on cask maturation — the deepest way to explore the difference a cask makes." },
@@ -378,15 +385,17 @@ export const content2026: Record<"ko" | "en", Content2026> = {
       recapBody2: "explore the brand lineup, timeline, and event photos!",
       recapBtn: "Revisit 2025 →",
       recapStats: [
-        { value: "27+", label: "Exhibitors" },
-        { value: "1,200+", label: "Visitors" },
-        { value: "100%", label: "Tickets sold out" },
+        { value: "27", label: "Booths" },
+        { value: "1,000+", label: "Visitors" },
+        { value: "16", label: "Master classes" },
+        { value: "320+", label: "Class attendees" },
       ],
       forecastTitle: "Preparing for 2026",
       forecastStats: [
-        { value: "50–60", label: "Exhibitors" },
-        { value: "3,000–4,000", label: "Expected visitors" },
+        { value: "60+", label: "Booths" },
+        { value: "3,000+", label: "Expected visitors" },
         { value: "24", label: "Master classes" },
+        { value: "700+", label: "Expected attendees" },
       ],
       overviewTitle: "Cask Carnival 2026 Overview",
       rowName: "Event",

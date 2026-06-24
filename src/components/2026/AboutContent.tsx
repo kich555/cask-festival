@@ -25,31 +25,36 @@ function Inner() {
       <PageHeader2026 title={a.title} subtitle={a.subtitle} watermark="ABOUT" />
 
       {/* INTRO — 취지 */}
-      <section className="max-w-[1000px] mx-auto px-5 md:px-10 py-16 md:py-24 text-center">
-        <h2 className="text-[clamp(24px,4vw,42px)] font-extrabold leading-[1.4] whitespace-pre-line break-keep">
+      <section className="max-w-[920px] mx-auto px-5 md:px-10 pt-20 md:pt-28 pb-16 md:pb-20 text-center">
+        <h2 className="text-[clamp(26px,4.4vw,46px)] font-extrabold leading-[1.35] whitespace-pre-line break-keep">
           {a.introTagline}
         </h2>
-        <div className="w-12 h-[3px] bg-[#7d0b1c] mx-auto my-8 md:my-10" />
-        <p className="text-[#444] text-[clamp(16px,1.4vw,18px)] leading-[1.9] max-w-[760px] mx-auto break-keep text-balance">
+        <div className="w-14 h-[3px] bg-[#7d0b1c] mx-auto my-9 md:my-12" />
+        <p className="text-[#3f3f3f] text-[clamp(16px,1.5vw,19px)] leading-[1.95] break-keep text-balance">
           {a.introBody1}
         </p>
-        <p className="text-[#444] text-[clamp(16px,1.4vw,18px)] leading-[1.9] max-w-[760px] mx-auto mt-4 break-keep text-balance">
+        <p className="text-[#3f3f3f] text-[clamp(16px,1.5vw,19px)] leading-[1.95] mt-5 break-keep text-balance">
           {a.introBody2}
+        </p>
+        <p className="text-[#3f3f3f] text-[clamp(16px,1.5vw,19px)] leading-[1.95] mt-5 break-keep text-balance">
+          {a.introBody3}
         </p>
       </section>
 
-      {/* WHY — 특장점 */}
-      <section className="bg-[#faf8f6]">
-        <div className="max-w-[1100px] mx-auto px-5 md:px-10 py-16 md:py-24">
-          <h2 className="text-[clamp(22px,3vw,32px)] font-extrabold text-center mb-10 md:mb-14">{a.whyTitle}</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-6">
+      {/* WHY — 특장점 (에디토리얼 리스트) */}
+      <section className="border-t border-black/10">
+        <div className="max-w-[960px] mx-auto px-5 md:px-10 py-16 md:py-24">
+          <h2 className="text-[clamp(24px,3.4vw,38px)] font-extrabold mb-10 md:mb-14">{a.whyTitle}</h2>
+          <div className="divide-y divide-black/10">
             {a.why.map((w, i) => (
-              <div key={w.title} className="bg-white border border-black/10 rounded-lg p-7 md:p-8">
-                <div className="text-[#7d0b1c] font-extrabold text-[20px] mb-3">
+              <div key={w.title} className="grid grid-cols-[auto_1fr] gap-5 md:gap-12 py-8 md:py-11">
+                <div className="text-[#7d0b1c]/25 font-extrabold text-[40px] md:text-[64px] leading-none tracking-tight">
                   {String(i + 1).padStart(2, "0")}
                 </div>
-                <h3 className="text-[18px] md:text-[20px] font-bold mb-2 break-keep">{w.title}</h3>
-                <p className="text-[#666] text-[15px] leading-[1.8] break-keep">{w.desc}</p>
+                <div className="pt-1">
+                  <h3 className="text-[20px] md:text-[26px] font-bold mb-2.5 break-keep">{w.title}</h3>
+                  <p className="text-[#555] text-[16px] md:text-[18px] leading-[1.85] break-keep">{w.desc}</p>
+                </div>
               </div>
             ))}
           </div>
@@ -58,12 +63,12 @@ function Inner() {
 
       {/* 2025 RECAP */}
       <section className="bg-[#ea5514] text-white">
-        <div className="max-w-[1100px] mx-auto px-5 md:px-10 py-16 md:py-20">
+        <div className="max-w-[1100px] mx-auto px-5 md:px-10 py-16 md:py-24">
           <div className="flex flex-col md:flex-row md:items-center gap-7 md:gap-10">
             <div className="md:flex-1">
-              <h2 className="text-[30px] font-extrabold mb-4">{a.recapTitle}</h2>
-              <p className="text-white/90 text-[16px] break-keep">{a.recapBody1}</p>
-              <p className="text-white/90 text-[16px] break-keep">{a.recapBody2}</p>
+              <h2 className="text-[clamp(26px,3vw,36px)] font-extrabold mb-4">{a.recapTitle}</h2>
+              <p className="text-white/90 text-[16px] md:text-[17px] break-keep">{a.recapBody1}</p>
+              <p className="text-white/90 text-[16px] md:text-[17px] break-keep">{a.recapBody2}</p>
             </div>
             <Link
               href={`/2025${qs}`}
@@ -72,11 +77,11 @@ function Inner() {
               {a.recapBtn}
             </Link>
           </div>
-          <div className="grid grid-cols-3 gap-4 mt-10 pt-8 border-t border-white/25">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-x-4 gap-y-8 mt-12 pt-10 border-t border-white/25">
             {a.recapStats.map((s) => (
               <div key={s.label} className="text-center">
-                <div className="text-[clamp(28px,5vw,44px)] font-extrabold leading-none">{s.value}</div>
-                <div className="text-white/85 text-[13px] md:text-[15px] mt-2 break-keep">{s.label}</div>
+                <div className="text-[clamp(34px,5vw,52px)] font-extrabold leading-none">{s.value}</div>
+                <div className="text-white/85 text-[13px] md:text-[15px] mt-2.5 break-keep">{s.label}</div>
               </div>
             ))}
           </div>
@@ -84,20 +89,22 @@ function Inner() {
       </section>
 
       {/* 2026 FORECAST */}
-      <section className="max-w-[1100px] mx-auto px-5 md:px-10 py-16 md:py-24">
-        <h2 className="text-[clamp(22px,3vw,32px)] font-extrabold text-center mb-10 md:mb-14">{a.forecastTitle}</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-6">
-          {a.forecastStats.map((s) => (
-            <div key={s.label} className="border border-black/10 border-t-[3px] border-t-[#7d0b1c] rounded-md p-8 text-center">
-              <div className="text-[clamp(30px,4vw,44px)] font-extrabold text-[#7d0b1c] leading-none">{s.value}</div>
-              <div className="text-[#666] text-[15px] mt-3 break-keep">{s.label}</div>
-            </div>
-          ))}
+      <section className="border-t border-black/10">
+        <div className="max-w-[1000px] mx-auto px-5 md:px-10 py-16 md:py-24">
+          <h2 className="text-[clamp(24px,3.4vw,38px)] font-extrabold text-center mb-12 md:mb-16">{a.forecastTitle}</h2>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-12 max-w-[920px] mx-auto">
+            {a.forecastStats.map((s) => (
+              <div key={s.label} className="text-center">
+                <div className="text-[clamp(34px,5vw,54px)] font-extrabold text-[#7d0b1c] leading-none">{s.value}</div>
+                <div className="text-[#666] text-[14px] md:text-[16px] mt-3 break-keep">{s.label}</div>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
       {/* OVERVIEW — 개요(맨 아래) */}
-      <section className="bg-[#faf8f6]">
+      <section className="bg-[#faf8f6] border-t border-black/10">
         <div className="max-w-[1440px] mx-auto px-5 md:px-10 py-16 md:py-24">
           <h2 className="text-[clamp(24px,3vw,32px)] font-extrabold">{a.overviewTitle}</h2>
           <div className="h-px bg-black/15 my-7" />
