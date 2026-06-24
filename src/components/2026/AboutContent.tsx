@@ -1,6 +1,7 @@
 "use client"
 
 import { motion } from "framer-motion"
+import { Award, Globe2, GraduationCap, Target } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 import { Suspense } from "react"
@@ -60,16 +61,40 @@ function Inner() {
     <div className="bg-white text-[#1a1a1a]">
       <PageHeader2026 title={a.title} subtitle={a.subtitle} watermark="ABOUT" />
 
-      {/* INTRO — 취지 (좌측 정렬) */}
-      <section className="max-w-[920px] mx-auto px-5 md:px-10 pt-20 md:pt-28 pb-16 md:pb-20">
-        <Reveal>
-          <h2 className="text-[clamp(20px,2.8vw,34px)] font-extrabold leading-[1.4] break-keep mb-8 md:mb-10">
-            {a.introTagline}
-          </h2>
-          <p className="text-[#3f3f3f] text-[clamp(16px,1.5vw,19px)] leading-[1.95] break-keep text-pretty">{renderBold(a.introBody1)}</p>
-          <p className="text-[#3f3f3f] text-[clamp(16px,1.5vw,19px)] leading-[1.95] mt-5 break-keep text-pretty">{renderBold(a.introBody2)}</p>
-          <p className="text-[#3f3f3f] text-[clamp(16px,1.5vw,19px)] leading-[1.95] mt-5 break-keep text-pretty">{renderBold(a.introBody3)}</p>
-        </Reveal>
+      {/* INTRO — 취지 (좌측 정렬 + 디자인 요소) */}
+      <section className="relative overflow-hidden">
+        {/* 배경 워터마크 로고 (은은한 그라데이션) */}
+        <div
+          className="hidden md:block absolute right-[-60px] top-1/2 -translate-y-1/2 w-[clamp(280px,40vw,560px)] opacity-[0.05] pointer-events-none select-none"
+          style={{
+            WebkitMaskImage: "linear-gradient(105deg, transparent 0%, #000 65%)",
+            maskImage: "linear-gradient(105deg, transparent 0%, #000 65%)",
+          }}
+        >
+          <Image src="/2026/logo_background.png" alt="" width={601} height={706} className="w-full h-auto" />
+        </div>
+
+        <div className="relative max-w-[940px] mx-auto px-5 md:px-10 pt-20 md:pt-28 pb-16 md:pb-24">
+          <Reveal>
+            <div className="flex items-start gap-4 md:gap-5">
+              <span className="mt-1.5 md:mt-2 w-[5px] h-[clamp(42px,5vw,64px)] bg-[#7d0b1c] rounded-full shrink-0" />
+              <h2 className="text-[clamp(20px,2.7vw,34px)] font-extrabold leading-[1.4] break-keep">
+                {a.introTagline}
+              </h2>
+            </div>
+            <div className="mt-9 md:mt-12 md:pl-9 max-w-[660px] space-y-5">
+              <p className="text-[#3f3f3f] text-[clamp(15px,1.3vw,18px)] leading-[1.95] break-keep text-balance">
+                {renderBold(a.introBody1)}
+              </p>
+              <p className="text-[#3f3f3f] text-[clamp(15px,1.3vw,18px)] leading-[1.95] break-keep text-balance">
+                {renderBold(a.introBody2)}
+              </p>
+              <p className="text-[#3f3f3f] text-[clamp(15px,1.3vw,18px)] leading-[1.95] break-keep text-balance">
+                {renderBold(a.introBody3)}
+              </p>
+            </div>
+          </Reveal>
+        </div>
       </section>
 
       {/* WHY — 특장점 (에디토리얼 리스트) */}
@@ -79,19 +104,20 @@ function Inner() {
             <h2 className="text-[clamp(24px,3.4vw,38px)] font-extrabold mb-10 md:mb-14">{a.whyTitle}</h2>
           </Reveal>
           <div className="divide-y divide-black/10">
-            {a.why.map((w, i) => (
-              <Reveal key={w.title} delay={i * 0.08}>
-                <div className="grid grid-cols-[auto_1fr] gap-5 md:gap-12 py-8 md:py-11">
-                  <div className="text-[#7d0b1c]/25 font-extrabold text-[40px] md:text-[64px] leading-none tracking-tight">
-                    {String(i + 1).padStart(2, "0")}
+            {a.why.map((w, i) => {
+              const Icon = [Target, Globe2, GraduationCap, Award][i] ?? Target
+              return (
+                <Reveal key={w.title} delay={i * 0.08}>
+                  <div className="grid grid-cols-[auto_1fr] gap-5 md:gap-10 py-8 md:py-11">
+                    <Icon className="w-9 h-9 md:w-12 md:h-12 text-[#7d0b1c] shrink-0 mt-1" strokeWidth={1.5} />
+                    <div>
+                      <h3 className="text-[20px] md:text-[26px] font-bold mb-2.5 break-keep">{w.title}</h3>
+                      <p className="text-[#555] text-[16px] md:text-[18px] leading-[1.85] break-keep">{w.desc}</p>
+                    </div>
                   </div>
-                  <div className="pt-1">
-                    <h3 className="text-[20px] md:text-[26px] font-bold mb-2.5 break-keep">{w.title}</h3>
-                    <p className="text-[#555] text-[16px] md:text-[18px] leading-[1.85] break-keep">{w.desc}</p>
-                  </div>
-                </div>
-              </Reveal>
-            ))}
+                </Reveal>
+              )
+            })}
           </div>
         </div>
       </section>

@@ -194,7 +194,7 @@ export const content2026: Record<"ko" | "en", Content2026> = {
       introBody1:
         "캐스크 카니발은 음료의 맛과 향을 좌우하는 핵심 요소, **오크통(Cask)**의 가치와 예술성을 조명하는 전문 박람회입니다.",
       introBody2:
-        "위스키·럼·브랜디 같은 증류주는 물론, **숙성 소주**와 커피처럼 캐스크에서 숙성되는 다양한 음료까지 — 캐스크가 빚어내는 풍미의 세계를 폭넓게 다룹니다.",
+        "위스키·럼·브랜디·숙성 소주 같은 증류주는 물론, 커피처럼 캐스크에서 숙성되는 다양한 음료까지 — 캐스크가 빚어내는 풍미의 세계를 폭넓게 다룹니다.",
       introBody3:
         "전 세계의 증류소와 독립병입업자, 프리미엄 바, 수입·유통사, 그리고 메이커가 한자리에 모이고, 마스터클래스·테이스팅 세션·부스를 통해 보고, 마시고, 배우는 모든 순간을 한 공간에 담았습니다.",
       whyTitle: "캐스크 카니발이 특별한 이유",
@@ -369,7 +369,7 @@ export const content2026: Record<"ko" | "en", Content2026> = {
       introBody1:
         "Cask Carnival is a specialized expo spotlighting the value and artistry of the **oak cask** — the single element that shapes the flavor and aroma of what we drink.",
       introBody2:
-        "From spirits like whisky, rum, and brandy to **aged soju**, coffee, and other drinks matured in casks, we explore the full world of flavor the cask creates.",
+        "From spirits like whisky, rum, brandy, and aged soju to coffee and other drinks matured in casks, we explore the full world of flavor the cask creates.",
       introBody3:
         "Distilleries, independent bottlers, premium bars, importers & distributors, and makers from around the world gather here — and through master classes, tasting sessions, and booths, every moment to see, taste, and learn comes together in one place.",
       whyTitle: "What Makes It Special",
