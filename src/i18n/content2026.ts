@@ -190,16 +190,16 @@ export const content2026: Record<"ko" | "en", Content2026> = {
     aboutP: {
       title: "행사 소개",
       subtitle: "Global Cask-Aged Drinks Festa, Cask Carnival",
-      introTagline: "오직 '캐스크'에 집중한\n단 하나의 글로벌 주류 페스티벌",
+      introTagline: "오직 '캐스크'에 집중한\n단 하나의 글로벌 페스티벌",
       introBody1:
-        "캐스크 카니발은 위스키의 맛과 향을 70% 이상 좌우하는 핵심 요소, '오크통(Cask)'의 가치와 예술성을 조명하는 전문 주류 박람회입니다.",
+        "캐스크 카니발은 음료의 맛과 향을 좌우하는 핵심 요소, '오크통(Cask)'의 가치와 예술성을 조명하는 전문 박람회입니다.",
       introBody2:
-        "전 세계의 유명 증류소와 인디펜던트 보틀러, 프리미엄 바가 한자리에 모여 각자의 철학이 담긴 다채로운 숙성 원액을 선보입니다. 단순한 시음을 넘어, 캐스크가 빚어내는 풍미의 깊이와 그 뒤의 이야기를 함께 경험하는 자리입니다.",
+        "위스키·럼·브랜디 같은 증류주는 물론, 커피를 비롯해 캐스크에서 숙성되는 다양한 음료까지 — 캐스크가 빚어내는 풍미의 세계를 폭넓게 다룹니다.",
       introBody3:
-        "브랜드 관계자가 직접 이끄는 마스터클래스, 테마 캐스크를 비교 시음하는 테이스팅 세션, 그리고 메이커와 마주 앉는 부스까지 — 보고, 마시고, 배우는 모든 순간을 한 공간에 담았습니다.",
-      whyTitle: "왜 캐스크 카니발인가",
+        "전 세계의 증류소와 인디펜던트 보틀러, 프리미엄 바, 메이커가 한자리에 모이고, 마스터클래스·테이스팅 세션·부스를 통해 보고, 마시고, 배우는 모든 순간을 한 공간에 담았습니다.",
+      whyTitle: "캐스크 카니발이 특별한 이유",
       why: [
-        { title: "캐스크라는 단 하나의 주제", desc: "수많은 주류 행사 중 오직 '캐스크 숙성'에 집중합니다. 캐스크가 만들어내는 맛의 차이를 가장 깊이 있게 탐구할 수 있습니다." },
+        { title: "캐스크라는 단 하나의 주제", desc: "수많은 음료 행사 중 오직 '캐스크 숙성'에 집중합니다. 캐스크가 만들어내는 맛의 차이를 가장 깊이 있게 탐구할 수 있습니다." },
         { title: "글로벌 라인업", desc: "세계 각국의 증류소, 독립병입자(IB), 프리미엄 바가 참여해 국내에서 만나기 어려운 숙성 원액을 선보입니다." },
         { title: "심화된 프로그램", desc: "브랜드 관계자가 직접 이끄는 마스터클래스와 테마 캐스크 테이스팅 세션으로 한 단계 깊은 경험을 제공합니다." },
         { title: "검증된 무대", desc: "2025년 전 회차 티켓과 마스터클래스 전석 매진. 고관여 애호가와 업계 관계자가 모이는 신뢰받는 플랫폼입니다." },
@@ -365,14 +365,14 @@ export const content2026: Record<"ko" | "en", Content2026> = {
     aboutP: {
       title: "About",
       subtitle: "Global Cask-Aged Drinks Festa, Cask Carnival",
-      introTagline: "The one global drinks festival\ndevoted entirely to the cask",
+      introTagline: "The one global festival\ndevoted entirely to the cask",
       introBody1:
-        "Cask Carnival is a specialized drinks expo spotlighting the value and artistry of the oak cask — the single element that shapes over 70% of a whisky's flavor and aroma.",
+        "Cask Carnival is a specialized expo spotlighting the value and artistry of the oak cask — the single element that shapes the flavor and aroma of what we drink.",
       introBody2:
-        "Renowned distilleries, independent bottlers, and premium bars from around the world gather to present matured spirits that embody their own philosophies. Beyond simple tasting, it is a place to experience the depth of flavor the cask creates — and the stories behind it.",
+        "From spirits like whisky, rum, and brandy to coffee and other drinks matured in casks, we explore the full world of flavor the cask creates.",
       introBody3:
-        "Master classes led by the brands themselves, tasting sessions comparing themed casks, and booths where you sit down with the makers — every moment to see, taste, and learn, all in one place.",
-      whyTitle: "Why Cask Carnival",
+        "Distilleries, independent bottlers, premium bars, and makers from around the world gather here — and through master classes, tasting sessions, and booths, every moment to see, taste, and learn comes together in one place.",
+      whyTitle: "What Makes It Special",
       why: [
         { title: "A single focus: the cask", desc: "Among countless drinks events, we focus solely on cask maturation — the deepest way to explore the difference a cask makes." },
         { title: "A global lineup", desc: "Distilleries, independent bottlers (IB), and premium bars from across the world present matured spirits rarely found in Korea." },
