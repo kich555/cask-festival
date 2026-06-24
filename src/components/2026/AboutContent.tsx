@@ -1,13 +1,15 @@
 "use client"
 
 import Image from "next/image"
+import Link from "next/link"
 import { Suspense } from "react"
 import { useContent2026 } from "@/i18n/useContent2026"
 import PageHeader2026 from "./PageHeader2026"
 
 function Inner() {
-  const { c } = useContent2026()
+  const { c, lang } = useContent2026()
   const a = c.aboutP
+  const qs = `?lang=${lang}`
 
   const rows: [string, string][] = [
     [a.rowName, a.rowNameV],
@@ -30,12 +32,12 @@ function Inner() {
             <p className="text-white/90 text-[16px] break-keep">{a.recapBody1}</p>
             <p className="text-white/90 text-[16px] break-keep">{a.recapBody2}</p>
           </div>
-          <a
-            href="https://www.caskcarnival.com/2025"
+          <Link
+            href={`/2025${qs}`}
             className="shrink-0 text-white text-[26px] md:text-[34px] font-extrabold underline decoration-[3px] underline-offset-[8px] hover:decoration-[4px] transition-all"
           >
             {a.recapBtn}
-          </a>
+          </Link>
         </div>
       </section>
 

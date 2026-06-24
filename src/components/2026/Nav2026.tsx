@@ -29,9 +29,9 @@ function Nav2026Content() {
   const [open, setOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
 
-  const isHome = pathname === "/"
-  // 메인 최상단(스크롤 전, 메뉴 닫힘) → 투명/흰 텍스트. 그 외 → 흰 배경/검정 텍스트.
-  const transparent = isHome && !scrolled && !open
+  // 메인(/)과 2025 아카이브(/2025)는 상단이 어두워서 최상단에선 투명/흰 텍스트
+  const transparentEligible = pathname === "/" || pathname === "/2025"
+  const transparent = transparentEligible && !scrolled && !open
 
   const qs = searchParams.get("lang") ? `?lang=${searchParams.get("lang")}` : ""
   const withLang = (href: string) => `${href}${qs}`

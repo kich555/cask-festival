@@ -44,12 +44,12 @@ function HomeContent() {
             <span>{c.hero.place}</span>
           </div>
           <div className="flex flex-col md:flex-row gap-4 md:gap-5 mt-9 w-full md:w-auto">
-            <a
-              href="https://www.caskcarnival.com/2025"
+            <Link
+              href={`/2025${qs}`}
               className="border border-white/70 rounded px-7 py-3.5 text-[15px] font-semibold hover:bg-white hover:text-[#1a1a1a] transition-colors"
             >
               {c.hero.recap}
-            </a>
+            </Link>
             <a
               href={BOOTH_FORM_2026[lang]}
               target="_blank"
