@@ -28,7 +28,7 @@ function Inner() {
         </div>
 
         {/* CTA */}
-        <div className="text-center py-12 md:py-16">
+        <div className="text-center pt-12 md:pt-16 pb-7 md:pb-9">
           <h2 className="text-[clamp(20px,3vw,26px)] font-semibold">
             {r.ctaTitle}
             <span className="block text-[#7d0b1c] mt-1.5">{r.ctaHl}</span>
@@ -44,7 +44,7 @@ function Inner() {
         </div>
 
         {/* PROCESS */}
-        <Block eyebrow={r.processEyebrow} title={r.processTitle}>
+        <Block title={r.processTitle}>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
             {r.process.map((s, i) => (
               <div
@@ -62,7 +62,7 @@ function Inner() {
         </Block>
 
         {/* FORECAST */}
-        <Block eyebrow={r.forecastEyebrow} title={r.forecastTitle}>
+        <Block title={r.forecastTitle}>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4">
             {r.forecast.map((f) => (
               <div key={f.title} className="rounded-md border border-black/10 border-t-[3px] border-t-[#7d0b1c] p-6">
@@ -75,7 +75,7 @@ function Inner() {
         </Block>
 
         {/* BOOTH PACKAGE */}
-        <Block eyebrow={r.boothEyebrow} title={r.boothTitle}>
+        <Block title={r.boothTitle}>
           <div className="grid grid-cols-1 md:grid-cols-3 bg-[#7d0b1c] text-white rounded-md overflow-hidden">
             <div className="p-7 md:p-8">
               <div className="text-[32px] font-extrabold">{r.boothSize}</div>
@@ -102,7 +102,7 @@ function Inner() {
         </Block>
 
         {/* CATEGORIES */}
-        <Block eyebrow={r.catsEyebrow} title={r.catsTitle}>
+        <Block title={r.catsTitle}>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
             {r.cats.map((cat) => (
               <div key={cat.name} className="border border-black/10 rounded-lg px-5 py-4 bg-white">
@@ -127,10 +127,9 @@ function Inner() {
   )
 }
 
-function Block({ eyebrow, title, children }: { eyebrow: string; title: string; children: React.ReactNode }) {
+function Block({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div className="mt-14 md:mt-16">
-      <p className="tracking-wide text-[13px] text-[#999] mb-2">{eyebrow}</p>
       <h2 className="text-[clamp(20px,3vw,28px)] font-extrabold mb-6">{title}</h2>
       {children}
     </div>
