@@ -23,17 +23,16 @@ function Inner() {
       <PageHeader2026 title={a.title} subtitle={a.subtitle} watermark="ABOUT" />
 
       {/* RECAP */}
-      <section className="bg-[#1a1a1a] text-white">
+      <section className="bg-[#ea5514] text-white">
         <div className="max-w-[1440px] mx-auto px-5 md:px-10 py-16 md:py-20 flex flex-col md:flex-row md:items-center gap-7 md:gap-10">
           <div className="md:flex-1">
-            <p className="text-white/60 tracking-wide text-[13px] mb-3">{a.recapEyebrow}</p>
             <h2 className="text-[30px] font-extrabold mb-4">{a.recapTitle}</h2>
-            <p className="text-white/70 text-[16px]">{a.recapBody1}</p>
-            <p className="text-white/70 text-[16px]">{a.recapBody2}</p>
+            <p className="text-white/90 text-[16px] break-keep">{a.recapBody1}</p>
+            <p className="text-white/90 text-[16px] break-keep">{a.recapBody2}</p>
           </div>
           <a
             href="https://www.caskcarnival.com/2025"
-            className="self-start border border-white/60 rounded px-6 py-3 font-semibold hover:bg-white hover:text-[#1a1a1a] transition-colors"
+            className="self-start text-white text-[18px] md:text-[20px] font-bold underline decoration-2 underline-offset-[6px] hover:decoration-[3px] transition-all"
           >
             {a.recapBtn}
           </a>
