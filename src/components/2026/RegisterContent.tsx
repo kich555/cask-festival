@@ -76,24 +76,27 @@ function Inner() {
 
         {/* BOOTH PACKAGE */}
         <Block title={r.boothTitle}>
-          <div className="grid grid-cols-1 md:grid-cols-3 bg-[#7d0b1c] text-white rounded-md overflow-hidden">
-            <div className="p-7 md:p-8">
-              <div className="text-[32px] font-extrabold">{r.boothSize}</div>
-              <div className="text-white/60 line-through mt-3 text-[14px]">{r.boothWas}</div>
-              <div className="text-[32px] font-extrabold">{r.boothNow}</div>
-              <div className="text-white/70 text-[13px]">{r.boothVat}</div>
-              <span className="inline-block mt-3 text-[12px] bg-white/15 rounded px-2 py-1">{r.boothTag}</span>
+          <div className="grid grid-cols-1 md:grid-cols-3 bg-[#7d0b1c] text-white rounded-lg overflow-hidden shadow-xl border-t-4 border-[#e7c9a0]">
+            {/* 가격 */}
+            <div className="p-8 md:p-10 flex flex-col justify-center">
+              <div className="text-[34px] font-extrabold leading-none">{r.boothSize}</div>
+              <div className="text-white/55 line-through mt-5 text-[14px]">{r.boothWas}</div>
+              <div className="text-[38px] font-extrabold leading-none mt-1">{r.boothNow}</div>
+              <div className="text-white/70 text-[13px] mt-1">{r.boothVat}</div>
+              <span className="inline-block self-start mt-5 text-[12px] font-semibold bg-white/15 rounded px-2.5 py-1">{r.boothTag}</span>
             </div>
-            <div className="p-7 md:p-8 border-t md:border-t-0 md:border-l border-white/15 text-center">
+            {/* 렌더 이미지 */}
+            <div className="p-8 md:p-10 border-t md:border-t-0 md:border-l border-white/15 flex flex-col justify-center text-center">
               <Image src="/2026/booth-render.png" alt="booth" width={408} height={220} className="w-full h-auto rounded" />
-              <p className="text-white/70 text-[13px] mt-4">{r.boothImgNote}</p>
+              <p className="text-white/70 text-[13px] mt-4 leading-relaxed">{r.boothImgNote}</p>
             </div>
-            <div className="p-7 md:p-8 border-t md:border-t-0 md:border-l border-white/15">
-              <ul className="space-y-3">
+            {/* 포함 항목 */}
+            <div className="p-8 md:p-10 border-t md:border-t-0 md:border-l border-white/15 flex flex-col justify-center">
+              <ul className="divide-y divide-white/10">
                 {r.boothIncludes.map((b) => (
-                  <li key={b.label} className="flex justify-between gap-3 text-[14px]">
+                  <li key={b.label} className="flex items-center justify-between gap-3 text-[15px] py-4 first:pt-0 last:pb-0">
                     <strong className="font-semibold">{b.label}</strong>
-                    <span className="text-white/75">{b.value}</span>
+                    <span className="text-white/75 text-right">{b.value}</span>
                   </li>
                 ))}
               </ul>
