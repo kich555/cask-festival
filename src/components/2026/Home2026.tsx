@@ -109,10 +109,10 @@ function HomeContent() {
             <br />
             {c.teaser.lead2}
           </h2>
-          <p className="text-[#555] text-[clamp(16px,1.2vw,18px)] leading-[1.9] max-w-[760px] break-keep text-pretty">
+          <p className="text-[#555] text-[clamp(16px,1.2vw,18px)] leading-[1.9] max-w-[760px] break-keep text-balance">
             {c.teaser.body1}
           </p>
-          <p className="text-[#555] text-[clamp(16px,1.2vw,18px)] leading-[1.9] max-w-[760px] mt-3 break-keep text-pretty">
+          <p className="text-[#555] text-[clamp(16px,1.2vw,18px)] leading-[1.9] max-w-[760px] mt-3 break-keep text-balance">
             {c.teaser.body2}
           </p>
           <Link
