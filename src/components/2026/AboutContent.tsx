@@ -32,7 +32,7 @@ function Inner() {
           </div>
           <a
             href="https://www.caskcarnival.com/2025"
-            className="self-start text-white text-[18px] md:text-[20px] font-bold underline decoration-2 underline-offset-[6px] hover:decoration-[3px] transition-all"
+            className="shrink-0 text-white text-[26px] md:text-[34px] font-extrabold underline decoration-[3px] underline-offset-[8px] hover:decoration-[4px] transition-all"
           >
             {a.recapBtn}
           </a>
