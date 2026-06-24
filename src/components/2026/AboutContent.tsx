@@ -5,7 +5,6 @@ import Image from "next/image"
 import Link from "next/link"
 import { Suspense } from "react"
 import { useContent2026 } from "@/i18n/useContent2026"
-import { CaskVenn } from "./AboutDiagrams"
 import PageHeader2026 from "./PageHeader2026"
 
 function Reveal({
@@ -57,13 +56,6 @@ function Inner() {
             </h2>
           </Reveal>
 
-          {/* 핵심 비주얼: 정체성 벤다이어그램 */}
-          <Reveal>
-            <div className="mb-16 md:mb-24">
-              <CaskVenn lang={lang} />
-            </div>
-          </Reveal>
-
           <div className="space-y-10 md:space-y-14 max-w-[820px]">
             {a.introItems.map((it, i) => (
               <Reveal key={it.heading} delay={i * 0.08}>
@@ -105,7 +97,7 @@ function Inner() {
       <section className="bg-[#ea5514] text-white">
         <div className="max-w-[1100px] mx-auto px-5 md:px-10 py-16 md:py-24">
           <Reveal>
-            <div className="flex flex-col md:flex-row md:items-center gap-7 md:gap-10">
+            <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 md:gap-10">
               <div className="md:flex-1">
                 <h2 className="text-[clamp(26px,3vw,36px)] font-extrabold mb-4">{a.recapTitle}</h2>
                 <p className="text-white/90 text-[16px] md:text-[17px] break-keep">{a.recapBody1}</p>
@@ -113,7 +105,7 @@ function Inner() {
               </div>
               <Link
                 href={`/2025${qs}`}
-                className="shrink-0 text-white text-[26px] md:text-[34px] font-extrabold underline decoration-[3px] underline-offset-[8px] hover:decoration-[4px] transition-all"
+                className="shrink-0 text-white text-[18px] md:text-[22px] font-bold underline decoration-2 underline-offset-[6px] hover:decoration-[3px] transition-all"
               >
                 {a.recapBtn}
               </Link>
