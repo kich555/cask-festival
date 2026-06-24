@@ -69,21 +69,21 @@ function HomeContent() {
       </section>
 
       {/* ABOUT TEASER */}
-      <section className="relative overflow-hidden py-24 md:py-36">
-        <div className="absolute right-[-40px] top-1/2 -translate-y-1/2 w-[clamp(200px,36vw,520px)] opacity-[0.06] pointer-events-none select-none">
+      <section className="relative overflow-hidden flex items-center min-h-[720px] md:min-h-[880px] py-20 md:py-24">
+        <div className="absolute right-[-40px] top-1/2 -translate-y-1/2 w-[clamp(220px,38vw,560px)] opacity-[0.06] pointer-events-none select-none">
           <Image src="/2026/logo_background.png" alt="" width={601} height={706} className="w-full h-auto" />
         </div>
-        <div className="relative max-w-[1440px] mx-auto px-5 md:px-10">
-          <Image src="/2026/logo-nav-dark.svg" alt="Cask Carnival" width={300} height={60} className="w-[min(58vw,240px)] md:w-[300px] h-auto mb-7" />
-          <p className="text-[#7d0b1c] tracking-wide text-[clamp(14px,4.4vw,18px)] font-semibold mb-8">{c.teaser.catch}</p>
-          <h2 className="text-[clamp(22px,5vw,36px)] font-extrabold leading-[1.45] mb-10">
+        <div className="relative max-w-[1440px] mx-auto px-5 md:px-10 w-full">
+          <Image src="/2026/logo-nav-dark.svg" alt="Cask Carnival" width={400} height={80} className="w-[clamp(220px,30vw,400px)] h-auto mb-[clamp(20px,2.6vw,40px)]" />
+          <p className="uppercase text-[#7d0b1c] font-extrabold tracking-tight leading-[1.15] text-[clamp(20px,2.4vw,30px)] mb-[clamp(28px,4.5vw,60px)]">{c.teaser.catch}</p>
+          <h2 className="text-[clamp(24px,3vw,36px)] font-extrabold leading-[1.45] mb-[clamp(22px,3.6vw,44px)]">
             {c.teaser.lead1}
             <br />
             {c.teaser.lead2}
           </h2>
-          <p className="text-[#555] text-[16px] md:text-[17px] leading-[1.9] max-w-[760px]">{c.teaser.body1}</p>
-          <p className="text-[#555] text-[16px] md:text-[17px] leading-[1.9] max-w-[760px] mt-3">{c.teaser.body2}</p>
-          <Link href={`/about${qs}`} className="inline-block mt-12 text-[#7d0b1c] font-bold border-b-2 border-[#7d0b1c] pb-1.5">
+          <p className="text-[#555] text-[clamp(16px,1.2vw,18px)] leading-[1.9] max-w-[760px]">{c.teaser.body1}</p>
+          <p className="text-[#555] text-[clamp(16px,1.2vw,18px)] leading-[1.9] max-w-[760px] mt-3">{c.teaser.body2}</p>
+          <Link href={`/about${qs}`} className="inline-block mt-9 text-[#7d0b1c] font-bold border-b-2 border-[#7d0b1c] pb-1.5">
             {c.teaser.more}
           </Link>
         </div>
