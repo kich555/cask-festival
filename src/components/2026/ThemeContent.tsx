@@ -49,12 +49,13 @@ function Inner() {
             <p className="tracking-[6px] text-[#7d0b1c] font-semibold mt-12 mb-8 text-[15px]">
               {t.notesTitle}
             </p>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-5 max-w-[860px] mx-auto">
+            <div className="grid grid-cols-5 gap-2 md:gap-5 max-w-[860px] mx-auto">
               {cur.notes.map((n) => (
-                <div key={n.en} className="flex flex-col items-center gap-1">
-                  <div className="text-[28px]">{n.icon}</div>
-                  <div className="text-[14px] font-semibold">{n.en}</div>
-                  <div className="text-[13px] text-[#888]">{n.ko}</div>
+                <div key={n.en} className="flex flex-col items-center gap-1 md:gap-1.5">
+                  <div className="text-[22px] md:text-[30px]">{n.icon}</div>
+                  <div className="text-[10px] md:text-[15px] font-semibold leading-tight break-keep">
+                    {lang === "ko" ? n.ko : n.en}
+                  </div>
                 </div>
               ))}
             </div>

@@ -30,7 +30,7 @@ function HomeContent() {
       {/* HERO */}
       <section className="relative h-screen min-h-[600px] overflow-hidden bg-[#07050a] flex items-end justify-center text-center text-white">
         <iframe
-          src="/2026/hero-scene.html"
+          src="/2026/hero-scene.html?v=3"
           title="Cask Carnival"
           loading="eager"
           scrolling="no"
@@ -147,12 +147,13 @@ function HomeContent() {
             <p className="tracking-[6px] text-[#7d0b1c] font-semibold mt-14 mb-10 text-[16px]">
               {c.themeBand.notesTitle}
             </p>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-6 max-w-[920px] mx-auto">
+            <div className="grid grid-cols-5 gap-2 md:gap-6 max-w-[920px] mx-auto">
               {TASTING_NOTES.map((n) => (
-                <div key={n.en} className="flex flex-col items-center gap-1.5">
-                  <div className="text-[34px]">{n.icon}</div>
-                  <div className="text-[15px] font-semibold">{n.en}</div>
-                  <div className="text-[14px] text-[#888]">{n.ko}</div>
+                <div key={n.en} className="flex flex-col items-center gap-1 md:gap-1.5">
+                  <div className="text-[22px] md:text-[34px]">{n.icon}</div>
+                  <div className="text-[10px] md:text-[15px] font-semibold leading-tight break-keep">
+                    {lang === "ko" ? n.ko : n.en}
+                  </div>
                 </div>
               ))}
             </div>
