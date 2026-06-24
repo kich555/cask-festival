@@ -77,7 +77,7 @@ function Nav2026Content() {
           />
         </Link>
 
-        <nav className="hidden md:flex items-center gap-[52px] text-[17px] font-medium">
+        <nav className="hidden md:flex items-center gap-[52px] text-[19px] font-medium">
           {NAV_LINKS.map((item) => {
             const active = isActive(item.href)
             return (
@@ -106,7 +106,7 @@ function Nav2026Content() {
             aria-label="Instagram"
             className={transparent ? "hover:opacity-80" : "text-[#555] hover:text-[#7d0b1c] transition-colors"}
           >
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" className="w-6 h-6">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" className="w-7 h-7">
               <rect x="3" y="3" width="18" height="18" rx="5" />
               <circle cx="12" cy="12" r="4" />
               <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" />
@@ -115,7 +115,7 @@ function Nav2026Content() {
           <button
             type="button"
             onClick={toggleLang}
-            className={`flex items-center gap-1 px-2.5 py-1 text-[13px] font-semibold rounded-md border transition-colors ${
+            className={`flex items-center gap-1 px-3 py-1.5 text-[15px] font-semibold rounded-md border transition-colors ${
               transparent
                 ? "border-white/40 hover:border-white"
                 : "border-black/15 hover:border-[#7d0b1c] hover:text-[#7d0b1c]"
