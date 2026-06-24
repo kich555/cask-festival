@@ -69,12 +69,18 @@ function HomeContent() {
       </section>
 
       {/* ABOUT TEASER */}
-      <section className="relative overflow-hidden flex items-center min-h-[720px] md:min-h-[880px] py-20 md:py-24">
-        <div className="absolute right-[-40px] top-1/2 -translate-y-1/2 w-[clamp(220px,38vw,560px)] opacity-[0.06] pointer-events-none select-none">
+      <section className="relative overflow-hidden flex items-center min-h-screen py-20 md:py-24">
+        <div
+          className="absolute right-[-40px] top-1/2 -translate-y-1/2 w-[clamp(260px,42vw,640px)] opacity-[0.08] pointer-events-none select-none"
+          style={{
+            WebkitMaskImage: "linear-gradient(105deg, transparent 0%, #000 62%)",
+            maskImage: "linear-gradient(105deg, transparent 0%, #000 62%)",
+          }}
+        >
           <Image src="/2026/logo_background.png" alt="" width={601} height={706} className="w-full h-auto" />
         </div>
         <div className="relative max-w-[1440px] mx-auto px-5 md:px-10 w-full">
-          <Image src="/2026/logo-nav-dark.svg" alt="Cask Carnival" width={400} height={80} className="w-[clamp(220px,30vw,400px)] h-auto mb-[clamp(20px,2.6vw,40px)]" />
+          <Image src="/2026/logo-nav-dark.svg" alt="Cask Carnival" width={480} height={96} className="w-[clamp(260px,34vw,480px)] h-auto mb-[clamp(24px,2.8vw,44px)]" />
           <p className="uppercase text-[#7d0b1c] font-extrabold tracking-tight leading-[1.15] text-[clamp(20px,2.4vw,30px)] mb-[clamp(28px,4.5vw,60px)]">{c.teaser.catch}</p>
           <h2 className="text-[clamp(24px,3vw,36px)] font-extrabold leading-[1.45] mb-[clamp(22px,3.6vw,44px)]">
             {c.teaser.lead1}
