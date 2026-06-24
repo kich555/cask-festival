@@ -94,11 +94,19 @@ export interface Content2026 {
   aboutP: {
     title: string
     subtitle: string
+    introTagline: string
+    introBody1: string
+    introBody2: string
+    whyTitle: string
+    why: { title: string; desc: string }[]
     recapEyebrow: string
     recapTitle: string
     recapBody1: string
     recapBody2: string
     recapBtn: string
+    recapStats: { value: string; label: string }[]
+    forecastTitle: string
+    forecastStats: { value: string; label: string }[]
     overviewTitle: string
     rowName: string
     rowNameV: string
@@ -181,11 +189,34 @@ export const content2026: Record<"ko" | "en", Content2026> = {
     aboutP: {
       title: "행사 소개",
       subtitle: "Global Cask-Aged Drinks Festa, Cask Carnival",
+      introTagline: "오직 '캐스크'에 집중한\n단 하나의 글로벌 주류 페스티벌",
+      introBody1:
+        "캐스크 카니발은 위스키의 맛과 향을 70% 이상 좌우하는 핵심 요소, '오크통(Cask)'의 가치와 예술성을 조명하는 전문 주류 박람회입니다.",
+      introBody2:
+        "전 세계의 유명 증류소와 인디펜던트 보틀러, 프리미엄 바가 한자리에 모여 각자의 철학이 담긴 다채로운 숙성 원액을 선보입니다. 단순한 시음을 넘어, 캐스크가 빚어내는 풍미의 깊이와 그 뒤의 이야기를 함께 경험하는 자리입니다.",
+      whyTitle: "왜 캐스크 카니발인가",
+      why: [
+        { title: "캐스크라는 단 하나의 주제", desc: "수많은 주류 행사 중 오직 '캐스크 숙성'에 집중합니다. 캐스크가 만들어내는 맛의 차이를 가장 깊이 있게 탐구할 수 있습니다." },
+        { title: "글로벌 라인업", desc: "세계 각국의 증류소, 독립병입자(IB), 프리미엄 바가 참여해 국내에서 만나기 어려운 숙성 원액을 선보입니다." },
+        { title: "심화된 프로그램", desc: "브랜드 관계자가 직접 이끄는 마스터클래스와 테마 캐스크 테이스팅 세션으로 한 단계 깊은 경험을 제공합니다." },
+        { title: "검증된 무대", desc: "2025년 전 회차 티켓과 마스터클래스 전석 매진. 고관여 애호가와 업계 관계자가 모이는 신뢰받는 플랫폼입니다." },
+      ],
       recapEyebrow: "2025 Cask Carnival",
       recapTitle: "2025 RECAP",
       recapBody1: "다채로운 즐거움이 가득했던 Cask Carnival 2025의",
       recapBody2: "브랜드 라인업과 타임라인, 현장 사진을 확인해보세요!",
       recapBtn: "2025 다시보기 →",
+      recapStats: [
+        { value: "27+", label: "참가 브랜드" },
+        { value: "1,200+", label: "관람객" },
+        { value: "100%", label: "티켓 매진" },
+      ],
+      forecastTitle: "2026, 이렇게 준비합니다",
+      forecastStats: [
+        { value: "50~60", label: "참가 브랜드" },
+        { value: "3,000~4,000", label: "예상 방문객" },
+        { value: "24회", label: "마스터클래스" },
+      ],
       overviewTitle: "캐스크 카니발 2026 개요",
       rowName: "명칭",
       rowNameV: "캐스크 카니발 2026",
@@ -329,11 +360,34 @@ export const content2026: Record<"ko" | "en", Content2026> = {
     aboutP: {
       title: "About",
       subtitle: "Global Cask-Aged Drinks Festa, Cask Carnival",
+      introTagline: "The one global drinks festival\ndevoted entirely to the cask",
+      introBody1:
+        "Cask Carnival is a specialized drinks expo spotlighting the value and artistry of the oak cask — the single element that shapes over 70% of a whisky's flavor and aroma.",
+      introBody2:
+        "Renowned distilleries, independent bottlers, and premium bars from around the world gather to present matured spirits that embody their own philosophies. Beyond simple tasting, it is a place to experience the depth of flavor the cask creates — and the stories behind it.",
+      whyTitle: "Why Cask Carnival",
+      why: [
+        { title: "A single focus: the cask", desc: "Among countless drinks events, we focus solely on cask maturation — the deepest way to explore the difference a cask makes." },
+        { title: "A global lineup", desc: "Distilleries, independent bottlers (IB), and premium bars from across the world present matured spirits rarely found in Korea." },
+        { title: "In-depth programs", desc: "Master classes led by the brands themselves and themed cask tasting sessions take the experience a step further." },
+        { title: "A proven stage", desc: "In 2025, every ticket and master class sold out — a trusted platform where dedicated enthusiasts and industry professionals meet." },
+      ],
       recapEyebrow: "2025 Cask Carnival",
       recapTitle: "2025 RECAP",
       recapBody1: "Relive the highlights of Cask Carnival 2025 —",
       recapBody2: "explore the brand lineup, timeline, and event photos!",
       recapBtn: "Revisit 2025 →",
+      recapStats: [
+        { value: "27+", label: "Exhibitors" },
+        { value: "1,200+", label: "Visitors" },
+        { value: "100%", label: "Tickets sold out" },
+      ],
+      forecastTitle: "Preparing for 2026",
+      forecastStats: [
+        { value: "50–60", label: "Exhibitors" },
+        { value: "3,000–4,000", label: "Expected visitors" },
+        { value: "24", label: "Master classes" },
+      ],
       overviewTitle: "Cask Carnival 2026 Overview",
       rowName: "Event",
       rowNameV: "Cask Carnival 2026",
