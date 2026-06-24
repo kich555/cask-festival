@@ -5,7 +5,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { Suspense } from "react"
 import { useContent2026 } from "@/i18n/useContent2026"
-import { CaskVenn, MaturationDiagram } from "./AboutDiagrams"
+import { CaskVenn } from "./AboutDiagrams"
 import PageHeader2026 from "./PageHeader2026"
 
 function Reveal({
@@ -57,44 +57,22 @@ function Inner() {
             </h2>
           </Reveal>
 
-          <div className="space-y-16 md:space-y-24">
-            {/* 1. 숙성의 가치 + 숙성 원리 도식 */}
-            {a.introItems[0] && (
-              <Reveal>
-                <div className="grid md:grid-cols-2 gap-8 md:gap-14 items-center">
-                  <div className="max-w-[560px]">
-                    <h3 className="text-[20px] md:text-[24px] font-bold mb-3 break-keep">{a.introItems[0].heading}</h3>
-                    <p className="text-[#555] text-[15px] md:text-[17px] leading-[1.9] break-keep">{a.introItems[0].body}</p>
-                  </div>
-                  <MaturationDiagram lang={lang} />
-                </div>
-              </Reveal>
-            )}
+          {/* 핵심 비주얼: 정체성 벤다이어그램 */}
+          <Reveal>
+            <div className="mb-16 md:mb-24">
+              <CaskVenn lang={lang} />
+            </div>
+          </Reveal>
 
-            {/* 2. 미각의 스펙트럼 + 벤다이어그램 */}
-            {a.introItems[1] && (
-              <Reveal>
-                <div className="grid md:grid-cols-2 gap-8 md:gap-14 items-center">
-                  <div className="md:order-2 max-w-[560px]">
-                    <h3 className="text-[20px] md:text-[24px] font-bold mb-3 break-keep">{a.introItems[1].heading}</h3>
-                    <p className="text-[#555] text-[15px] md:text-[17px] leading-[1.9] break-keep">{a.introItems[1].body}</p>
-                  </div>
-                  <div className="md:order-1">
-                    <CaskVenn lang={lang} />
-                  </div>
+          <div className="space-y-10 md:space-y-14 max-w-[820px]">
+            {a.introItems.map((it, i) => (
+              <Reveal key={it.heading} delay={i * 0.08}>
+                <div>
+                  <h3 className="text-[20px] md:text-[24px] font-bold mb-3 break-keep">{it.heading}</h3>
+                  <p className="text-[#555] text-[15px] md:text-[17px] leading-[1.9] break-keep">{it.body}</p>
                 </div>
               </Reveal>
-            )}
-
-            {/* 3. 연간 테마 큐레이션 */}
-            {a.introItems[2] && (
-              <Reveal>
-                <div className="max-w-[780px]">
-                  <h3 className="text-[20px] md:text-[24px] font-bold mb-3 break-keep">{a.introItems[2].heading}</h3>
-                  <p className="text-[#555] text-[15px] md:text-[17px] leading-[1.9] break-keep">{a.introItems[2].body}</p>
-                </div>
-              </Reveal>
-            )}
+            ))}
           </div>
         </div>
       </section>
