@@ -211,15 +211,15 @@ export const content2026: Record<"ko" | "en", Content2026> = {
         },
         {
           heading: "경험의 깊이를 더하는 심화 프로그램",
-          body: "각 브랜드를 대표하는 마스터 디스틸러와 업계 전문가들이 이끄는 프리미엄 마스터클래스를 진행합니다.||소수 정예 예약제로 운영되는 클래스와 테마별 테이스팅 세션을 통해 숙성주에 대한 식견을 나눕니다.",
+          body: "각 브랜드를 대표하는 마스터 디스틸러와 업계 전문가들이 이끄는 마스터클래스 및 테이스팅 세션이 진행됩니다. 브랜드의 철학과 테이스팅을 직접 가이드받으며 숙성주에 대한 깊이 있는 식견을 나눕니다.",
         },
         {
           heading: "시간을 담아내는 캐스크 프로젝트",
-          body: "국내 유수 증류소들과 동일한 캐스크로 숙성을 진행해 각기 다른 개성을 담아내는 협업을 선보입니다.||또한 매년 행사에서 남은 원액을 하나의 오크통에 모아 솔레라 방식으로 보존하는 인피니티 캐스크 프로젝트를 통해 행사의 고유한 역사를 기록해 나갑니다.",
+          body: "국내 유수 증류소들과 동일한 캐스크로 숙성을 진행해 각기 다른 개성을 담아내는 협업을 선보입니다. 또한 매년 행사에서 남은 원액을 하나의 오크통에 모으는 인피니티 캐스크 프로젝트를 통해 행사의 고유한 역사를 기록해 나갑니다.",
         },
         {
           heading: "업계와 애호가를 잇는 비즈니스 플랫폼",
-          body: "고관여 애호가들에게는 새로운 미식의 발견을, 수입 및 유통사에게는 B2B 매칭 서비스를 통해 실질적인 비즈니스 교류의 기회를 제공합니다. 전문가와 대중이 자연스럽게 소통하는 스피릿 네트워크의 장을 마련합니다.",
+          body: "고관여 애호가들에게는 새로운 미식의 발견을, 수입 및 유통사에게는 B2B 매칭 서비스를 통해 실질적인 비즈니스 교류의 기회를 제공합니다.||전문가와 대중이 자연스럽게 소통하는 스피릿 네트워크의 장을 마련합니다.",
         },
       ],
       recapEyebrow: "2025 Cask Carnival",
@@ -406,11 +406,11 @@ export const content2026: Record<"ko" | "en", Content2026> = {
         },
         {
           heading: "In-depth programs that deepen the experience",
-          body: "Premium master classes led by each brand's master distillers and industry experts. Through reservation-only, small-group classes and themed tasting sessions, we share deeper insight into matured drinks.",
+          body: "Master classes and tasting sessions led by each brand's master distillers and industry experts. Guided directly through each brand's philosophy and tasting, you deepen your insight into matured drinks.",
         },
         {
           heading: "The Cask Project that captures time",
-          body: "We collaborate with leading Korean distilleries, maturing in the same cask to capture distinct characters. And through the Infinity Cask project — gathering each year's remaining spirits into one cask preserved solera-style — we record the event's own history.",
+          body: "We collaborate with leading Korean distilleries, maturing in the same cask to capture distinct characters. And through the Infinity Cask project — gathering each year's remaining spirits into one cask — we record the event's own history.",
         },
         {
           heading: "A business platform linking industry and enthusiasts",
