@@ -38,7 +38,7 @@ function Inner() {
             <h2 className="text-[clamp(28px,6vw,52px)] font-extrabold">{cur.name}</h2>
             <div className="w-[clamp(160px,40vw,720px)] h-px bg-[#7d0b1c]/30 mx-auto my-7" />
             {desc.map((d) => (
-              <p key={d} className="text-[#444] max-w-[760px] mx-auto leading-relaxed text-[16px] mt-2 first:mt-0 break-keep text-pretty">
+              <p key={d} className="text-[#444] max-w-[760px] mx-auto leading-[1.9] text-[16px] mt-4 first:mt-0 break-keep text-balance">
                 {d}
               </p>
             ))}

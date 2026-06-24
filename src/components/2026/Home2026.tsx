@@ -100,11 +100,13 @@ function HomeContent() {
         <div className="max-w-[1180px] mx-auto px-5 md:px-10 py-20 md:py-32">
           <div className="border border-[#7d0b1c]/35 rounded-lg px-6 md:px-20 py-16 md:py-24 text-center text-[#1a1a1a]">
             <p className="tracking-[3px] text-[14px] text-[#7d0b1c] mb-4">{c.themeBand.eyebrow}</p>
-            <h2 className="text-[clamp(34px,7vw,64px)] font-extrabold leading-tight">{c.themeBand.title}</h2>
+            <h2 className="text-[clamp(30px,5vw,46px)] font-extrabold leading-tight">{c.themeBand.title}</h2>
             <div className="w-[clamp(180px,40vw,760px)] h-px bg-[#7d0b1c]/30 mx-auto my-9" />
-            <p className="text-[#444] max-w-[860px] mx-auto leading-[1.85] text-[clamp(16px,1.4vw,18px)] break-keep text-pretty">{c.themeBand.desc1}</p>
-            <p className="text-[#444] max-w-[860px] mx-auto leading-[1.85] text-[clamp(16px,1.4vw,18px)] mt-3 break-keep text-pretty">{c.themeBand.desc2}</p>
-            <p className="text-[#444] max-w-[860px] mx-auto leading-[1.85] text-[clamp(16px,1.4vw,18px)] mt-3 break-keep text-pretty">{c.themeBand.desc3}</p>
+            <div className="max-w-[760px] mx-auto space-y-4">
+              <p className="text-[#444] leading-[1.9] text-[clamp(15px,1.3vw,17px)] break-keep text-balance">{c.themeBand.desc1}</p>
+              <p className="text-[#444] leading-[1.9] text-[clamp(15px,1.3vw,17px)] break-keep text-balance">{c.themeBand.desc2}</p>
+              <p className="text-[#444] leading-[1.9] text-[clamp(15px,1.3vw,17px)] break-keep text-balance">{c.themeBand.desc3}</p>
+            </div>
             <p className="tracking-[6px] text-[#7d0b1c] font-semibold mt-14 mb-10 text-[16px]">{c.themeBand.notesTitle}</p>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-6 max-w-[920px] mx-auto">
               {TASTING_NOTES.map((n) => (
@@ -120,7 +122,7 @@ function HomeContent() {
       </section>
 
       {/* MASTER CLASS TEASER — Coming Soon 박스(프로그램 페이지와 동일 디자인) */}
-      <section className="py-20 md:py-24 text-center border-t border-black/10">
+      <section className="py-20 md:py-24 text-center">
         <div className="max-w-[1100px] mx-auto px-5 md:px-10">
           <h2 className="text-[clamp(24px,4vw,32px)] font-extrabold mb-9">{c.masterclass.title}</h2>
           <div className="border border-[#7d0b1c]/30 rounded-xl py-16 md:py-24 px-6 bg-[#faf8f6]">
@@ -132,7 +134,7 @@ function HomeContent() {
       </section>
 
       {/* EXHIBITOR TEASER */}
-      <section className="bg-white py-20 md:py-28 border-t border-black/10">
+      <section className="bg-white py-20 md:py-28">
         <div className="max-w-[1440px] mx-auto px-5 md:px-10">
           <h2 className="text-[clamp(26px,4vw,40px)] font-extrabold mb-8">{c.exhibitor.title}</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 border-t border-black/10">
