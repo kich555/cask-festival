@@ -37,7 +37,7 @@ function HomeContent() {
           className="absolute inset-0 w-full h-full border-0 pointer-events-none"
         />
         <div className="relative z-10 px-6 pb-28 flex flex-col items-center">
-          <div className="hidden md:block w-[540px] max-w-[80vw] h-px bg-white/40 mb-10" />
+          <div className="hidden md:block w-[540px] max-w-[80vw] h-px bg-white/40 mb-4" />
           <div className="flex flex-col md:flex-row items-center justify-center gap-2 md:gap-4 font-semibold text-[22px] md:text-[30px]">
             <span>{c.hero.date}</span>
             <span className="hidden md:inline text-white/45 font-light">|</span>
