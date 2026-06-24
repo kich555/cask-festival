@@ -83,14 +83,14 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: [
-      { url: "/icon-16x16.png?v=2", sizes: "16x16", type: "image/png" },
-      { url: "/icon-32x32.png?v=2", sizes: "32x32", type: "image/png" },
-      { url: "/icon.ico?v=2" },
+      { url: "/icon-16x16.png?v=3", sizes: "16x16", type: "image/png" },
+      { url: "/icon-32x32.png?v=3", sizes: "32x32", type: "image/png" },
+      { url: "/icon.ico?v=3" },
     ],
-    apple: [{ url: "/apple-touch-icon.png?v=2", sizes: "180x180", type: "image/png" }],
+    apple: [{ url: "/apple-touch-icon.png?v=3", sizes: "180x180", type: "image/png" }],
     other: [
-      { rel: "android-chrome-192x192", url: "/android-chrome-192x192.png?v=2" },
-      { rel: "android-chrome-512x512", url: "/android-chrome-512x512.png?v=2" },
+      { rel: "android-chrome-192x192", url: "/android-chrome-192x192.png?v=3" },
+      { rel: "android-chrome-512x512", url: "/android-chrome-512x512.png?v=3" },
     ],
   },
   manifest: "/site.webmanifest",
