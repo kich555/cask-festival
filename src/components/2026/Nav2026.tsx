@@ -65,14 +65,14 @@ function Nav2026Content() {
 
   return (
     <header className={`fixed top-0 left-0 right-0 z-50 transition-colors duration-300 ${headerBg}`}>
-      <div className="max-w-[1440px] mx-auto h-[70px] px-5 md:px-10 flex items-center justify-between">
+      <div className="max-w-[1440px] mx-auto h-[88px] px-5 md:px-10 flex items-center justify-between">
         <Link href={withLang("/")} aria-label="Cask Carnival" className="flex items-center">
           <Image
             src={transparent ? "/2026/logo-nav-white.svg" : "/2026/logo-nav-dark.svg"}
             alt="Cask Carnival"
-            width={200}
-            height={40}
-            className="h-[34px] md:h-[40px] w-auto"
+            width={240}
+            height={48}
+            className="h-[40px] md:h-[48px] w-auto"
             priority
           />
         </Link>
