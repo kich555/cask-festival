@@ -15,9 +15,9 @@ export const metadata: Metadata = {
 
 export default function ThemePage() {
   return (
-    <div className="min-h-screen bg-white pt-[70px]">
+    <div className="min-h-screen bg-white pt-[70px] flex flex-col">
       <Nav2026 />
-      <main>
+      <main className="flex-1">
         <ThemeContent />
       </main>
       <Footer2026 />

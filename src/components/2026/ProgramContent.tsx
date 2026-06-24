@@ -9,10 +9,10 @@ function Inner() {
   const p = c.programP
 
   return (
-    <div className="bg-white text-[#1a1a1a]">
+    <div className="bg-white text-[#1a1a1a] flex flex-col flex-1">
       <PageHeader2026 title={p.title} subtitle={p.subtitle} watermark="PROGRAM" />
-      <section className="max-w-[1100px] mx-auto px-5 md:px-10 py-16 md:py-24 text-center">
-        <div className="border border-[#7d0b1c]/30 rounded-xl py-16 md:py-24 px-6 bg-[#faf8f6]">
+      <section className="flex-1 flex items-center w-full max-w-[1100px] mx-auto px-5 md:px-10 py-16 md:py-24">
+        <div className="w-full border border-[#7d0b1c]/30 rounded-xl py-16 md:py-24 px-6 bg-[#faf8f6] text-center">
           <p className="text-[#7d0b1c] tracking-[2px] text-[13px] font-semibold">{p.comingEyebrow}</p>
           <h2 className="text-[clamp(22px,4vw,28px)] font-extrabold mt-4">{p.comingTitle}</h2>
           <p className="text-[#888] mt-3">{p.comingBody}</p>
