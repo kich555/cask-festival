@@ -1,10 +1,10 @@
 "use client"
 
-import { useContent2026 } from "@/i18n/useContent2026"
 import Image from "next/image"
 import Link from "next/link"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import { Suspense, useCallback, useEffect, useState } from "react"
+import { useContent2026 } from "@/i18n/useContent2026"
 
 const LANG_COOKIE_NAME = "preferred-lang"
 
@@ -64,7 +64,9 @@ function Nav2026Content() {
     : "bg-white/95 backdrop-blur-sm border-b border-black/5"
 
   return (
-    <header className={`fixed top-0 left-0 right-0 z-50 transition-colors duration-300 ${headerBg}`}>
+    <header
+      className={`fixed top-0 left-0 right-0 z-50 transition-colors duration-300 ${headerBg}`}
+    >
       <div className="max-w-[1440px] mx-auto h-[88px] px-5 md:px-10 flex items-center justify-between">
         <Link href={withLang("/")} aria-label="Cask Carnival" className="flex items-center">
           <Image
@@ -104,9 +106,19 @@ function Nav2026Content() {
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Instagram"
-            className={transparent ? "hover:opacity-80" : "text-[#555] hover:text-[#7d0b1c] transition-colors"}
+            className={
+              transparent
+                ? "hover:opacity-80"
+                : "text-[#555] hover:text-[#7d0b1c] transition-colors"
+            }
           >
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" className="w-7 h-7">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.6"
+              className="w-7 h-7"
+            >
               <rect x="3" y="3" width="18" height="18" rx="5" />
               <circle cx="12" cy="12" r="4" />
               <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" />
@@ -122,9 +134,21 @@ function Nav2026Content() {
             }`}
             aria-label={lang === "ko" ? "Switch to English" : "한국어로 전환"}
           >
-            <span className={lang === "ko" ? "text-[#7d0b1c]" : transparent ? "text-white/70" : "text-black/50"}>한</span>
+            <span
+              className={
+                lang === "ko" ? "text-[#7d0b1c]" : transparent ? "text-white/70" : "text-black/50"
+              }
+            >
+              한
+            </span>
             <span className={transparent ? "text-white/40" : "text-black/30"}>/</span>
-            <span className={lang === "en" ? "text-[#7d0b1c]" : transparent ? "text-white/70" : "text-black/50"}>EN</span>
+            <span
+              className={
+                lang === "en" ? "text-[#7d0b1c]" : transparent ? "text-white/70" : "text-black/50"
+              }
+            >
+              EN
+            </span>
           </button>
           <button
             type="button"
@@ -133,7 +157,14 @@ function Nav2026Content() {
             aria-expanded={open}
             className="md:hidden p-1"
           >
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" className="w-7 h-7">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.8"
+              strokeLinecap="round"
+              className="w-7 h-7"
+            >
               {open ? <path d="M6 6l12 12M18 6L6 18" /> : <path d="M4 7h16M4 12h16M4 17h16" />}
             </svg>
           </button>

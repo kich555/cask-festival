@@ -1,11 +1,11 @@
 "use client"
 
-import { BOOTH_FORM_2026 } from "@/i18n/content2026"
-import { useContent2026 } from "@/i18n/useContent2026"
 import Image from "next/image"
 import Link from "next/link"
 import { useSearchParams } from "next/navigation"
 import { Suspense } from "react"
+import { BOOTH_FORM_2026 } from "@/i18n/content2026"
+import { useContent2026 } from "@/i18n/useContent2026"
 
 const TASTING_NOTES = [
   { icon: "🍇", en: "Dried Fruits", ko: "건과일" },
@@ -62,7 +62,15 @@ function HomeContent() {
         </div>
         <div className="absolute left-1/2 -translate-x-1/2 bottom-6 z-20 flex flex-col items-center gap-1.5 text-white/75 text-[11px] tracking-[2.5px] font-semibold pointer-events-none">
           <span>{c.hero.scroll}</span>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 animate-bounce">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.8"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="w-5 h-5 animate-bounce"
+          >
             <path d="M12 5v14M6 13l6 6 6-6" />
           </svg>
         </div>
@@ -77,19 +85,40 @@ function HomeContent() {
             maskImage: "linear-gradient(105deg, transparent 0%, #000 62%)",
           }}
         >
-          <Image src="/2026/logo_background.png" alt="" width={601} height={706} className="w-full h-auto" />
+          <Image
+            src="/2026/logo_background.png"
+            alt=""
+            width={601}
+            height={706}
+            className="w-full h-auto"
+          />
         </div>
         <div className="relative max-w-[1440px] mx-auto px-5 md:px-10 w-full">
-          <Image src="/2026/logo-nav-dark.svg" alt="Cask Carnival" width={480} height={96} className="w-[clamp(260px,34vw,480px)] h-auto mb-[clamp(24px,2.8vw,44px)]" />
-          <p className="uppercase text-[#7d0b1c] font-extrabold tracking-tight leading-[1.15] text-[clamp(20px,2.4vw,30px)] mb-[clamp(28px,4.5vw,60px)]">{c.teaser.catch}</p>
+          <Image
+            src="/2026/logo-nav-dark.svg"
+            alt="Cask Carnival"
+            width={480}
+            height={96}
+            className="w-[clamp(260px,34vw,480px)] h-auto mb-[clamp(24px,2.8vw,44px)]"
+          />
+          <p className="uppercase text-[#7d0b1c] font-extrabold tracking-tight leading-[1.15] text-[clamp(20px,2.4vw,30px)] mb-[clamp(28px,4.5vw,60px)]">
+            {c.teaser.catch}
+          </p>
           <h2 className="text-[clamp(24px,3vw,36px)] font-extrabold leading-[1.45] mb-[clamp(22px,3.6vw,44px)]">
             {c.teaser.lead1}
             <br />
             {c.teaser.lead2}
           </h2>
-          <p className="text-[#555] text-[clamp(16px,1.2vw,18px)] leading-[1.9] max-w-[760px] break-keep text-pretty">{c.teaser.body1}</p>
-          <p className="text-[#555] text-[clamp(16px,1.2vw,18px)] leading-[1.9] max-w-[760px] mt-3 break-keep text-pretty">{c.teaser.body2}</p>
-          <Link href={`/about${qs}`} className="inline-block mt-9 text-[#7d0b1c] font-bold border-b-2 border-[#7d0b1c] pb-1.5">
+          <p className="text-[#555] text-[clamp(16px,1.2vw,18px)] leading-[1.9] max-w-[760px] break-keep text-pretty">
+            {c.teaser.body1}
+          </p>
+          <p className="text-[#555] text-[clamp(16px,1.2vw,18px)] leading-[1.9] max-w-[760px] mt-3 break-keep text-pretty">
+            {c.teaser.body2}
+          </p>
+          <Link
+            href={`/about${qs}`}
+            className="inline-block mt-9 text-[#7d0b1c] font-bold border-b-2 border-[#7d0b1c] pb-1.5"
+          >
             {c.teaser.more}
           </Link>
         </div>
@@ -100,14 +129,24 @@ function HomeContent() {
         <div className="max-w-[1180px] mx-auto px-5 md:px-10 py-20 md:py-32">
           <div className="border border-[#7d0b1c]/35 rounded-lg px-6 md:px-20 py-16 md:py-24 text-center text-[#1a1a1a]">
             <p className="tracking-[3px] text-[14px] text-[#7d0b1c] mb-4">{c.themeBand.eyebrow}</p>
-            <h2 className="text-[clamp(30px,5vw,46px)] font-extrabold leading-tight">{c.themeBand.title}</h2>
+            <h2 className="text-[clamp(30px,5vw,46px)] font-extrabold leading-tight">
+              {c.themeBand.title}
+            </h2>
             <div className="w-[clamp(180px,40vw,760px)] h-px bg-[#7d0b1c]/30 mx-auto my-9" />
             <div className="max-w-[760px] mx-auto space-y-4">
-              <p className="text-[#444] leading-[1.9] text-[clamp(15px,1.3vw,17px)] break-keep text-balance">{c.themeBand.desc1}</p>
-              <p className="text-[#444] leading-[1.9] text-[clamp(15px,1.3vw,17px)] break-keep text-balance">{c.themeBand.desc2}</p>
-              <p className="text-[#444] leading-[1.9] text-[clamp(15px,1.3vw,17px)] break-keep text-balance">{c.themeBand.desc3}</p>
+              <p className="text-[#444] leading-[1.9] text-[clamp(15px,1.3vw,17px)] break-keep text-balance">
+                {c.themeBand.desc1}
+              </p>
+              <p className="text-[#444] leading-[1.9] text-[clamp(15px,1.3vw,17px)] break-keep text-balance">
+                {c.themeBand.desc2}
+              </p>
+              <p className="text-[#444] leading-[1.9] text-[clamp(15px,1.3vw,17px)] break-keep text-balance">
+                {c.themeBand.desc3}
+              </p>
             </div>
-            <p className="tracking-[6px] text-[#7d0b1c] font-semibold mt-14 mb-10 text-[16px]">{c.themeBand.notesTitle}</p>
+            <p className="tracking-[6px] text-[#7d0b1c] font-semibold mt-14 mb-10 text-[16px]">
+              {c.themeBand.notesTitle}
+            </p>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-6 max-w-[920px] mx-auto">
               {TASTING_NOTES.map((n) => (
                 <div key={n.en} className="flex flex-col items-center gap-1.5">
@@ -126,8 +165,12 @@ function HomeContent() {
         <div className="max-w-[1100px] mx-auto px-5 md:px-10">
           <h2 className="text-[clamp(24px,4vw,32px)] font-extrabold mb-9">{c.masterclass.title}</h2>
           <div className="border border-[#7d0b1c]/30 rounded-xl py-16 md:py-24 px-6 bg-[#faf8f6]">
-            <p className="text-[#7d0b1c] tracking-[2px] text-[13px] font-semibold">{c.programP.comingEyebrow}</p>
-            <h3 className="text-[clamp(22px,4vw,28px)] font-extrabold mt-4">{c.programP.comingTitle}</h3>
+            <p className="text-[#7d0b1c] tracking-[2px] text-[13px] font-semibold">
+              {c.programP.comingEyebrow}
+            </p>
+            <h3 className="text-[clamp(22px,4vw,28px)] font-extrabold mt-4">
+              {c.programP.comingTitle}
+            </h3>
             <p className="text-[#888] mt-3">{c.programP.comingBody}</p>
           </div>
         </div>
@@ -154,7 +197,10 @@ function HomeContent() {
           <h3 className="text-[20px] font-bold mt-12 mb-5">{c.exhibitor.catsTitle}</h3>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
             {CATEGORIES[lang].map((name) => (
-              <div key={name} className="border border-black/10 rounded-lg px-5 py-4 bg-white font-semibold">
+              <div
+                key={name}
+                className="border border-black/10 rounded-lg px-5 py-4 bg-white font-semibold"
+              >
                 {name}
               </div>
             ))}
@@ -163,21 +209,37 @@ function HomeContent() {
           {/* 얼리버드 할인 배너 */}
           <div className="mt-10 rounded-lg bg-gradient-to-br from-[#8a0f20] to-[#5e0816] text-white px-6 md:px-10 py-7 flex flex-col md:flex-row md:items-center justify-between gap-5">
             <div>
-              <span className="inline-block text-[12px] font-semibold tracking-wide bg-white/15 rounded px-2.5 py-1">{c.exhibitor.ebTag}</span>
-              <h3 className="text-[20px] md:text-[24px] font-extrabold mt-3">{c.exhibitor.ebTitle}</h3>
+              <span className="inline-block text-[12px] font-semibold tracking-wide bg-white/15 rounded px-2.5 py-1">
+                {c.exhibitor.ebTag}
+              </span>
+              <h3 className="text-[20px] md:text-[24px] font-extrabold mt-3">
+                {c.exhibitor.ebTitle}
+              </h3>
               <p className="text-white/80 text-[14px] mt-1.5">{c.exhibitor.ebBody}</p>
             </div>
             <div className="text-center md:text-right shrink-0">
-              <small className="block text-white/70 text-[12px] tracking-wide">{c.exhibitor.ebUpto}</small>
-              <strong className="text-[34px] md:text-[40px] font-extrabold text-white">{c.exhibitor.ebOff}</strong>
+              <small className="block text-white/70 text-[12px] tracking-wide">
+                {c.exhibitor.ebUpto}
+              </small>
+              <strong className="text-[34px] md:text-[40px] font-extrabold text-white">
+                {c.exhibitor.ebOff}
+              </strong>
             </div>
           </div>
 
           <div className="flex flex-col sm:flex-row justify-center gap-3 mt-10">
-            <Link href={`/register${qs}`} className="border border-[#7d0b1c] text-[#7d0b1c] rounded px-7 py-3.5 font-semibold text-center hover:bg-[#7d0b1c] hover:text-white transition-colors">
+            <Link
+              href={`/register${qs}`}
+              className="border border-[#7d0b1c] text-[#7d0b1c] rounded px-7 py-3.5 font-semibold text-center hover:bg-[#7d0b1c] hover:text-white transition-colors"
+            >
               {c.exhibitor.moreBtn}
             </Link>
-            <a href={BOOTH_FORM_2026[lang]} target="_blank" rel="noopener noreferrer" className="bg-[#7d0b1c] hover:bg-[#5e0816] text-white rounded px-7 py-3.5 font-semibold text-center transition-colors">
+            <a
+              href={BOOTH_FORM_2026[lang]}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-[#7d0b1c] hover:bg-[#5e0816] text-white rounded px-7 py-3.5 font-semibold text-center transition-colors"
+            >
               {c.exhibitor.applyBtn}
             </a>
           </div>

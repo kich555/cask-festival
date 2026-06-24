@@ -1,10 +1,10 @@
 "use client"
 
-import { getThemeByYear, getThemesDesc } from "@/content/themes2026"
-import { useContent2026 } from "@/i18n/useContent2026"
 import Link from "next/link"
 import { useSearchParams } from "next/navigation"
 import { Suspense } from "react"
+import { getThemeByYear, getThemesDesc } from "@/content/themes2026"
+import { useContent2026 } from "@/i18n/useContent2026"
 import PageHeader2026 from "./PageHeader2026"
 
 function Inner() {
@@ -23,9 +23,10 @@ function Inner() {
 
       {/* CURRENT LABEL */}
       <section className="max-w-[1440px] mx-auto px-5 md:px-10 py-7 md:py-10">
-        <p className="text-[#7d0b1c] tracking-wide text-[13px]">{t.archiveEyebrow}</p>
-        <div className="flex items-center gap-3 md:gap-6 mt-3">
-          <span className="bg-[#7d0b1c] text-white font-semibold px-3 py-1.5 rounded text-[14px] md:text-[16px]">{cur.year}</span>
+        <div className="flex items-center gap-3 md:gap-6">
+          <span className="bg-[#7d0b1c] text-white font-semibold px-3 py-1.5 rounded text-[14px] md:text-[16px]">
+            {cur.year}
+          </span>
           <span className="text-[clamp(17px,5vw,32px)] font-extrabold">{cur.name}</span>
         </div>
       </section>
@@ -38,11 +39,16 @@ function Inner() {
             <h2 className="text-[clamp(28px,6vw,52px)] font-extrabold">{cur.name}</h2>
             <div className="w-[clamp(160px,40vw,720px)] h-px bg-[#7d0b1c]/30 mx-auto my-7" />
             {desc.map((d) => (
-              <p key={d} className="text-[#444] max-w-[760px] mx-auto leading-[1.9] text-[16px] mt-4 first:mt-0 break-keep text-balance">
+              <p
+                key={d}
+                className="text-[#444] max-w-[760px] mx-auto leading-[1.9] text-[16px] mt-4 first:mt-0 break-keep text-balance"
+              >
                 {d}
               </p>
             ))}
-            <p className="tracking-[6px] text-[#7d0b1c] font-semibold mt-12 mb-8 text-[15px]">{t.notesTitle}</p>
+            <p className="tracking-[6px] text-[#7d0b1c] font-semibold mt-12 mb-8 text-[15px]">
+              {t.notesTitle}
+            </p>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-5 max-w-[860px] mx-auto">
               {cur.notes.map((n) => (
                 <div key={n.en} className="flex flex-col items-center gap-1">
@@ -71,7 +77,9 @@ function Inner() {
                   active ? "outline outline-2 outline-white/70 outline-offset-[3px]" : ""
                 }`}
               >
-                <span className="text-white/80 font-semibold tracking-[4px] text-[22px]">{th.year}</span>
+                <span className="text-white/80 font-semibold tracking-[4px] text-[22px]">
+                  {th.year}
+                </span>
                 <strong className="text-[30px] mt-3 leading-tight">{th.name}</strong>
               </Link>
             )

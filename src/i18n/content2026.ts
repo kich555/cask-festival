@@ -2,51 +2,111 @@
 // 한국어 기본, 영어 전환. 컴포넌트에서 useContent2026() 로 사용.
 
 export interface Content2026 {
-  nav: { about: string; theme: string; program: string; register: string; openMenu: string; closeMenu: string }
+  nav: {
+    about: string
+    theme: string
+    program: string
+    register: string
+    openMenu: string
+    closeMenu: string
+  }
   hero: { date: string; place: string; recap: string; booth: string; scroll: string }
-  teaser: { catch: string; lead1: string; lead2: string; body1: string; body2: string; more: string }
-  themeBand: { eyebrow: string; title: string; desc1: string; desc2: string; desc3: string; notesTitle: string }
+  teaser: {
+    catch: string
+    lead1: string
+    lead2: string
+    body1: string
+    body2: string
+    more: string
+  }
+  themeBand: {
+    eyebrow: string
+    title: string
+    desc1: string
+    desc2: string
+    desc3: string
+    notesTitle: string
+  }
   masterclass: { eyebrow: string; title: string; tbd: string }
   exhibitor: {
-    eyebrow: string; title: string
-    infoEvent: string; infoEventV: string; infoDate: string; infoDateV: string
-    infoVenue: string; infoVenueV: string; infoHost: string; infoHostV: string
-    catsTitle: string; moreBtn: string; applyBtn: string
-    ebTag: string; ebTitle: string; ebBody: string; ebUpto: string; ebOff: string
+    eyebrow: string
+    title: string
+    infoEvent: string
+    infoEventV: string
+    infoDate: string
+    infoDateV: string
+    infoVenue: string
+    infoVenueV: string
+    infoHost: string
+    infoHostV: string
+    catsTitle: string
+    moreBtn: string
+    applyBtn: string
+    ebTag: string
+    ebTitle: string
+    ebBody: string
+    ebUpto: string
+    ebOff: string
   }
   themeP: {
-    title: string; subtitle: string
-    archiveEyebrow: string; archiveTitle: string; notesTitle: string
+    title: string
+    subtitle: string
+    archiveEyebrow: string
+    archiveTitle: string
+    notesTitle: string
   }
   programP: {
-    title: string; subtitle: string
-    comingEyebrow: string; comingTitle: string; comingBody: string
+    title: string
+    subtitle: string
+    comingEyebrow: string
+    comingTitle: string
+    comingBody: string
   }
   registerP: {
-    title: string; subtitle: string
+    title: string
+    subtitle: string
     brochureBtn: string
-    ctaTitle: string; ctaHl: string; applyBtn: string
-    processEyebrow: string; processTitle: string
+    ctaTitle: string
+    ctaHl: string
+    applyBtn: string
+    processEyebrow: string
+    processTitle: string
     process: { n: string; title: string; desc: string }[]
-    forecastEyebrow: string; forecastTitle: string
+    forecastEyebrow: string
+    forecastTitle: string
     forecast: { big: string; title: string; desc: string }[]
-    boothEyebrow: string; boothTitle: string
-    boothSize: string; boothWas: string; boothNow: string; boothVat: string; boothTag: string
+    boothEyebrow: string
+    boothTitle: string
+    boothSize: string
+    boothWas: string
+    boothNow: string
+    boothVat: string
+    boothTag: string
     boothImgNote: string
     boothIncludes: { label: string; value: string }[]
-    catsEyebrow: string; catsTitle: string
+    catsEyebrow: string
+    catsTitle: string
     cats: { name: string; desc: string }[]
-    contactNote: string; contactOffice: string
+    contactNote: string
+    contactOffice: string
   }
   footer: { brand: string; copy: string }
   aboutP: {
-    title: string; subtitle: string
-    recapEyebrow: string; recapTitle: string; recapBody1: string; recapBody2: string; recapBtn: string
+    title: string
+    subtitle: string
+    recapEyebrow: string
+    recapTitle: string
+    recapBody1: string
+    recapBody2: string
+    recapBtn: string
     overviewTitle: string
-    rowName: string; rowNameV: string
+    rowName: string
+    rowNameV: string
     rowTheme: string
-    rowDate: string; rowDateV: string
-    rowVenue: string; rowVenueV: string
+    rowDate: string
+    rowDateV: string
+    rowVenue: string
+    rowVenueV: string
     rowHost: string
     rowSns: string
   }
@@ -73,15 +133,19 @@ export const content2026: Record<"ko" | "en", Content2026> = {
       catch: "Global Cask-Aged Drinks Festa",
       lead1: "캐스크에 담긴 취향의 시작, 미학의 완성",
       lead2: "캐스크 숙성의 모든 것을 캐스크 카니발에서",
-      body1: "대한민국에서 캐스크 숙성 제품과 콘텐츠를 가장 깊이 있게 경험할 수 있는 페스티벌, 캐스크 카니발.",
-      body2: "국내외 메이커와 수입사, 독립병입자 등 각 분야의 전문가들과 함께 숙성주에 담긴 새로운 인사이트를 발견해 보세요.",
+      body1:
+        "대한민국에서 캐스크 숙성 제품과 콘텐츠를 가장 깊이 있게 경험할 수 있는 페스티벌, 캐스크 카니발.",
+      body2:
+        "국내외 메이커와 수입사, 독립병입자 등 각 분야의 전문가들과 함께 숙성주에 담긴 새로운 인사이트를 발견해 보세요.",
       more: "더 자세히 알아보기 →",
     },
     themeBand: {
       eyebrow: "2026 THEME",
       title: "Oloroso Sherry Cask",
-      desc1: "올로로소 셰리는 스페인 안달루시아 헤레스(Jerez) 지방에서 생산되는 대표적인 드라이 셰리 와인입니다.",
-      desc2: "플로르(효모막) 없이 공기에 직접 노출되는 산화 숙성 과정을 거치며, 호두와 건포도, 다크 초콜릿, 시나몬 등이 어우러진 복합적이고 깊은 풍미를 완성합니다.",
+      desc1:
+        "올로로소 셰리는 스페인 안달루시아 헤레스(Jerez) 지방에서 생산되는 대표적인 드라이 셰리 와인입니다.",
+      desc2:
+        "플로르(효모막) 없이 공기에 직접 노출되는 산화 숙성 과정을 거치며, 호두와 건포도, 다크 초콜릿, 시나몬 등이 어우러진 복합적이고 깊은 풍미를 완성합니다.",
       desc3: "스페인어로 '향기로운'이라는 뜻을 가진 이름처럼 진하고 풍성한 아로마가 특징입니다.",
       notesTitle: "TASTING NOTES",
     },
@@ -142,14 +206,16 @@ export const content2026: Record<"ko" | "en", Content2026> = {
     },
     programP: {
       title: "프로그램",
-      subtitle: "마스터클래스와 테이스팅 세션으로 구성된 캐스크 카니발 2026의 프로그램 일정을 안내합니다.",
+      subtitle:
+        "마스터클래스와 테이스팅 세션으로 구성된 캐스크 카니발 2026의 프로그램 일정을 안내합니다.",
       comingEyebrow: "Coming Soon",
       comingTitle: "2026 마스터클래스 라인업",
       comingBody: "추후 공개 예정",
     },
     registerP: {
       title: "참가 업체 모집",
-      subtitle: "캐스크 카니발 2026과 함께할 브랜드를 모집합니다. 부스 신청 안내와 참가 혜택을 확인하세요.",
+      subtitle:
+        "캐스크 카니발 2026과 함께할 브랜드를 모집합니다. 부스 신청 안내와 참가 혜택을 확인하세요.",
       brochureBtn: "행사 소개 자료 다운로드",
       ctaTitle: "지금 바로 캐스크 카니발 2026에 참여하세요!",
       ctaHl: "6월 30일까지 신청 및 입금 완료 시 부스비 할인",
@@ -218,14 +284,16 @@ export const content2026: Record<"ko" | "en", Content2026> = {
       lead1: "Where taste begins and aesthetics are perfected.",
       lead2: "Everything about cask aging, at Cask Carnival.",
       body1: "Korea's most in-depth festival for cask-aged products and culture.",
-      body2: "Discover new insights into matured spirits with makers, importers, and independent bottlers from home and abroad.",
+      body2:
+        "Discover new insights into matured spirits with makers, importers, and independent bottlers from home and abroad.",
       more: "Learn more →",
     },
     themeBand: {
       eyebrow: "2026 THEME",
       title: "Oloroso Sherry Cask",
       desc1: "Oloroso Sherry is a classic dry sherry from the Jerez region of Andalusia, Spain.",
-      desc2: "It undergoes oxidative aging in direct contact with air, without a protective layer of flor, developing a deep, complex character of walnut, raisin, dark chocolate, and cinnamon.",
+      desc2:
+        "It undergoes oxidative aging in direct contact with air, without a protective layer of flor, developing a deep, complex character of walnut, raisin, dark chocolate, and cinnamon.",
       desc3: "True to its name — Spanish for 'fragrant' — it offers a rich, full-bodied aroma.",
       notesTitle: "TASTING NOTES",
     },
@@ -279,7 +347,8 @@ export const content2026: Record<"ko" | "en", Content2026> = {
     },
     themeP: {
       title: "Themes",
-      subtitle: "Each year, Cask Carnival selects a single cask as its Theme of the Year and explores it in depth.",
+      subtitle:
+        "Each year, Cask Carnival selects a single cask as its Theme of the Year and explores it in depth.",
       archiveEyebrow: "Theme Archive",
       archiveTitle: "Archive",
       notesTitle: "TASTING NOTES",
@@ -293,7 +362,8 @@ export const content2026: Record<"ko" | "en", Content2026> = {
     },
     registerP: {
       title: "Register",
-      subtitle: "We're inviting brands to join Cask Carnival 2026. Discover how to apply for a booth and the benefits of taking part.",
+      subtitle:
+        "We're inviting brands to join Cask Carnival 2026. Discover how to apply for a booth and the benefits of taking part.",
       brochureBtn: "Download Event Brochure",
       ctaTitle: "Join Cask Carnival 2026 today!",
       ctaHl: "Apply and complete payment by June 30 for a discounted booth fee",
@@ -310,7 +380,11 @@ export const content2026: Record<"ko" | "en", Content2026> = {
       forecastTitle: "Event Forecast",
       forecast: [
         { big: "60–70", title: "Expected Brands", desc: "Cask-aged brands from Korea & abroad" },
-        { big: "4,000+", title: "Expected Visitors", desc: "Dedicated whisky & spirits enthusiasts" },
+        {
+          big: "4,000+",
+          title: "Expected Visitors",
+          desc: "Dedicated whisky & spirits enthusiasts",
+        },
         { big: "24", title: "Master Classes", desc: "700+ attendees expected" },
       ],
       boothEyebrow: "What's Included",
@@ -331,7 +405,10 @@ export const content2026: Record<"ko" | "en", Content2026> = {
       catsTitle: "Exhibitor Categories",
       cats: [
         { name: "Spirits", desc: "All kinds of cask-aged spirits" },
-        { name: "Bars & Independent Bottlers", desc: "IB brands and custom cask-selection bottlers" },
+        {
+          name: "Bars & Independent Bottlers",
+          desc: "IB brands and custom cask-selection bottlers",
+        },
         { name: "Barware & Goods", desc: "Glassware, coasters, openers, cases, and event goods" },
         { name: "Food", desc: "Dark chocolate, dried fruit, cheese, and jamón for pairing" },
         { name: "Business", desc: "Importers, distributors, and drinks-tech companies" },

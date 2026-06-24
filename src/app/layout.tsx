@@ -1,7 +1,7 @@
-import LanguageSync from "@/components/LanguageSync"
 import type { Metadata } from "next"
 import { Geist, Geist_Mono } from "next/font/google"
 import { Suspense } from "react"
+import LanguageSync from "@/components/LanguageSync"
 import "./globals.css"
 
 const geistSans = Geist({
@@ -25,11 +25,11 @@ export const metadata: Metadata = {
   description:
     "2026년 11월 21일 개최되는 CASK CARNIVAL. 세계 각국의 Cask 숙성 증류주들을 만나보세요.",
   keywords: [
-    '캐스크카니발',
-    '캐스크 카니발',
-    '캐스크 카니발 2026',
-    'cask carnival',
-    'cask carnival 2026',
+    "캐스크카니발",
+    "캐스크 카니발",
+    "캐스크 카니발 2026",
+    "cask carnival",
+    "cask carnival 2026",
     "whiskynavi",
     "위스키",
     "숙성 증류주",
@@ -104,7 +104,6 @@ export const metadata: Metadata = {
       "max-snippet": -1,
     },
   },
-  
 }
 
 export default function RootLayout({

@@ -1,7 +1,7 @@
+import type { Metadata } from "next"
 import Footer2026 from "@/components/2026/Footer2026"
 import Nav2026 from "@/components/2026/Nav2026"
 import ThemeContent from "@/components/2026/ThemeContent"
-import type { Metadata } from "next"
 
 export const metadata: Metadata = {
   title: "테마 소개",

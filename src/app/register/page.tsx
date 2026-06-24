@@ -1,7 +1,7 @@
+import type { Metadata } from "next"
 import Footer2026 from "@/components/2026/Footer2026"
 import Nav2026 from "@/components/2026/Nav2026"
 import RegisterContent from "@/components/2026/RegisterContent"
-import type { Metadata } from "next"
 
 export const metadata: Metadata = {
   title: "참가 업체 모집",

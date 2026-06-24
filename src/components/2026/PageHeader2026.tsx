@@ -1,7 +1,7 @@
 "use client"
 
-import { useLanguage } from "@/i18n"
 import { Suspense } from "react"
+import { useLanguage } from "@/i18n"
 
 interface PageHeader2026Props {
   title: string

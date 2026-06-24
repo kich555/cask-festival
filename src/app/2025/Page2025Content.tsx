@@ -8,7 +8,7 @@ function Content() {
   const { t } = useTranslation()
 
   return (
-    <section id="gallery" className="px-4 md:px-40 py-4 bg-[#121212]/50 mt-[80px]">
+    <section id="gallery" className="px-4 md:px-40 py-4 bg-[#121212]/50 mt-[88px]">
       <h1 className="text-[28px] md:text-[36px] font-extrabold text-[#ea5514]">
         {t.page2025.title}
       </h1>

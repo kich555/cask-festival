@@ -1,25 +1,29 @@
-@import 'tailwindcss';
-@import '@fontsource/pretendard/400.css';
-@import '@fontsource/pretendard/500.css';
-@import '@fontsource/pretendard/600.css';
-@import '@fontsource/pretendard/700.css';
-@import '@fontsource/pretendard/800.css';
-@import '@fontsource/pretendard/900.css';
+@import "tailwindcss";
+@import "@fontsource/pretendard/400.css";
+@import "@fontsource/pretendard/500.css";
+@import "@fontsource/pretendard/600.css";
+@import "@fontsource/pretendard/700.css";
+@import "@fontsource/pretendard/800.css";
+@import "@fontsource/pretendard/900.css";
 
 /* 2026 전용: D-DIN Condensed (페이지 헤더 배경 워터마크 한정) — 추가만, 기존 영향 없음 */
 @font-face {
-  font-family: 'D-DIN Condensed';
+  font-family: "D-DIN Condensed";
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: local('D-DIN Condensed'), url('/2026/fonts/D-DINCondensed.otf') format('opentype');
+  src:
+    local("D-DIN Condensed"),
+    url("/2026/fonts/D-DINCondensed.otf") format("opentype");
 }
 @font-face {
-  font-family: 'D-DIN Condensed';
+  font-family: "D-DIN Condensed";
   font-style: normal;
   font-weight: 700;
   font-display: swap;
-  src: local('D-DIN Condensed Bold'), url('/2026/fonts/D-DINCondensed-Bold.otf') format('opentype');
+  src:
+    local("D-DIN Condensed Bold"),
+    url("/2026/fonts/D-DINCondensed-Bold.otf") format("opentype");
 }
 
 :root {
@@ -47,19 +51,19 @@ html {
 
 * {
   font-family:
-    'Pretendard',
+    "Pretendard",
     -apple-system,
     BlinkMacSystemFont,
     system-ui,
     Roboto,
-    'Helvetica Neue',
-    'Segoe UI',
-    'Apple SD Gothic Neo',
-    'Noto Sans KR',
-    'Malgun Gothic',
-    'Apple Color Emoji',
-    'Segoe UI Emoji',
-    'Segoe UI Symbol',
+    "Helvetica Neue",
+    "Segoe UI",
+    "Apple SD Gothic Neo",
+    "Noto Sans KR",
+    "Malgun Gothic",
+    "Apple Color Emoji",
+    "Segoe UI Emoji",
+    "Segoe UI Symbol",
     sans-serif;
 }
 
@@ -67,18 +71,18 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family:
-    'Pretendard',
+    "Pretendard",
     -apple-system,
     BlinkMacSystemFont,
     system-ui,
     Roboto,
-    'Helvetica Neue',
-    'Segoe UI',
-    'Apple SD Gothic Neo',
-    'Noto Sans KR',
-    'Malgun Gothic',
-    'Apple Color Emoji',
-    'Segoe UI Emoji',
-    'Segoe UI Symbol',
+    "Helvetica Neue",
+    "Segoe UI",
+    "Apple SD Gothic Neo",
+    "Noto Sans KR",
+    "Malgun Gothic",
+    "Apple Color Emoji",
+    "Segoe UI Emoji",
+    "Segoe UI Symbol",
     sans-serif;
 }

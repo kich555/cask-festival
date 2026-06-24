@@ -1,8 +1,8 @@
 "use client"
 
-import { useContent2026 } from "@/i18n/useContent2026"
 import Image from "next/image"
 import { Suspense } from "react"
+import { useContent2026 } from "@/i18n/useContent2026"
 import PageHeader2026 from "./PageHeader2026"
 
 function Inner() {
