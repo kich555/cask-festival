@@ -7,6 +7,19 @@ import { Suspense } from "react"
 import { useContent2026 } from "@/i18n/useContent2026"
 import PageHeader2026 from "./PageHeader2026"
 
+// **bold** 마커를 <strong>으로 렌더링
+function renderBold(text: string) {
+  return text.split("**").map((part, i) =>
+    i % 2 === 1 ? (
+      <strong key={`b${i}`} className="font-bold text-[#1a1a1a]">
+        {part}
+      </strong>
+    ) : (
+      part
+    ),
+  )
+}
+
 function Reveal({
   children,
   delay = 0,
@@ -50,13 +63,12 @@ function Inner() {
       {/* INTRO — 취지 (좌측 정렬) */}
       <section className="max-w-[920px] mx-auto px-5 md:px-10 pt-20 md:pt-28 pb-16 md:pb-20">
         <Reveal>
-          <h2 className="text-[clamp(26px,4.4vw,46px)] font-extrabold leading-[1.35] whitespace-pre-line break-keep">
+          <h2 className="text-[clamp(20px,2.8vw,34px)] font-extrabold leading-[1.4] break-keep mb-8 md:mb-10">
             {a.introTagline}
           </h2>
-          <div className="w-14 h-[3px] bg-[#7d0b1c] my-9 md:my-11" />
-          <p className="text-[#3f3f3f] text-[clamp(16px,1.5vw,19px)] leading-[1.95] break-keep">{a.introBody1}</p>
-          <p className="text-[#3f3f3f] text-[clamp(16px,1.5vw,19px)] leading-[1.95] mt-5 break-keep">{a.introBody2}</p>
-          <p className="text-[#3f3f3f] text-[clamp(16px,1.5vw,19px)] leading-[1.95] mt-5 break-keep">{a.introBody3}</p>
+          <p className="text-[#3f3f3f] text-[clamp(16px,1.5vw,19px)] leading-[1.95] break-keep text-pretty">{renderBold(a.introBody1)}</p>
+          <p className="text-[#3f3f3f] text-[clamp(16px,1.5vw,19px)] leading-[1.95] mt-5 break-keep text-pretty">{renderBold(a.introBody2)}</p>
+          <p className="text-[#3f3f3f] text-[clamp(16px,1.5vw,19px)] leading-[1.95] mt-5 break-keep text-pretty">{renderBold(a.introBody3)}</p>
         </Reveal>
       </section>
 
