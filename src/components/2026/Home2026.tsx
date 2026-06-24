@@ -69,9 +69,9 @@ function HomeContent() {
       </section>
 
       {/* ABOUT TEASER */}
-      <section className="relative overflow-hidden flex items-center min-h-screen py-20 md:py-24">
+      <section className="relative overflow-hidden flex items-center md:min-h-screen py-16 md:py-24">
         <div
-          className="absolute right-[-40px] top-1/2 -translate-y-1/2 w-[clamp(260px,42vw,640px)] opacity-[0.08] pointer-events-none select-none"
+          className="hidden md:block absolute right-[-40px] top-1/2 -translate-y-1/2 w-[clamp(260px,42vw,640px)] opacity-[0.08] pointer-events-none select-none"
           style={{
             WebkitMaskImage: "linear-gradient(105deg, transparent 0%, #000 62%)",
             maskImage: "linear-gradient(105deg, transparent 0%, #000 62%)",
