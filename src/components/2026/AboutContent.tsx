@@ -7,33 +7,17 @@ import { Suspense } from "react"
 import { useContent2026 } from "@/i18n/useContent2026"
 import PageHeader2026 from "./PageHeader2026"
 
-// [[...]] 구간은 줄바꿈되지 않도록(핵심 문구 보호)
-function renderNowrap(text: string, keyPrefix: string) {
+// [[...]] 구간만 줄바꿈 방지(핵심 단어/문구 보호). 그 외는 자연스러운 자동 줄바꿈.
+function renderText(text: string) {
   return text.split(/\[\[|\]\]/).map((part, i) =>
     i % 2 === 1 ? (
-      <span key={`${keyPrefix}nw${i}`} className="whitespace-nowrap">
+      <span key={`nw${i}`} className="whitespace-nowrap">
         {part}
       </span>
     ) : (
       part
     ),
   )
-}
-
-// 줄바꿈 우선순위: ① 과도한 줄바꿈 방지(text-pretty) ② 문장 단위(데스크톱) ③ 단어 단위(break-keep)
-// 데스크톱: 문장이 끝나면 줄바꿈 / 모바일: 공백으로 자연스럽게 이어짐
-function renderText(text: string) {
-  return text.split(/(?<=[.!?])\s+/).map((sentence, si) => (
-    <span key={`s${si}`}>
-      {si > 0 && (
-        <>
-          <span className="md:hidden"> </span>
-          <br className="hidden md:inline" />
-        </>
-      )}
-      {renderNowrap(sentence, `s${si}-`)}
-    </span>
-  ))
 }
 
 function Reveal({
