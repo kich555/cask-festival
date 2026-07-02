@@ -207,28 +207,7 @@ function HomeContent() {
             ))}
           </div>
 
-          {/* 얼리버드 할인 배너 */}
-          <div className="mt-10 rounded-lg bg-gradient-to-br from-[#8a0f20] to-[#5e0816] text-white px-6 md:px-10 py-7 flex flex-col md:flex-row md:items-center justify-between gap-5">
-            <div>
-              <span className="inline-block text-[12px] font-semibold tracking-wide bg-white/15 rounded px-2.5 py-1">
-                {c.exhibitor.ebTag}
-              </span>
-              <h3 className="text-[20px] md:text-[24px] font-extrabold mt-3">
-                {c.exhibitor.ebTitle}
-              </h3>
-              <p className="text-white/80 text-[14px] mt-1.5">{c.exhibitor.ebBody}</p>
-            </div>
-            <div className="text-center md:text-right shrink-0">
-              <small className="block text-white/70 text-[12px] tracking-wide">
-                {c.exhibitor.ebUpto}
-              </small>
-              <strong className="text-[34px] md:text-[40px] font-extrabold text-white">
-                {c.exhibitor.ebOff}
-              </strong>
-            </div>
-          </div>
-
-          <div className="flex flex-col sm:flex-row justify-center gap-3 mt-10">
+          <div className="flex flex-col sm:flex-row justify-center gap-3 mt-12">
             <Link
               href={`/register${qs}`}
               className="border border-[#7d0b1c] text-[#7d0b1c] rounded px-7 py-3.5 font-semibold text-center hover:bg-[#7d0b1c] hover:text-white transition-colors"

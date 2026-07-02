@@ -29,10 +29,7 @@ function Inner() {
 
         {/* CTA */}
         <div className="text-center pt-12 md:pt-16 pb-7 md:pb-9">
-          <h2 className="text-[clamp(20px,3vw,26px)] font-semibold">
-            {r.ctaTitle}
-            <span className="block text-[#7d0b1c] mt-1.5">{r.ctaHl}</span>
-          </h2>
+          <h2 className="text-[clamp(20px,3vw,26px)] font-semibold">{r.ctaTitle}</h2>
           <a
             href={BOOTH_FORM_2026[lang]}
             target="_blank"
@@ -90,13 +87,9 @@ function Inner() {
           <div className="grid grid-cols-1 md:grid-cols-3 bg-[#7d0b1c] text-white rounded-lg overflow-hidden shadow-xl">
             {/* 가격 */}
             <div className="p-8 md:p-10 flex flex-col justify-center">
-              <div className="text-[34px] font-extrabold leading-none">{r.boothSize}</div>
-              <div className="text-white/55 line-through mt-5 text-[14px]">{r.boothWas}</div>
-              <div className="text-[38px] font-extrabold leading-none mt-1">{r.boothNow}</div>
-              <div className="text-white/70 text-[13px] mt-1">{r.boothVat}</div>
-              <span className="inline-block self-start mt-5 text-[12px] font-semibold bg-white/15 rounded px-2.5 py-1">
-                {r.boothTag}
-              </span>
+              <div className="text-[40px] font-extrabold leading-none">{r.boothSize}</div>
+              <div className="text-[52px] font-extrabold leading-none mt-7">{r.boothNow}</div>
+              <div className="text-white/70 text-[15px] mt-2">{r.boothVat}</div>
             </div>
             {/* 렌더 이미지 */}
             <div className="p-8 md:p-10 border-t md:border-t-0 md:border-l border-white/15 flex flex-col justify-center text-center">
