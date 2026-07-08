@@ -207,11 +207,24 @@
       addEventListener('resize', fit); fit();
     })();
 
+    // 모바일: 움직이는 3D 로고 대신 정적 로고 이미지 사용 (렌더러 부하↓ → 스크롤 튕김 완화).
+    // 3D 로고와 같은 자리(.logo-scene)에 동일 비율로 끼워넣어 위치/크기 유지, 애니메이션만 제거.
+    // 데스크톱은 아래 3D 로고 빌드를 그대로 실행.
+    if (MOBILE) {
+      const scene = document.querySelector('.logo-scene');
+      const tilt = scene.querySelector('.tilt');
+      if (tilt) tilt.remove();
+      const img = document.createElement('img');
+      img.src = 'hero-static.png';
+      img.alt = 'Cask Carnival';
+      img.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;object-fit:contain;';
+      scene.appendChild(img);
+    } else
     // build the extruded 3D logo (ring + wordmark as one solid piece)
     (function(){
       const coin = document.getElementById('coin');
       const tpl  = document.getElementById('logoTpl');
-      const RIM=MOBILE?12:22, DEPTH=34, half=DEPTH/2;
+      const RIM=22, DEPTH=34, half=DEPTH/2;
       function makeSlice(z, ink, cls){
         const s=document.createElement('div');
         s.className='slice'+(cls?' '+cls:'');
