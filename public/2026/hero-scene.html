@@ -144,6 +144,12 @@
     .glow{ width:780px; height:780px; }
     .glow--2{ width:480px; height:480px; }
   }
+  /* 세로가 긴 모바일(주소창 없는 일반 브라우저 등)에서는 로고가 텍스트와
+     과하게 벌어지므로 로고를 아래로 내려 간격을 좁힌다. 짧은 화면(카톡 주소창)은
+     위 값(-215) 유지. */
+  @media (max-width: 560px) and (min-height: 740px){
+    .logo-scene{ transform:translateY(-150px) scale(.47); }
+  }
 </style>
 </head>
 <body>
