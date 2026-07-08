@@ -47,6 +47,13 @@
 
 html {
   scroll-behavior: smooth;
+  /* 인앱 브라우저(카카오톡 등)의 pull-to-refresh 및 스크롤 체이닝으로 인한
+     "맨 위로 튕김" 방지 */
+  overscroll-behavior-y: none;
+}
+
+body {
+  overscroll-behavior-y: none;
 }
 
 * {

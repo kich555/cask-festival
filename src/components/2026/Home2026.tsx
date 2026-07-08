@@ -4,6 +4,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { useSearchParams } from "next/navigation"
 import { Suspense } from "react"
+import HeroScene from "@/components/2026/HeroScene"
 import { BOOTH_FORM_2026 } from "@/i18n/content2026"
 import { useContent2026 } from "@/i18n/useContent2026"
 
@@ -29,13 +30,7 @@ function HomeContent() {
     <div className="bg-white text-[#1a1a1a]">
       {/* HERO */}
       <section className="relative h-screen min-h-[600px] overflow-hidden bg-[#07050a] flex items-end justify-center text-center text-white">
-        <iframe
-          src="/2026/hero-scene.html?v=3"
-          title="Cask Carnival"
-          loading="eager"
-          scrolling="no"
-          className="absolute inset-0 w-full h-full border-0 pointer-events-none"
-        />
+        <HeroScene />
         <div className="relative z-10 px-6 pb-28 flex flex-col items-center">
           <div className="hidden md:block w-[540px] max-w-[80vw] h-px bg-white/40 mb-4" />
           <div className="flex flex-col md:flex-row items-center justify-center gap-2 md:gap-4 font-semibold text-[22px] md:text-[30px]">
