@@ -134,6 +134,10 @@
     .glow{ width:920px; height:920px; }
     .glow--2{ width:560px; height:560px; }
     .rays{ width:1160px; height:1160px; opacity:.42; }
+    /* 모바일 한정: 매 프레임 재래스터되는 대형 blur 레이어의 반경을 낮춰
+       인앱 WebView 렌더러 포화(→ 스크롤 튕김)를 완화. 데스크톱은 미변경. */
+    .flow{ filter:blur(40px); }
+    .rays{ filter:blur(20px); }
   }
   @media (max-width: 560px){
     .logo-scene{ transform:translateY(-170px) scale(.52); }
@@ -188,6 +192,11 @@
   </template>
 
   <script>
+    // 모바일/터치 인앱 브라우저(카카오톡 등)에서는 렌더러 포화로 스크롤이 튕기므로
+    // 데스크톱 모습은 그대로 두고 무거운 부분(3D 슬라이스 수, 파티클 수)만 줄인다.
+    const MOBILE = window.matchMedia('(max-width: 767px)').matches
+      || window.matchMedia('(pointer: coarse)').matches;
+
     // scale the fixed canvas to COVER the viewport (center stays put, sides crop when narrow)
     (function(){
       const canvas = document.getElementById('canvas');
@@ -202,7 +211,7 @@
     (function(){
       const coin = document.getElementById('coin');
       const tpl  = document.getElementById('logoTpl');
-      const RIM=22, DEPTH=34, half=DEPTH/2;
+      const RIM=MOBILE?12:22, DEPTH=34, half=DEPTH/2;
       function makeSlice(z, ink, cls){
         const s=document.createElement('div');
         s.className='slice'+(cls?' '+cls:'');
@@ -222,7 +231,7 @@
 
     // rising embers
     (function(){
-      const box=document.getElementById('embers'), N=30;
+      const box=document.getElementById('embers'), N=MOBILE?12:30;
       for(let i=0;i<N;i++){
         const e=document.createElement('i');
         const fast=Math.random()<0.3;                       // 일부는 빠른 불꽃

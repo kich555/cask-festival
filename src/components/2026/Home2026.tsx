@@ -30,7 +30,7 @@ function HomeContent() {
       {/* HERO */}
       <section className="relative h-screen min-h-[600px] overflow-hidden bg-[#07050a] flex items-end justify-center text-center text-white">
         <iframe
-          src="/2026/hero-scene.html?v=3"
+          src="/2026/hero-scene.html?v=4"
           title="Cask Carnival"
           loading="eager"
           scrolling="no"
