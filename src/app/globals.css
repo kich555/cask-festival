@@ -1,10 +1,10 @@
 @import "tailwindcss";
+/* 첫 로드 부담 완화: 실사용 핵심 웨이트만 로드 (500/900 제거).
+   한글은 어차피 시스템 폰트로 폴백되며, 라틴 500/900은 인접 웨이트로 대체됨. */
 @import "@fontsource/pretendard/400.css";
-@import "@fontsource/pretendard/500.css";
 @import "@fontsource/pretendard/600.css";
 @import "@fontsource/pretendard/700.css";
 @import "@fontsource/pretendard/800.css";
-@import "@fontsource/pretendard/900.css";
 
 /* 2026 전용: D-DIN Condensed (페이지 헤더 배경 워터마크 한정) — 추가만, 기존 영향 없음 */
 @font-face {
