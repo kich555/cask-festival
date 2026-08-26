@@ -38,22 +38,43 @@ function HomeContent() {
             <span>{c.hero.place}</span>
           </div>
           <div className="flex flex-col md:flex-row gap-4 md:gap-5 mt-9 w-full md:w-auto">
-            <a
-              href="https://nol.yanolja.com/ticket/products/26012544"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-full md:w-[240px] text-center bg-white text-[#1a1a1a] rounded px-7 py-3.5 text-[18px] font-bold hover:bg-white/85 transition-colors"
-            >
-              {c.hero.buyTicket}
-            </a>
-            <a
-              href="https://world.nol.com/en/ticket/places/26001036/products/26012544"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-full md:w-[240px] text-center bg-[#7d0b1c] hover:bg-[#5e0816] rounded px-7 py-3.5 text-[18px] font-bold transition-colors"
-            >
-              {c.hero.globalTicket}
-            </a>
+            {lang === "ko" ? (
+              <>
+                <a
+                  href="https://nol.yanolja.com/ticket/products/26012544"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full md:w-[240px] text-center bg-white text-[#1a1a1a] rounded px-7 py-3.5 text-[18px] font-bold hover:bg-white/85 transition-colors"
+                >
+                  {c.hero.buyTicket}
+                </a>
+                <a
+                  href="https://world.nol.com/en/ticket/places/26001036/products/26012544"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full md:w-[240px] text-center bg-[#7d0b1c] hover:bg-[#5e0816] rounded px-7 py-3.5 text-[18px] font-bold transition-colors"
+                >
+                  {c.hero.globalTicket}
+                </a>
+              </>
+            ) : (
+              <>
+                <a
+                  href="https://world.nol.com/en/ticket/places/26001036/products/26012544"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full md:w-[240px] text-center bg-white text-[#1a1a1a] rounded px-7 py-3.5 text-[18px] font-bold hover:bg-white/85 transition-colors"
+                >
+                  {c.hero.globalTicket}
+                </a>
+                <Link
+                  href={`/2025${qs}`}
+                  className="w-full md:w-[240px] text-center bg-[#7d0b1c] hover:bg-[#5e0816] rounded px-7 py-3.5 text-[18px] font-bold transition-colors"
+                >
+                  {c.hero.recap}
+                </Link>
+              </>
+            )}
           </div>
         </div>
         <div className="absolute left-1/2 -translate-x-1/2 bottom-6 z-20 flex flex-col items-center gap-1.5 text-white/75 text-[11px] tracking-[2.5px] font-semibold pointer-events-none">
