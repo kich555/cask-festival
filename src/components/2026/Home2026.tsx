@@ -42,7 +42,7 @@ function HomeContent() {
               href="https://nol.yanolja.com/ticket/products/26012544"
               target="_blank"
               rel="noopener noreferrer"
-              className="bg-white text-[#1a1a1a] rounded px-7 py-3.5 text-[18px] font-bold hover:bg-white/85 transition-colors"
+              className="w-full md:w-[240px] text-center bg-white text-[#1a1a1a] rounded px-7 py-3.5 text-[18px] font-bold hover:bg-white/85 transition-colors"
             >
               {c.hero.buyTicket}
             </a>
@@ -50,7 +50,7 @@ function HomeContent() {
               href="https://world.nol.com/en/ticket/places/26001036/products/26012544"
               target="_blank"
               rel="noopener noreferrer"
-              className="bg-[#7d0b1c] hover:bg-[#5e0816] rounded px-7 py-3.5 text-[18px] font-bold transition-colors"
+              className="w-full md:w-[240px] text-center bg-[#7d0b1c] hover:bg-[#5e0816] rounded px-7 py-3.5 text-[18px] font-bold transition-colors"
             >
               {c.hero.globalTicket}
             </a>
