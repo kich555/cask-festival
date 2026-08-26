@@ -344,7 +344,7 @@ export const content2026: Record<"ko" | "en", Content2026> = {
     hero: {
       date: "Sat, Nov 21 — Sun, Nov 22",
       place: "SETEC Hall 3",
-      recap: "2025 Event Recap",
+      recap: "2025 RECAP",
       booth: "Apply for a Booth (Exhibitors)",
       scroll: "SCROLL",
       buyTicket: "Buy Ticket",
