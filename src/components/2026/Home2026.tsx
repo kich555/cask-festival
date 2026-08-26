@@ -4,7 +4,6 @@ import Image from "next/image"
 import Link from "next/link"
 import { useSearchParams } from "next/navigation"
 import { Suspense } from "react"
-import { BOOTH_FORM_2026 } from "@/i18n/content2026"
 import { useContent2026 } from "@/i18n/useContent2026"
 
 const TASTING_NOTES = [
@@ -14,11 +13,6 @@ const TASTING_NOTES = [
   { icon: "🍃", en: "Leather & Tobacco", ko: "가죽 & 담뱃잎" },
   { icon: "🍊", en: "Orange Peel", ko: "오렌지 필" },
 ]
-
-const CATEGORIES: Record<"ko" | "en", string[]> = {
-  ko: ["주류", "독립병입", "주류 용품", "푸드", "비즈니스", "미디어"],
-  en: ["Spirits", "Bottlers", "Barware & Goods", "Food", "Business", "Media"],
-}
 
 function HomeContent() {
   const { c, lang } = useContent2026()
@@ -44,19 +38,21 @@ function HomeContent() {
             <span>{c.hero.place}</span>
           </div>
           <div className="flex flex-col md:flex-row gap-4 md:gap-5 mt-9 w-full md:w-auto">
-            <Link
-              href={`/2025${qs}`}
-              className="border border-white/70 rounded px-7 py-3.5 text-[15px] font-semibold hover:bg-white hover:text-[#1a1a1a] transition-colors"
-            >
-              {c.hero.recap}
-            </Link>
             <a
-              href={BOOTH_FORM_2026[lang]}
+              href="https://nol.yanolja.com/ticket/products/26012544"
               target="_blank"
               rel="noopener noreferrer"
-              className="bg-[#7d0b1c] hover:bg-[#5e0816] rounded px-7 py-3.5 text-[15px] font-semibold transition-colors"
+              className="bg-white text-[#1a1a1a] rounded px-7 py-3.5 text-[18px] font-bold hover:bg-white/85 transition-colors"
             >
-              {c.hero.booth}
+              {c.hero.buyTicket}
+            </a>
+            <a
+              href="https://world.nol.com/en/ticket/places/26001036/products/26012544"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-[#7d0b1c] hover:bg-[#5e0816] rounded px-7 py-3.5 text-[18px] font-bold transition-colors"
+            >
+              {c.hero.globalTicket}
             </a>
           </div>
         </div>
@@ -195,33 +191,17 @@ function HomeContent() {
             ))}
           </div>
 
-          <h3 className="text-[20px] font-bold mt-12 mb-5">{c.exhibitor.catsTitle}</h3>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-            {CATEGORIES[lang].map((name) => (
-              <div
-                key={name}
-                className="border border-black/10 rounded-lg px-5 py-4 bg-white font-semibold"
-              >
-                {name}
-              </div>
-            ))}
-          </div>
+          <p className="text-center text-[16px] md:text-[18px] font-semibold mt-12 leading-relaxed">
+            {c.exhibitor.closed}
+          </p>
 
-          <div className="flex flex-col sm:flex-row justify-center gap-3 mt-12">
+          <div className="flex justify-center mt-8">
             <Link
               href={`/register${qs}`}
               className="border border-[#7d0b1c] text-[#7d0b1c] rounded px-7 py-3.5 font-semibold text-center hover:bg-[#7d0b1c] hover:text-white transition-colors"
             >
               {c.exhibitor.moreBtn}
             </Link>
-            <a
-              href={BOOTH_FORM_2026[lang]}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="bg-[#7d0b1c] hover:bg-[#5e0816] text-white rounded px-7 py-3.5 font-semibold text-center transition-colors"
-            >
-              {c.exhibitor.applyBtn}
-            </a>
           </div>
         </div>
       </section>

@@ -10,7 +10,15 @@ export interface Content2026 {
     openMenu: string
     closeMenu: string
   }
-  hero: { date: string; place: string; recap: string; booth: string; scroll: string }
+  hero: {
+    date: string
+    place: string
+    recap: string
+    booth: string
+    scroll: string
+    buyTicket: string
+    globalTicket: string
+  }
   teaser: {
     catch: string
     lead1: string
@@ -47,6 +55,7 @@ export interface Content2026 {
     ebBody: string
     ebUpto: string
     ebOff: string
+    closed: string
   }
   themeP: {
     title: string
@@ -89,6 +98,8 @@ export interface Content2026 {
     cats: { name: string; desc: string }[]
     contactNote: string
     contactOffice: string
+    closed: string
+    closedDesc: string
   }
   footer: { brand: string; copy: string }
   aboutP: {
@@ -135,6 +146,8 @@ export const content2026: Record<"ko" | "en", Content2026> = {
       recap: "2025 행사 RECAP",
       booth: "부스 참가 신청하기 (업체용)",
       scroll: "SCROLL",
+      buyTicket: "티켓 구매하기",
+      globalTicket: "GLOBAL TICKET",
     },
     teaser: {
       catch: "Global Cask-Aged Drinks Festa",
@@ -180,6 +193,7 @@ export const content2026: Record<"ko" | "en", Content2026> = {
       ebBody: "6월 30일까지 얼리버드 할인가로 참가 신청하실 수 있습니다.",
       ebUpto: "UP TO",
       ebOff: "20% OFF",
+      closed: "참가 업체 모집이 마감되었습니다. 많은 관심에 진심으로 감사드립니다.",
     },
     footer: {
       brand: "Global Cask-Aged Drinks Festa · 2026 · Seoul",
@@ -268,8 +282,7 @@ export const content2026: Record<"ko" | "en", Content2026> = {
     },
     registerP: {
       title: "참가 업체 모집",
-      subtitle:
-        "캐스크 카니발 2026과 함께할 브랜드를 모집합니다. 부스 신청 안내와 참가 혜택을 확인하세요.",
+      subtitle: "캐스크 카니발 2026 참가 업체 모집이 마감되었습니다.",
       brochureBtn: "행사 소개 자료 다운로드",
       ctaTitle: "지금 바로 캐스크 카니발 2026에 참여하세요!",
       ctaHl: "6월 30일까지 신청 및 입금 완료 시 부스비 할인",
@@ -315,6 +328,8 @@ export const content2026: Record<"ko" | "en", Content2026> = {
       ],
       contactNote: "* 기타 문의 사항이 있으시면 운영사무국으로 연락바랍니다.",
       contactOffice: "운영사무국",
+      closed: "2026년 참가 업체 모집이 마감되었습니다.",
+      closedDesc: "많은 관심에 진심으로 감사드립니다. 다음 캐스크 카니발에서 함께해 주세요.",
     },
   },
   en: {
@@ -332,6 +347,8 @@ export const content2026: Record<"ko" | "en", Content2026> = {
       recap: "2025 Event Recap",
       booth: "Apply for a Booth (Exhibitors)",
       scroll: "SCROLL",
+      buyTicket: "Buy Ticket",
+      globalTicket: "GLOBAL TICKET",
     },
     teaser: {
       catch: "Global Cask-Aged Drinks Festa",
@@ -375,6 +392,7 @@ export const content2026: Record<"ko" | "en", Content2026> = {
       ebBody: "Early-bird pricing is available for applications through June 30.",
       ebUpto: "UP TO",
       ebOff: "20% OFF",
+      closed: "Applications for exhibitor booths are now closed. Thank you for your interest.",
     },
     footer: {
       brand: "Global Cask-Aged Drinks Festa · 2026 · Seoul",
@@ -463,8 +481,7 @@ export const content2026: Record<"ko" | "en", Content2026> = {
     },
     registerP: {
       title: "Register",
-      subtitle:
-        "We're inviting brands to join Cask Carnival 2026. Discover how to apply for a booth and the benefits of taking part.",
+      subtitle: "Applications for Cask Carnival 2026 are now closed.",
       brochureBtn: "Download Event Brochure",
       ctaTitle: "Join Cask Carnival 2026 today!",
       ctaHl: "Apply and complete payment by June 30 for a discounted booth fee",
@@ -517,6 +534,8 @@ export const content2026: Record<"ko" | "en", Content2026> = {
       ],
       contactNote: "* For any other inquiries, please contact the organizing office.",
       contactOffice: "Organizing Office",
+      closed: "Applications for Cask Carnival 2026 are now closed.",
+      closedDesc: "Thank you for your interest. We look forward to seeing you at the next Cask Carnival.",
     },
   },
 }
