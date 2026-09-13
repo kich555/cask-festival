@@ -51,7 +51,7 @@
 인스타그램 @caskcarnival 게시물
   ↓  매일 09:00 UTC (= 18:00 KST) GitHub Actions 크론 / 수동 실행도 가능
 scripts/sync-brands.mjs
-  · Instagram Graph API /{IG_USER_ID}/media 를 끝까지 페이징
+  · graph.instagram.com /me/media 를 끝까지 페이징
   · 캡션 첫 줄이 [BRAND BOOTH] 인 것만 필터 + 파싱
   · 기존 JSON과 id 기준 병합 (신규만 추가)
   ↓  변경이 있을 때만 git commit + push
@@ -142,13 +142,13 @@ API 장애나 토큰 만료가 사이트 표시에 전혀 영향을 주지 않�
 
 동작:
 1. `IG_ACCESS_TOKEN`, `IG_USER_ID` 환경변수 확인. 없으면 명확한 메시지와 함께 종료(코드 1).
-2. `GET /{IG_USER_ID}/media?fields=id,caption,permalink,timestamp&limit=100`
-   — `paging.next`를 따라 **전체 이력**을 수집.
+2. `GET https://graph.instagram.com/v23.0/me/media?fields=id,caption,permalink,timestamp&limit=100`
+   — `paging.next`를 따라 **전체 이력**을 수집. (`IG_USER_ID`는 응답 계정 검증에 사용)
 3. 캡션 첫 줄 필터 + 파싱. 형식 불일치는 경고 후 건너뜀.
 4. 기존 `brands2026.json`을 읽어 id 기준 병합.
 5. 변경이 없으면 아무것도 쓰지 않고 "변경 없음" 로그 후 정상 종료.
 6. 변경이 있으면 JSON을 쓰고, 추가된 업체 목록을 로그에 출력.
-7. 토큰 만료일을 확인(`GET /access_token?grant_type=ig_refresh_token`)해 갱신을 시도하고,
+7. 토큰 갱신(`GET /refresh_access_token?grant_type=ig_refresh_token`)을 시도하고,
    남은 기간이 14일 미만이면 로그에 경고를 남긴다.
 
 ### 토큰 갱신
@@ -177,19 +177,20 @@ API 장애나 토큰 만료가 사이트 표시에 전혀 영향을 주지 않�
 
 ## 설정 안내 문서
 
-`docs/instagram-brand-sync-setup.md` — 진하님이 직접 수행해야 하는 설정 절차를
-클릭 경로 수준까지 적는다.
+`docs/instagram-brand-sync-setup.md` (작성 완료) — 사용자가 직접 수행해야 하는 설정 절차를
+클릭 경로 수준까지 적었다.
 
-1. 인스타그램 계정을 비즈니스/크리에이터로 전환
-2. 페이스북 페이지 생성 및 인스타그램 계정 연동
-3. Meta 개발자 앱 생성, `instagram_basic` · `pages_show_list` 권한 추가
-4. 단기 토큰 → 60일 장기 토큰 교환 (복사해 쓸 수 있는 URL 형태로 제시)
-5. `IG_USER_ID` 조회
-6. GitHub 레포 Settings → Secrets and variables → Actions 에
-   `IG_ACCESS_TOKEN`, `IG_USER_ID` 등록
-7. 설정이 됐는지 확인하는 검증 요청 1개 + 워크플로우 수동 실행으로 최종 확인
+**Instagram 로그인을 통한 API**(Instagram API with Instagram Login)를 사용한다.
+구 Basic Display API는 종료되었고, 페이스북 로그인 방식은 페이스북 페이지 연동이
+필요하므로 더 번거롭다. Instagram 로그인 방식은 페이지가 필요 없고 앱 심사도 거치지 않는다.
 
-토큰은 계정 접근 권한이므로 Secrets에 직접 입력한다.
+- 호스트: `https://graph.instagram.com/v23.0`
+- 권한: `instagram_business_basic` (Meta 콘솔의 토큰 생성 버튼으로 자동 부여)
+- 토큰: 콘솔에서 바로 60일 장기 토큰을 발급받는다 (단기→장기 교환 불필요)
+- 계정 ID: `GET /me?fields=id,username`
+- 게시물: `GET /me/media?fields=id,caption,permalink,timestamp`
+
+토큰은 계정 접근 권한이므로 사용자가 GitHub Secrets에 직접 입력한다.
 
 ## 에러 처리
 
@@ -216,7 +217,7 @@ API 장애나 토큰 만료가 사이트 표시에 전혀 영향을 주지 않�
 
 ## 작업 순서
 
-1. 설정 안내 문서(`docs/instagram-brand-sync-setup.md`) 작성 → 진하님이 설정 시작
+1. 설정 안내 문서(`docs/instagram-brand-sync-setup.md`) 작성 → 사용자가 설정 시작
 2. 동시에 순수 함수 + 테스트 구현
 3. 동기화 스크립트 구현
 4. `/brands` 페이지 + i18n + 네비게이션 교체
