@@ -7,6 +7,7 @@ export interface Content2026 {
     theme: string
     program: string
     register: string
+    brands: string
     openMenu: string
     closeMenu: string
   }
@@ -70,6 +71,13 @@ export interface Content2026 {
     comingEyebrow: string
     comingTitle: string
     comingBody: string
+  }
+  brandsP: {
+    title: string
+    subtitle: string
+    count: string
+    empty: string
+    emptyDesc: string
   }
   registerP: {
     title: string
@@ -137,6 +145,7 @@ export const content2026: Record<"ko" | "en", Content2026> = {
       theme: "테마 소개",
       program: "프로그램",
       register: "참가 업체 모집",
+      brands: "참가 업체",
       openMenu: "메뉴 열기",
       closeMenu: "메뉴 닫기",
     },
@@ -280,6 +289,13 @@ export const content2026: Record<"ko" | "en", Content2026> = {
       comingTitle: "2026 마스터클래스 라인업",
       comingBody: "추후 공개 예정",
     },
+    brandsP: {
+      title: "참가 업체",
+      subtitle: "캐스크 카니발 2026에 함께하는 브랜드를 소개합니다.",
+      count: "총 {n}개 브랜드",
+      empty: "참가 업체는 곧 공개됩니다.",
+      emptyDesc: "확정되는 대로 순차적으로 업데이트됩니다.",
+    },
     registerP: {
       title: "참가 업체 모집",
       subtitle: "캐스크 카니발 2026 참가 업체 모집이 마감되었습니다.",
@@ -338,6 +354,7 @@ export const content2026: Record<"ko" | "en", Content2026> = {
       theme: "Themes",
       program: "Program",
       register: "Register",
+      brands: "Exhibitors",
       openMenu: "Open menu",
       closeMenu: "Close menu",
     },
@@ -479,6 +496,13 @@ export const content2026: Record<"ko" | "en", Content2026> = {
       comingTitle: "2026 Master Class Lineup",
       comingBody: "To be announced",
     },
+    brandsP: {
+      title: "Exhibitors",
+      subtitle: "Brands joining CASK CARNIVAL 2026.",
+      count: "{n} brands",
+      empty: "Exhibitors will be announced soon.",
+      emptyDesc: "This page is updated as brands are confirmed.",
+    },
     registerP: {
       title: "Register",
       subtitle: "Applications for Cask Carnival 2026 are now closed.",
@@ -535,7 +559,8 @@ export const content2026: Record<"ko" | "en", Content2026> = {
       contactNote: "* For any other inquiries, please contact the organizing office.",
       contactOffice: "Organizing Office",
       closed: "Applications for Cask Carnival 2026 are now closed.",
-      closedDesc: "Thank you for your interest. We look forward to seeing you at the next Cask Carnival.",
+      closedDesc:
+        "Thank you for your interest. We look forward to seeing you at the next Cask Carnival.",
     },
   },
 }

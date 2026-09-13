@@ -218,7 +218,7 @@ function HomeContent() {
 
           <div className="flex justify-center mt-8">
             <Link
-              href={`/register${qs}`}
+              href={`/brands${qs}`}
               className="border border-[#7d0b1c] text-[#7d0b1c] rounded px-7 py-3.5 font-semibold text-center hover:bg-[#7d0b1c] hover:text-white transition-colors"
             >
               {c.exhibitor.moreBtn}
