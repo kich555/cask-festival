@@ -8,7 +8,8 @@
     "website": "https://smwskr.com/",
     "instagram": "https://www.instagram.com/smws_korea/",
     "booths": 2,
-    "logo": null
+    "logo": "/brands/the-scotch-malt-whisky-society.png",
+    "logoBg": null
   },
   {
     "slug": "jinmac-distillery",
@@ -19,7 +20,8 @@
     "website": "https://3d.co.kr/",
     "instagram": "https://www.instagram.com/jinmac.soju/",
     "booths": 1,
-    "logo": null
+    "logo": "/brands/jinmac-distillery.jpg",
+    "logoBg": "#ffffff"
   },
   {
     "slug": "chusa",
@@ -30,7 +32,8 @@
     "website": "https://ysapplewine.cafe24.com/",
     "instagram": "https://www.instagram.com/chusa_wine/",
     "booths": 1,
-    "logo": null
+    "logo": "/brands/chusa.png",
+    "logoBg": null
   },
   {
     "slug": "hwasimjujo",
@@ -41,7 +44,8 @@
     "website": "https://www.hwasimjujo.co.kr/",
     "instagram": "https://www.instagram.com/hwasimjujo/",
     "booths": 1,
-    "logo": null
+    "logo": "/brands/hwasimjujo.png",
+    "logoBg": null
   },
   {
     "slug": "danong-bio",
@@ -52,7 +56,8 @@
     "website": "https://danongbio.co.kr/",
     "instagram": "https://www.instagram.com/danongbio_kr/",
     "booths": 1,
-    "logo": null
+    "logo": "/brands/danong-bio.png",
+    "logoBg": null
   },
   {
     "slug": "corevest",
@@ -63,7 +68,8 @@
     "website": "https://www.corevest.co.kr/",
     "instagram": "https://www.instagram.com/corevest_brewing/",
     "booths": 1,
-    "logo": null
+    "logo": "/brands/corevest.png",
+    "logoBg": null
   },
   {
     "slug": "korea-brandy-society",
@@ -74,7 +80,8 @@
     "website": "https://koreabrandysociety.com/",
     "instagram": "https://www.instagram.com/korea_brandy_society/",
     "booths": 1,
-    "logo": null
+    "logo": "/brands/korea-brandy-society.jpg",
+    "logoBg": "#ffffff"
   },
   {
     "slug": "whiskylabel-kr",
@@ -85,7 +92,20 @@
     "website": "https://sites.google.com/view/whiskylabel/home",
     "instagram": "https://www.instagram.com/whiskylabel_kr/",
     "booths": 1,
-    "logo": null
+    "logo": "/brands/whiskylabel-kr.jpg",
+    "logoBg": "#ffffff"
+  },
+  {
+    "slug": "jizake-cy-korea-jck",
+    "nameKo": "지자케씨와이코리아㈜",
+    "nameEn": "JIZAKE CY KOREA(JCK)",
+    "country": "KR",
+    "countryKo": "한국",
+    "website": "https://blog.naver.com/jizakekorea",
+    "instagram": "https://www.instagram.com/jizakekorea",
+    "booths": 1,
+    "logo": "/brands/jizake-cy-korea-jck.png",
+    "logoBg": null
   },
   {
     "slug": "taepyung-brewing",
@@ -96,7 +116,8 @@
     "website": null,
     "instagram": "https://www.instagram.com/tp_craftbrewing/",
     "booths": 1,
-    "logo": null
+    "logo": "/brands/taepyung-brewing.png",
+    "logoBg": null
   },
   {
     "slug": "olod",
@@ -107,7 +128,8 @@
     "website": "https://smartstore.naver.com/olod",
     "instagram": "https://www.instagram.com/olod_official/",
     "booths": 1,
-    "logo": null
+    "logo": "/brands/olod.png",
+    "logoBg": null
   },
   {
     "slug": "korea-bourbon-whisk-e-y-club",
@@ -118,7 +140,8 @@
     "website": "https://linktr.ee/KoreaBourbonClub",
     "instagram": "https://www.instagram.com/koreabourbonclub/",
     "booths": 1,
-    "logo": null
+    "logo": "/brands/korea-bourbon-whisk-e-y-club.png",
+    "logoBg": null
   },
   {
     "slug": "waoak-distillery",
@@ -129,7 +152,8 @@
     "website": "https://waoak.com/",
     "instagram": "https://www.instagram.com/waoakdistillery/",
     "booths": 1,
-    "logo": null
+    "logo": "/brands/waoak-distillery.jpg",
+    "logoBg": "#ffffff"
   },
   {
     "slug": "dram-mars-whisky",
@@ -140,7 +164,8 @@
     "website": null,
     "instagram": "https://www.instagram.com/dram.kr/",
     "booths": 1,
-    "logo": null
+    "logo": "/brands/dram-mars-whisky.png",
+    "logoBg": null
   },
   {
     "slug": "bwi-korea",
@@ -151,7 +176,20 @@
     "website": "https://www.bwikorea.co.kr/",
     "instagram": "https://www.instagram.com/bwikorea/",
     "booths": 1,
-    "logo": null
+    "logo": "/brands/bwi-korea.jpg",
+    "logoBg": "#ffffff"
+  },
+  {
+    "slug": "space-company-korea",
+    "nameKo": "스페이스 컴퍼니 코리아",
+    "nameEn": "SPACE COMPANY KOREA",
+    "country": "KR",
+    "countryKo": "한국",
+    "website": "https://spacecompanykorea.com/",
+    "instagram": "https://www.instagram.com/spacecompany_korea/",
+    "booths": 1,
+    "logo": "/brands/space-company-korea.png",
+    "logoBg": "#ffffff"
   },
   {
     "slug": "bomnae-fermentation-technology",
@@ -162,7 +200,8 @@
     "website": "http://bomnae.bluechips.co.kr/",
     "instagram": null,
     "booths": 1,
-    "logo": null
+    "logo": "/brands/bomnae-fermentation-technology.png",
+    "logoBg": null
   },
   {
     "slug": "kanpaikai",
@@ -185,7 +224,8 @@
     "website": "https://kujudistillery.jp/",
     "instagram": "https://www.instagram.com/kujudistillery/",
     "booths": 1,
-    "logo": null
+    "logo": "/brands/kuju-distillery.png",
+    "logoBg": null
   },
   {
     "slug": "kameda-distillery",
@@ -196,7 +236,8 @@
     "website": "https://kameda-distillery.com/",
     "instagram": "https://www.instagram.com/kamedadistillery/",
     "booths": 1,
-    "logo": null
+    "logo": "/brands/kameda-distillery.png",
+    "logoBg": null
   },
   {
     "slug": "sakurao-distillery",
@@ -207,7 +248,8 @@
     "website": "https://www.sakuraobd.co.jp/",
     "instagram": "https://www.instagram.com/sakurao.official/",
     "booths": 1,
-    "logo": null
+    "logo": "/brands/sakurao-distillery.png",
+    "logoBg": null
   },
   {
     "slug": "rudder-ltd",
@@ -218,7 +260,8 @@
     "website": "https://theultimatespirits.jp/",
     "instagram": "https://www.instagram.com/rudder_ltd/",
     "booths": 1,
-    "logo": null
+    "logo": "/brands/rudder-ltd.png",
+    "logoBg": null
   },
   {
     "slug": "gakkogawa-distillery",
@@ -253,7 +296,8 @@
     "website": "https://drammorgroup.com/",
     "instagram": "https://www.instagram.com/drammorgroup/",
     "booths": 1,
-    "logo": null
+    "logo": "/brands/dra-m-mo-r.png",
+    "logoBg": null
   },
   {
     "slug": "the-single-cask",
@@ -276,7 +320,8 @@
     "website": null,
     "instagram": "https://www.instagram.com/scout_drinks/",
     "booths": 1,
-    "logo": null
+    "logo": "/brands/scout-drinks.png",
+    "logoBg": null
   },
   {
     "slug": "the-whiskyfind",
