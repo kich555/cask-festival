@@ -144,24 +144,30 @@ function Inner() {
           {t.pressNote}
         </p>
 
-        <div className="mt-8 border border-[#7d0b1c]/25 bg-[#7d0b1c]/[0.04] rounded p-5 flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-8">
-          <div className="sm:flex-1">
-            <h3 className="text-[15px] font-extrabold text-[#7d0b1c]">{t.ticketTitle}</h3>
-            <p className="text-[13px] md:text-[14px] text-[#555] mt-2 leading-relaxed">
-              {t.ticketNote}
-            </p>
+        <div className="mt-8 border border-[#7d0b1c]/25 bg-[#7d0b1c]/[0.04] rounded p-5">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-8">
+            <div className="sm:flex-1">
+              <h3 className="text-[15px] font-extrabold text-[#7d0b1c]">{t.ticketTitle}</h3>
+              <p className="text-[13px] md:text-[14px] text-[#555] mt-2 leading-relaxed">
+                {t.ticketNote}
+              </p>
+            </div>
+            <dl className="flex flex-wrap items-baseline gap-x-8 gap-y-2 sm:justify-end shrink-0">
+              {t.ticketRows.map((row) => (
+                <div key={row.label} className="flex items-baseline gap-2.5">
+                  <dt className="text-[14px] font-semibold">{row.label}</dt>
+                  <dd className="flex items-baseline gap-2">
+                    <span className="text-[13px] text-[#999] line-through">{row.was}</span>
+                    <span className="text-[20px] font-extrabold text-[#7d0b1c]">{row.now}</span>
+                  </dd>
+                </div>
+              ))}
+            </dl>
           </div>
-          <dl className="flex flex-wrap items-baseline gap-x-8 gap-y-2 sm:justify-end shrink-0">
-            {t.ticketRows.map((row) => (
-              <div key={row.label} className="flex items-baseline gap-2.5">
-                <dt className="text-[14px] font-semibold">{row.label}</dt>
-                <dd className="flex items-baseline gap-2">
-                  <span className="text-[13px] text-[#999] line-through">{row.was}</span>
-                  <span className="text-[20px] font-extrabold text-[#7d0b1c]">{row.now}</span>
-                </dd>
-              </div>
-            ))}
-          </dl>
+
+          <p className="mt-4 pt-4 border-t border-[#7d0b1c]/20 text-[13px] font-bold text-[#7d0b1c] leading-relaxed">
+            {t.ticketWarning}
+          </p>
         </div>
 
         <form onSubmit={handleSubmit} className="mt-12 flex flex-col gap-14">
