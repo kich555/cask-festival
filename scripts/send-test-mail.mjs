@@ -1,6 +1,8 @@
-// 승인 메일 설정 점검용. 사용법: node scripts/send-test-mail.mjs [받는주소]
+// 실제 승인 메일과 동일한 본문으로 시험 발송한다.
+// 사용법: npx tsx scripts/send-test-mail.mjs [받는주소]
 import fs from "node:fs"
 import nodemailer from "nodemailer"
+import { buildApprovalEmail } from "../src/lib/approvalEmail.ts"
 
 const env = Object.fromEntries(
   fs
@@ -15,6 +17,29 @@ const missing = ["SMTP_HOST", "SMTP_PORT", "SMTP_USER", "SMTP_PASS"].filter((k) 
 if (missing.length) {
   console.error(`.env.local 에 값이 비어 있습니다: ${missing.join(", ")}`)
   process.exit(1)
+}
+
+const sample = {
+  id: "sample",
+  created_at: new Date().toISOString(),
+  status: "approved",
+  name: "홍길동",
+  company: "테스트 주류상사",
+  job_title: "구매팀장",
+  phone: "010-0000-0000",
+  email: to,
+  business_card_path: "",
+  visit_day: "both",
+  buyer_type: "wholesale",
+  buyer_type_other: null,
+  referral: "website",
+  referral_other: null,
+  purpose: "new_partners",
+  purpose_other: null,
+  age_confirmed: true,
+  marketing_opt_in: false,
+  admin_note: null,
+  approval_email_sent_at: null,
 }
 
 const port = Number(env.SMTP_PORT)
@@ -33,16 +58,15 @@ try {
   process.exit(1)
 }
 
+const { subject, text, html } = buildApprovalEmail(sample)
 const info = await transport.sendMail({
   from: env.MAIL_FROM || env.SMTP_USER,
   to,
-  subject: "[테스트] CASK CARNIVAL 승인 메일 발송 점검",
-  text: "이 메일이 보이면 승인 메일 발송 설정이 정상입니다.",
-  html: `<div style="font-family:sans-serif;padding:20px">
-    <h2 style="color:#7d0b1c;margin:0 0 12px">발송 설정 정상</h2>
-    <p style="font-size:14px;color:#555">이 메일이 보이면 캐스크 카니발 승인 메일 발송 설정이 정상입니다.</p>
-  </div>`,
+  subject,
+  text,
+  html,
 })
 
 console.log("발송 완료 →", to)
+console.log("제목:", subject)
 console.log("messageId:", info.messageId)

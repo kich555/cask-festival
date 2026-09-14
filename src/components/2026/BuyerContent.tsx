@@ -140,7 +140,7 @@ function Inner() {
             {line}
           </p>
         ))}
-        <p className="mt-4 text-[13px] text-[#7d0b1c] font-semibold leading-relaxed">
+        <p className="mt-5 text-[14px] md:text-[15px] text-[#7d0b1c] font-bold leading-relaxed">
           {t.pressNote}
         </p>
 

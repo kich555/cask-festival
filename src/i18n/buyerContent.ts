@@ -63,7 +63,7 @@ export const buyerContent: Record<"ko" | "en", BuyerContent> = {
     ticketTitle: "바이어 현장 구매 할인",
     ticketNote: "승인된 바이어는 현장에서 아래 할인가로 티켓을 구매해 입장하실 수 있습니다.",
     ticketWarning:
-      "현장 등록 데스크에서 명함과 신분증 대조가 이루어집니다. 신청 시 제출하신 명함과 신분증을 지참해 주세요.",
+      "현장 등록 데스크에서 신분증 대조가 이루어집니다. 신분증을 지참해 주세요.",
     ticketRows: [{ label: "일일권", was: "60,000원", now: "50,000원" }],
 
     sectionApplicant: "1. 신청자 정보",
@@ -148,7 +148,7 @@ export const buyerContent: Record<"ko" | "en", BuyerContent> = {
     ticketTitle: "On-site buyer discount",
     ticketNote: "Approved buyers can purchase tickets on site at the discounted price below.",
     ticketWarning:
-      "Your business card will be checked against your photo ID at the registration desk. Please bring both.",
+      "Your identity will be verified at the registration desk. Please bring a photo ID.",
     ticketRows: [{ label: "1-day", was: "KRW 60,000", now: "KRW 50,000" }],
 
     sectionApplicant: "1. Applicant",
