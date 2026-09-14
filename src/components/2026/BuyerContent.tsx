@@ -100,7 +100,6 @@ function ChoiceGroup({
           className={`${inputClass} mt-3 sm:max-w-[400px]`}
         />
       )}
-      <FieldError message={error} />
     </div>
   )
 }
@@ -143,6 +142,22 @@ function FileField({
     </>
   )
 }
+
+/** 요약에 쓰는 항목 순서 — 폼에 나오는 순서와 같게 유지한다. */
+const FIELD_ORDER = [
+  "name",
+  "company",
+  "job_title",
+  "phone",
+  "email",
+  "business_card",
+  "visit_day",
+  "buyer_type",
+  "referral",
+  "purpose",
+  "age_confirmed",
+  "privacy_consent",
+]
 
 function Inner() {
   const lang = useLanguage()
@@ -193,6 +208,8 @@ function Inner() {
     first.scrollIntoView({ behavior: "smooth", block: "center" })
     first.querySelector<HTMLElement>("input, textarea, select")?.focus({ preventScroll: true })
   }, [errors])
+
+  const missingLabels = FIELD_ORDER.filter((key) => errors[key]).map((key) => t.labels[key])
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
@@ -475,6 +492,19 @@ function Inner() {
             <p className="text-[14px] text-[#7d0b1c] font-semibold border border-[#7d0b1c]/30 bg-[#7d0b1c]/[0.04] rounded px-4 py-3">
               {error}
             </p>
+          )}
+
+          {missingLabels.length > 0 && (
+            <div className="text-[14px] text-[#7d0b1c] leading-relaxed">
+              <p className="font-bold">{t.missingSummary}</p>
+              <ul className="mt-1.5 flex flex-col gap-0.5">
+                {missingLabels.map((label) => (
+                  <li key={label} className="font-semibold">
+                    - {label}
+                  </li>
+                ))}
+              </ul>
+            </div>
           )}
 
           <div className="flex justify-center">

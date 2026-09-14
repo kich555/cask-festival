@@ -43,6 +43,7 @@ export interface BuyerContent {
   fileHint: string
   fileChoose: string
   fileNone: string
+  missingSummary: string
   requiredText: string
   requiredChoice: string
   requiredFile: string
@@ -145,6 +146,7 @@ export const buyerContent: Record<"ko" | "en", BuyerContent> = {
     fileHint: "JPG · PNG · WEBP · HEIC · PDF · 10MB 이하",
     fileChoose: "파일 선택",
     fileNone: "선택된 파일 없음",
+    missingSummary: "미입력 항목",
     requiredText: "필수 기재 사항입니다.",
     requiredChoice: "필수 선택 사항입니다.",
     requiredFile: "명함 이미지를 첨부해 주세요.",
@@ -246,6 +248,7 @@ export const buyerContent: Record<"ko" | "en", BuyerContent> = {
     fileHint: "JPG · PNG · WEBP · HEIC · PDF · max 10MB",
     fileChoose: "Choose file",
     fileNone: "No file selected",
+    missingSummary: "Missing fields",
     requiredText: "This field is required.",
     requiredChoice: "Please make a selection.",
     requiredFile: "Please attach your business card.",
