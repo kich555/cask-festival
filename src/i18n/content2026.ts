@@ -9,6 +9,7 @@ export interface Content2026 {
     register: string
     brands: string
     buyer: string
+    privacy: string
     openMenu: string
     closeMenu: string
   }
@@ -148,6 +149,7 @@ export const content2026: Record<"ko" | "en", Content2026> = {
       register: "참가 업체 모집",
       brands: "참가 업체",
       buyer: "바이어 신청",
+      privacy: "개인정보처리방침",
       openMenu: "메뉴 열기",
       closeMenu: "메뉴 닫기",
     },
@@ -358,6 +360,7 @@ export const content2026: Record<"ko" | "en", Content2026> = {
       register: "Register",
       brands: "Exhibitors",
       buyer: "Buyer",
+      privacy: "Privacy Policy",
       openMenu: "Open menu",
       closeMenu: "Close menu",
     },

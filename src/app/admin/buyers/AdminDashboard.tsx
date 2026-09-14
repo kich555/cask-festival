@@ -6,7 +6,7 @@ import { type BuyerApplication, isFreeEmail } from "@/lib/buyer"
 const TYPE_LABEL: Record<string, string> = {
   wholesale: "도매/유통",
   retail: "소매/보틀샵",
-  bar: "바/레스토랑",
+  self_employed: "자영업",
   importer: "수입사",
   press: "프레스",
 }
@@ -162,14 +162,11 @@ export default function AdminDashboard({ initialRows }: { initialRows: BuyerAppl
                     ["연락처", r.phone],
                     ["이메일", r.email],
                     ["국가", r.country],
-                    ["참관일", `${DAY_LABEL[r.visit_day] ?? r.visit_day} · 동반 ${r.companions}명`],
+                    ["참관일", DAY_LABEL[r.visit_day] ?? r.visit_day],
                     ["주소", r.company_address],
                     ["사업자번호", r.business_number],
-                    ["취급주종", r.categories],
-                    ["매장/거래처", r.outlets],
                     ["매체명", r.media_name],
                     ["매체URL", r.media_url],
-                    ["취재목적", r.press_purpose],
                     ["부서", r.department],
                   ]
                     .filter(([, v]) => v)
@@ -181,6 +178,15 @@ export default function AdminDashboard({ initialRows }: { initialRows: BuyerAppl
                     ))}
                 </dl>
 
+                {r.visit_purpose && (
+                  <div className="mt-4 bg-black/[0.03] rounded px-4 py-3">
+                    <p className="text-[#999] text-[12px]">참관 이유</p>
+                    <p className="text-[13px] mt-1 whitespace-pre-line leading-relaxed">
+                      {r.visit_purpose}
+                    </p>
+                  </div>
+                )}
+
                 <div className="flex flex-wrap items-center gap-2.5 mt-5 pt-4 border-t border-black/10">
                   <a
                     href={fileHref(r.business_card_path)}
@@ -190,16 +196,6 @@ export default function AdminDashboard({ initialRows }: { initialRows: BuyerAppl
                   >
                     명함 보기
                   </a>
-                  {r.document_path && (
-                    <a
-                      href={fileHref(r.document_path)}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-[13px] font-semibold border border-black/15 rounded px-3.5 py-2 hover:border-black/40"
-                    >
-                      첨부서류 보기
-                    </a>
-                  )}
 
                   <div className="flex gap-2 ml-auto">
                     <button

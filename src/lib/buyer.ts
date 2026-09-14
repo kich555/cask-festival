@@ -1,7 +1,7 @@
 // 바이어 신청 도메인 정의 — 클라이언트/서버 공용.
 // 여기의 타입과 필수 항목 정의가 폼 UI와 서버 검증의 단일 기준이다.
 
-export const BUYER_TYPES = ["wholesale", "retail", "bar", "importer", "press"] as const
+export const BUYER_TYPES = ["wholesale", "retail", "self_employed", "importer", "press"] as const
 export type BuyerType = (typeof BUYER_TYPES)[number]
 
 export const VISIT_DAYS = ["day1", "day2", "both"] as const
@@ -37,18 +37,15 @@ export type BuyerApplication = {
   company_address: string
   country: string
   visit_day: VisitDay
-  companions: number
   /** 사업자 유형 전용 */
   business_number: string | null
-  categories: string | null
-  outlets: string | null
   /** 프레스 전용 */
   media_name: string | null
   media_url: string | null
-  press_purpose: string | null
+  /** 모든 유형 공통 — 참관 이유 (선택) */
+  visit_purpose: string | null
   /** Storage 경로 (공개 URL 아님) */
   business_card_path: string
-  document_path: string | null
   marketing_opt_in: boolean
   admin_note: string | null
 }
@@ -99,4 +96,17 @@ export function extensionFor(mime: string): string {
     default:
       return "bin"
   }
+}
+
+/**
+ * 한글 받침 여부에 따라 목적격 조사를 붙인다. ("이름을" / "참관 이유를")
+ * 한글이 아닌 글자로 끝나면 "을"을 기본으로 한다.
+ */
+export function withObjectParticle(word: string): string {
+  const last = word.trim().slice(-1)
+  const code = last.charCodeAt(0)
+  const isHangulSyllable = code >= 0xac00 && code <= 0xd7a3
+  if (!isHangulSyllable) return `${word}을`
+  const hasFinalConsonant = (code - 0xac00) % 28 !== 0
+  return `${word}${hasFinalConsonant ? "을" : "를"}`
 }

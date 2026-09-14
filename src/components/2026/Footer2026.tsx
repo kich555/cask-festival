@@ -37,6 +37,12 @@ function Footer2026Content() {
               {c.nav[l.key]}
             </Link>
           ))}
+          <Link
+            href={`/privacy${qs}`}
+            className="text-white/90 font-semibold hover:text-white transition-colors"
+          >
+            {c.nav.privacy}
+          </Link>
         </nav>
         <div className="md:flex-1 text-[12px] text-white/45 md:text-right">{c.footer.copy}</div>
       </div>

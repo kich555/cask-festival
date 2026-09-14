@@ -9,7 +9,7 @@ export const runtime = "nodejs"
 const TYPE_LABEL: Record<string, string> = {
   wholesale: "도매/유통",
   retail: "소매/보틀샵",
-  bar: "바/레스토랑",
+  self_employed: "자영업",
   importer: "수입사",
   press: "프레스",
 }
@@ -41,17 +41,13 @@ const COLUMNS: { header: string; width: number; get: (r: BuyerApplication) => st
     { header: "국가", width: 10, get: (r) => r.country },
     { header: "회사주소", width: 36, get: (r) => r.company_address },
     { header: "참관일", width: 12, get: (r) => DAY_LABEL[r.visit_day] ?? r.visit_day },
-    { header: "동반인원", width: 9, get: (r) => r.companions },
     { header: "사업자등록번호", width: 16, get: (r) => r.business_number ?? "" },
-    { header: "취급주종", width: 22, get: (r) => r.categories ?? "" },
-    { header: "매장/거래처", width: 16, get: (r) => r.outlets ?? "" },
     { header: "매체명", width: 18, get: (r) => r.media_name ?? "" },
     { header: "매체URL", width: 28, get: (r) => r.media_url ?? "" },
-    { header: "취재목적", width: 30, get: (r) => r.press_purpose ?? "" },
+    { header: "참관이유", width: 44, get: (r) => r.visit_purpose ?? "" },
     { header: "마케팅수신", width: 10, get: (r) => (r.marketing_opt_in ? "동의" : "미동의") },
     { header: "관리자메모", width: 30, get: (r) => r.admin_note ?? "" },
     { header: "명함파일", width: 40, get: (r) => r.business_card_path },
-    { header: "첨부서류", width: 40, get: (r) => r.document_path ?? "" },
   ]
 
 export async function GET() {

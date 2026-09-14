@@ -9,6 +9,7 @@ import {
   isPress,
   MAX_UPLOAD_BYTES,
   VISIT_DAYS,
+  withObjectParticle,
 } from "@/lib/buyer"
 import { BUYER_BUCKET, BUYER_TABLE, type Database, getSupabaseAdmin } from "@/lib/supabaseAdmin"
 
@@ -97,7 +98,7 @@ export async function POST(request: NextRequest) {
   const values: Record<string, string> = {}
   for (const [key, label] of Object.entries(required)) {
     const v = str(form, key)
-    if (!v) return fail(`${label}을(를) 입력해 주세요.`)
+    if (!v) return fail(`${withObjectParticle(label)} 입력해 주세요.`)
     values[key] = v
   }
 
@@ -108,11 +109,6 @@ export async function POST(request: NextRequest) {
   const visitDay = str(form, "visit_day")
   if (!VISIT_DAYS.includes(visitDay as (typeof VISIT_DAYS)[number])) {
     return fail("참관 희망일을 선택해 주세요.")
-  }
-
-  const companions = Number(str(form, "companions") || "0")
-  if (!Number.isInteger(companions) || companions < 0 || companions > 20) {
-    return fail("동반 인원 수를 확인해 주세요. (0~20)")
   }
 
   if (str(form, "privacy_consent") !== "on") {
@@ -133,19 +129,12 @@ export async function POST(request: NextRequest) {
   if (!(businessCard instanceof File) || businessCard.size === 0) {
     return fail("명함 이미지를 첨부해 주세요.")
   }
-  const document = form.get("document")
-  const hasDocument = document instanceof File && document.size > 0
-
   const id = crypto.randomUUID()
   const dir = `applications/${id}`
 
   let businessCardPath: string
-  let documentPath: string | null = null
   try {
     businessCardPath = await uploadFile(businessCard, dir, "business-card")
-    if (hasDocument) {
-      documentPath = await uploadFile(document as File, dir, "document")
-    }
   } catch (e) {
     console.error("[buyer] upload error", e)
     // 검증 실패(용량/형식) 메시지는 그대로, 그 외 내부 오류는 일반 문구로 바꾼다.
@@ -169,24 +158,18 @@ export async function POST(request: NextRequest) {
     company_address: values.company_address,
     country: values.country,
     visit_day: visitDay as (typeof VISIT_DAYS)[number],
-    companions,
     business_number: businessNumber || null,
-    categories: str(form, "categories") || null,
-    outlets: str(form, "outlets") || null,
     media_name: mediaName || null,
     media_url: str(form, "media_url") || null,
-    press_purpose: str(form, "press_purpose") || null,
+    visit_purpose: str(form, "visit_purpose").slice(0, 1000) || null,
     business_card_path: businessCardPath,
-    document_path: documentPath,
     marketing_opt_in: str(form, "marketing_opt_in") === "on",
   }
 
   const { error } = await getSupabaseAdmin().from(BUYER_TABLE).insert(row)
   if (error) {
     // 저장에 실패하면 이미 올라간 파일은 남겨두지 않는다.
-    await getSupabaseAdmin()
-      .storage.from(BUYER_BUCKET)
-      .remove([businessCardPath, ...(documentPath ? [documentPath] : [])])
+    await getSupabaseAdmin().storage.from(BUYER_BUCKET).remove([businessCardPath])
     console.error("[buyer] insert failed", error)
     return fail("신청 저장에 실패했습니다. 잠시 후 다시 시도해 주세요.", 500)
   }
