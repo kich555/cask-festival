@@ -214,6 +214,7 @@ function collectCandidates() {
 const candidates = collectCandidates()
 
 const linked = []
+const kept = []
 const noLogo = []
 const usedKeys = new Set()
 
@@ -231,9 +232,19 @@ for (const brand of brands) {
   }
 
   if (!key) {
-    brand.logo = null
-    brand.logoBg = null
-    noLogo.push(brand.nameKo)
+    // 원본을 정리한 뒤라도 이미 만들어 둔 로고가 있으면 그대로 쓴다
+    const already = [...EXTS]
+      .map((e) => `${brand.slug}${e}`)
+      .find((name) => fs.existsSync(path.join(LOGO_DIR, name)))
+
+    if (already) {
+      brand.logo = `/brands/${already}`
+      kept.push(brand.nameKo)
+    } else {
+      brand.logo = null
+      brand.logoBg = null
+      noLogo.push(brand.nameKo)
+    }
     continue
   }
 
@@ -283,6 +294,11 @@ if (unmatched.length > 0) {
     `\n업체와 짝이 없는 파일 ${unmatched.length}개 (이름이 다르거나, 아직 홈페이지에 노출되지 않는 업체)`,
   )
   for (const f of unmatched) console.log("  ·", f)
+}
+
+if (kept.length > 0) {
+  console.log(`\n원본 없이 기존 로고를 유지한 업체 ${kept.length}곳`)
+  console.log(`  ${kept.join(", ")}`)
 }
 
 if (noLogo.length > 0) {

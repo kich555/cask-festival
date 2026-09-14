@@ -2,7 +2,7 @@
 
 import { Globe, Instagram } from "lucide-react"
 import Image from "next/image"
-import { Suspense } from "react"
+import { Suspense, useMemo } from "react"
 import { useContent2026 } from "@/i18n/useContent2026"
 import { type Brand, brandInitials, countryFlag, countryName } from "@/lib/brands"
 import PageHeader2026 from "./PageHeader2026"
@@ -34,7 +34,14 @@ function Inner({ brands }: { brands: Brand[] }) {
   const { c, lang } = useContent2026()
   const b = c.brandsP
 
-  if (brands.length === 0) {
+  // 한글명 기준 가나다순으로 고정한다. 한글이 먼저 오고 영문 이름은 그 뒤에 알파벳순으로 놓인다.
+  // 영어 화면에서도 같은 순서를 써서 업체 위치가 달라지지 않게 한다.
+  const sorted = useMemo(() => {
+    const collator = new Intl.Collator("ko-KR", { sensitivity: "base", numeric: true })
+    return [...brands].sort((x, y) => collator.compare(x.nameKo || x.nameEn, y.nameKo || y.nameEn))
+  }, [brands])
+
+  if (sorted.length === 0) {
     return (
       <div className="bg-white text-[#1a1a1a]">
         <PageHeader2026 title={b.title} subtitle={b.subtitle} watermark="BRANDS" />
@@ -52,7 +59,7 @@ function Inner({ brands }: { brands: Brand[] }) {
 
       <div className="max-w-[1100px] mx-auto px-5 md:px-10 py-12 md:py-16">
         <ul className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
-          {brands.map((brand) => {
+          {sorted.map((brand) => {
             const primary =
               lang === "ko" ? brand.nameKo || brand.nameEn : brand.nameEn || brand.nameKo
             const flag = countryFlag(brand.country)
