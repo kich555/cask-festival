@@ -10,9 +10,10 @@ export interface Database {
     Tables: {
       buyer_applications: {
         Row: BuyerApplication
-        Insert: Omit<BuyerApplication, "created_at" | "admin_note"> & {
+        Insert: Omit<BuyerApplication, "created_at" | "admin_note" | "approval_email_sent_at"> & {
           created_at?: string
           admin_note?: string | null
+          approval_email_sent_at?: string | null
         }
         Update: Partial<BuyerApplication>
         Relationships: []

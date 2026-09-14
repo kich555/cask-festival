@@ -13,12 +13,15 @@ export async function POST(request: NextRequest) {
 
   const body = (await request.json()) as {
     id?: string
+    ids?: string[]
     status?: string
     admin_note?: string
   }
 
-  if (!body.id) {
-    return NextResponse.json({ ok: false, error: "id 가 필요합니다." }, { status: 400 })
+  // 단건(id)과 일괄(ids) 모두 받는다.
+  const ids = body.ids ?? (body.id ? [body.id] : [])
+  if (ids.length === 0) {
+    return NextResponse.json({ ok: false, error: "대상이 없습니다." }, { status: 400 })
   }
 
   const patch: Partial<BuyerApplication> = {}
@@ -36,10 +39,10 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ ok: false, error: "변경할 내용이 없습니다." }, { status: 400 })
   }
 
-  const { error } = await getSupabaseAdmin().from(BUYER_TABLE).update(patch).eq("id", body.id)
+  const { error } = await getSupabaseAdmin().from(BUYER_TABLE).update(patch).in("id", ids)
   if (error) {
     return NextResponse.json({ ok: false, error: error.message }, { status: 500 })
   }
 
-  return NextResponse.json({ ok: true })
+  return NextResponse.json({ ok: true, updated: ids.length })
 }

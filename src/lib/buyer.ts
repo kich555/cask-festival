@@ -1,8 +1,41 @@
 // 바이어 신청 도메인 정의 — 클라이언트/서버 공용.
-// 여기의 타입과 필수 항목 정의가 폼 UI와 서버 검증의 단일 기준이다.
+// 여기의 타입과 선택지 정의가 폼 UI와 서버 검증의 단일 기준이다.
 
-export const BUYER_TYPES = ["wholesale", "retail", "self_employed", "importer", "press"] as const
+/** 바이어 구분 */
+export const BUYER_TYPES = [
+  "import_export",
+  "wholesale",
+  "food_service",
+  "manufacturer",
+  "distribution",
+  "equipment",
+  "other",
+] as const
 export type BuyerType = (typeof BUYER_TYPES)[number]
+
+/** 인지 경로 */
+export const REFERRALS = [
+  "sns",
+  "website",
+  "cafe_blog",
+  "industry_site",
+  "word_of_mouth",
+  "invitation",
+  "search",
+  "other",
+] as const
+export type Referral = (typeof REFERRALS)[number]
+
+/** 참관 목적 */
+export const PURPOSES = [
+  "new_products",
+  "market_research",
+  "new_partners",
+  "tasting",
+  "program",
+  "other",
+] as const
+export type Purpose = (typeof PURPOSES)[number]
 
 export const VISIT_DAYS = ["day1", "day2", "both"] as const
 export type VisitDay = (typeof VISIT_DAYS)[number]
@@ -10,44 +43,44 @@ export type VisitDay = (typeof VISIT_DAYS)[number]
 export const APPLICATION_STATUSES = ["pending", "approved", "rejected"] as const
 export type ApplicationStatus = (typeof APPLICATION_STATUSES)[number]
 
-/** 프레스는 사업자 정보 대신 매체 정보를 받는다. */
-export function isPress(type: string): boolean {
-  return type === "press"
-}
-
-/** 사업자 유형(프레스 제외)인지 */
-export function isBusiness(type: string): boolean {
-  return BUYER_TYPES.includes(type as BuyerType) && !isPress(type)
-}
-
-// interface 가 아니라 type 으로 둔다.
-// interface 는 암묵적 인덱스 시그니처를 갖지 않아 supabase 의 스키마 제약(Record<string, unknown>)을
-// 통과하지 못하고, 그 결과 쿼리 타입이 전부 never 로 무너진다.
 export type BuyerApplication = {
   id: string
   created_at: string
   status: ApplicationStatus
-  buyer_type: BuyerType
+
+  /** 1. 신청자 정보 */
   name: string
-  job_title: string
   company: string
-  department: string | null
+  job_title: string
   phone: string
   email: string
-  company_address: string
-  country: string
-  visit_day: VisitDay
-  /** 사업자 유형 전용 */
-  business_number: string | null
-  /** 프레스 전용 */
-  media_name: string | null
-  media_url: string | null
-  /** 모든 유형 공통 — 참관 이유 (선택) */
-  visit_purpose: string | null
   /** Storage 경로 (공개 URL 아님) */
   business_card_path: string
+
+  /** 2. 참관 희망일 */
+  visit_day: VisitDay
+
+  /** 3. 바이어 구분 — other 인 경우 buyer_type_other 에 직접 입력값 */
+  buyer_type: BuyerType
+  buyer_type_other: string | null
+
+  /** 4. 인지 경로 */
+  referral: Referral | null
+  referral_other: string | null
+
+  /** 5. 참관 목적 */
+  purpose: Purpose | null
+  purpose_other: string | null
+
+  /** 6. 필수 확인 */
+  age_confirmed: boolean
+
+  /** 7. 선택 동의 */
   marketing_opt_in: boolean
+
+  /** 운영용 */
   admin_note: string | null
+  approval_email_sent_at: string | null
 }
 
 /** 무료 이메일 도메인 — 관리자 화면에서 '회사 도메인 아님' 표시에 사용 */
@@ -99,7 +132,7 @@ export function extensionFor(mime: string): string {
 }
 
 /**
- * 한글 받침 여부에 따라 목적격 조사를 붙인다. ("이름을" / "참관 이유를")
+ * 한글 받침 여부에 따라 목적격 조사를 붙인다. ("성명을" / "회사명를"이 아니라 "회사명을")
  * 한글이 아닌 글자로 끝나면 "을"을 기본으로 한다.
  */
 export function withObjectParticle(word: string): string {

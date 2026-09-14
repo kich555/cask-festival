@@ -5,10 +5,13 @@ import {
   BUYER_TYPES,
   type BuyerType,
   extensionFor,
-  isBusiness,
-  isPress,
   MAX_UPLOAD_BYTES,
+  PURPOSES,
+  type Purpose,
+  REFERRALS,
+  type Referral,
   VISIT_DAYS,
+  type VisitDay,
   withObjectParticle,
 } from "@/lib/buyer"
 import { BUYER_BUCKET, BUYER_TABLE, type Database, getSupabaseAdmin } from "@/lib/supabaseAdmin"
@@ -58,6 +61,22 @@ async function uploadFile(file: File, dir: string, name: string) {
   return path
 }
 
+/**
+ * 선택지 검증. '기타'를 고른 경우 직접 입력값이 있어야 한다.
+ * 선택하지 않았으면 [null, null] 을 돌려주고, 필수 여부는 호출부가 판단한다.
+ */
+function readChoice<T extends string>(
+  form: FormData,
+  key: string,
+  allowed: readonly T[],
+): { value: T | null; other: string | null; invalid: boolean } {
+  const raw = str(form, key)
+  if (!raw) return { value: null, other: null, invalid: false }
+  if (!allowed.includes(raw as T)) return { value: null, other: null, invalid: true }
+  const other = raw === "other" ? str(form, `${key}_other`) : ""
+  return { value: raw as T, other: other || null, invalid: raw === "other" && !other }
+}
+
 export async function POST(request: NextRequest) {
   const ip =
     request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ??
@@ -80,21 +99,14 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ ok: true })
   }
 
-  const buyerType = str(form, "buyer_type")
-  if (!BUYER_TYPES.includes(buyerType as BuyerType)) {
-    return fail("참가 유형을 선택해 주세요.")
-  }
-
+  // 1. 신청자 정보
   const required: Record<string, string> = {
-    name: "이름",
-    job_title: "직함",
+    name: "성명",
     company: "회사명",
-    phone: "휴대폰 번호",
+    job_title: "직함",
+    phone: "연락처",
     email: "이메일",
-    company_address: "회사 주소",
-    country: "국가",
   }
-
   const values: Record<string, string> = {}
   for (const [key, label] of Object.entries(required)) {
     const v = str(form, key)
@@ -106,29 +118,55 @@ export async function POST(request: NextRequest) {
     return fail("이메일 형식을 확인해 주세요.")
   }
 
+  // 2. 참관 희망일
   const visitDay = str(form, "visit_day")
-  if (!VISIT_DAYS.includes(visitDay as (typeof VISIT_DAYS)[number])) {
+  if (!VISIT_DAYS.includes(visitDay as VisitDay)) {
     return fail("참관 희망일을 선택해 주세요.")
   }
 
-  if (str(form, "privacy_consent") !== "on") {
-    return fail("개인정보 수집·이용에 동의해 주셔야 신청할 수 있습니다.")
+  // 3. 바이어 구분 (필수)
+  const type = readChoice(form, "buyer_type", BUYER_TYPES)
+  if (!type.value || type.invalid) {
+    return fail(
+      type.value === null && !type.invalid
+        ? "바이어 구분을 선택해 주세요."
+        : "바이어 구분의 기타 항목을 입력해 주세요.",
+    )
   }
 
-  // 유형별 필수값
-  const businessNumber = str(form, "business_number")
-  const mediaName = str(form, "media_name")
-  if (isBusiness(buyerType) && !businessNumber) {
-    return fail("사업자등록번호를 입력해 주세요.")
+  // 4. 인지 경로 (필수)
+  const ref = readChoice(form, "referral", REFERRALS)
+  if (!ref.value || ref.invalid) {
+    return fail(
+      ref.value === null && !ref.invalid
+        ? "인지 경로를 선택해 주세요."
+        : "인지 경로의 기타 항목을 입력해 주세요.",
+    )
   }
-  if (isPress(buyerType) && !mediaName) {
-    return fail("매체명을 입력해 주세요.")
+
+  // 5. 참관 목적 (필수)
+  const purpose = readChoice(form, "purpose", PURPOSES)
+  if (!purpose.value || purpose.invalid) {
+    return fail(
+      purpose.value === null && !purpose.invalid
+        ? "참관 목적을 선택해 주세요."
+        : "참관 목적의 기타 항목을 입력해 주세요.",
+    )
+  }
+
+  // 6. 필수 확인
+  if (str(form, "age_confirmed") !== "on") {
+    return fail("만 19세 이상 여부를 확인해 주세요.")
+  }
+  if (str(form, "privacy_consent") !== "on") {
+    return fail("개인정보 수집·이용에 동의해 주셔야 신청할 수 있습니다.")
   }
 
   const businessCard = form.get("business_card")
   if (!(businessCard instanceof File) || businessCard.size === 0) {
     return fail("명함 이미지를 첨부해 주세요.")
   }
+
   const id = crypto.randomUUID()
   const dir = `applications/${id}`
 
@@ -137,7 +175,6 @@ export async function POST(request: NextRequest) {
     businessCardPath = await uploadFile(businessCard, dir, "business-card")
   } catch (e) {
     console.error("[buyer] upload error", e)
-    // 검증 실패(용량/형식) 메시지는 그대로, 그 외 내부 오류는 일반 문구로 바꾼다.
     const message =
       e instanceof Error && /10MB|업로드할 수 있습니다/.test(e.message)
         ? e.message
@@ -148,21 +185,20 @@ export async function POST(request: NextRequest) {
   const row: Database["public"]["Tables"]["buyer_applications"]["Insert"] = {
     id,
     status: "pending" as const,
-    buyer_type: buyerType as BuyerType,
     name: values.name,
-    job_title: values.job_title,
     company: values.company,
-    department: str(form, "department") || null,
+    job_title: values.job_title,
     phone: values.phone,
     email: values.email,
-    company_address: values.company_address,
-    country: values.country,
-    visit_day: visitDay as (typeof VISIT_DAYS)[number],
-    business_number: businessNumber || null,
-    media_name: mediaName || null,
-    media_url: str(form, "media_url") || null,
-    visit_purpose: str(form, "visit_purpose").slice(0, 1000) || null,
     business_card_path: businessCardPath,
+    visit_day: visitDay as VisitDay,
+    buyer_type: type.value as BuyerType,
+    buyer_type_other: type.other,
+    referral: ref.value as Referral,
+    referral_other: ref.other,
+    purpose: purpose.value as Purpose,
+    purpose_other: purpose.other,
+    age_confirmed: true,
     marketing_opt_in: str(form, "marketing_opt_in") === "on",
   }
 
