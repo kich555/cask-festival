@@ -19,6 +19,7 @@ const NAV_LINKS = [
   { href: "/theme", key: "theme" },
   { href: "/program", key: "program" },
   { href: "/brands", key: "brands" },
+  { href: "/buyer", key: "buyer" },
 ] as const
 
 function Nav2026Content() {

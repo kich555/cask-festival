@@ -10,6 +10,7 @@ const LINKS = [
   { href: "/theme", key: "theme" },
   { href: "/program", key: "program" },
   { href: "/brands", key: "brands" },
+  { href: "/buyer", key: "buyer" },
 ] as const
 
 function Footer2026Content() {
