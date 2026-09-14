@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import { isAdminRequest } from "@/lib/adminAuth"
+import type { BuyerApplication } from "@/lib/buyer"
 import { BUYER_TABLE, getSupabaseAdmin } from "@/lib/supabaseAdmin"
 import AdminDashboard from "./AdminDashboard"
 import AdminLogin from "./AdminLogin"
@@ -32,5 +33,6 @@ export default async function AdminBuyersPage() {
     )
   }
 
-  return <AdminDashboard initialRows={data ?? []} />
+  // supabase-js 의 select("*") 추론이 버전에 따라 달라 명시적으로 좁힌다.
+  return <AdminDashboard initialRows={(data ?? []) as BuyerApplication[]} />
 }

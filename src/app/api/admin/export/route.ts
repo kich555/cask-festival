@@ -64,7 +64,8 @@ export async function GET() {
     return NextResponse.json({ ok: false, error: error.message }, { status: 500 })
   }
 
-  const rows = data ?? []
+  // supabase-js 의 select("*") 추론이 버전에 따라 달라 명시적으로 좁힌다.
+  const rows = (data ?? []) as BuyerApplication[]
 
   const wb = new ExcelJS.Workbook()
   const ws = wb.addWorksheet("바이어 신청")
