@@ -1,10 +1,10 @@
 [
   {
-    "slug": "the-scoth-malt-whisky-society",
+    "slug": "the-scotch-malt-whisky-society",
     "nameKo": "SMWS",
-    "nameEn": "The Scoth Malt Whisky Society",
-    "country": "KR",
-    "countryKo": "한국",
+    "nameEn": "The Scotch Malt Whisky Society",
+    "country": "GB-SCT",
+    "countryKo": "스코틀랜드",
     "website": "https://smwskr.com/",
     "instagram": "https://www.instagram.com/smws_korea/",
     "booths": 2,
@@ -229,7 +229,8 @@
     "website": "https://gakkogawa.com/",
     "instagram": "https://www.instagram.com/gakkogawa/",
     "booths": 1,
-    "logo": null
+    "logo": "/brands/gakkogawa-distillery.jpg",
+    "logoBg": "#ffffff"
   },
   {
     "slug": "cask-trade",
