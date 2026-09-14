@@ -73,7 +73,8 @@ function formatSentAt(value: string) {
 
 export default function AdminDashboard({ initialRows }: { initialRows: BuyerApplication[] }) {
   const [rows, setRows] = useState(initialRows)
-  const [filter, setFilter] = useState<"all" | "pending" | "approved" | "rejected">("all")
+  // 새로 들어온 신청부터 보는 게 기본. '전체'는 맨 뒤에 둔다.
+  const [filter, setFilter] = useState<"pending" | "approved" | "rejected" | "all">("pending")
   const [selected, setSelected] = useState<Set<string>>(new Set())
   const [busy, setBusy] = useState(false)
   const [message, setMessage] = useState<{ kind: "ok" | "error"; text: string } | null>(null)
@@ -211,7 +212,7 @@ export default function AdminDashboard({ initialRows }: { initialRows: BuyerAppl
 
       <div className="max-w-[1280px] mx-auto px-5 md:px-8 py-8">
         <div className="flex flex-wrap gap-2 mb-4">
-          {(["all", "pending", "approved", "rejected"] as const).map((k) => (
+          {(["pending", "approved", "rejected", "all"] as const).map((k) => (
             <button
               key={k}
               type="button"

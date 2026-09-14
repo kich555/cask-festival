@@ -40,6 +40,13 @@ export interface BuyerContent {
   privacyProcessor: string
   privacyLink: string
 
+  fileHint: string
+  fileChoose: string
+  fileNone: string
+  requiredText: string
+  requiredChoice: string
+  requiredFile: string
+  emailInvalid: string
   submit: string
   submitting: string
   requiredMark: string
@@ -80,6 +87,15 @@ export const buyerContent: Record<"ko" | "en", BuyerContent> = {
       phone: "연락처",
       email: "이메일",
       business_card: "명함 이미지",
+      visit_day: "참관 희망일",
+      buyer_type: "바이어 구분",
+      referral: "인지 경로",
+      purpose: "참관 목적",
+      buyer_type_other: "바이어 구분 — 기타 직접 입력",
+      referral_other: "인지 경로 — 기타 직접 입력",
+      purpose_other: "참관 목적 — 기타 직접 입력",
+      age_confirmed: "만 19세 이상 확인",
+      privacy_consent: "개인정보 수집·이용 동의",
     },
     otherPlaceholder: "직접 입력",
 
@@ -126,6 +142,13 @@ export const buyerContent: Record<"ko" | "en", BuyerContent> = {
       "제출하신 정보는 Supabase(서울 리전)에 위탁 보관되며, 제3자에게 제공되지 않습니다.",
     privacyLink: "개인정보처리방침 전문 보기",
 
+    fileHint: "JPG · PNG · WEBP · HEIC · PDF · 10MB 이하",
+    fileChoose: "파일 선택",
+    fileNone: "선택된 파일 없음",
+    requiredText: "필수 기재 사항입니다.",
+    requiredChoice: "필수 선택 사항입니다.",
+    requiredFile: "명함 이미지를 첨부해 주세요.",
+    emailInvalid: "이메일 형식이 올바르지 않습니다. 다시 확인해 주세요.",
     submit: "신청하기",
     submitting: "제출 중...",
     requiredMark: "필수",
@@ -165,6 +188,15 @@ export const buyerContent: Record<"ko" | "en", BuyerContent> = {
       phone: "Phone",
       email: "Email",
       business_card: "Business card",
+      visit_day: "Preferred day",
+      buyer_type: "Buyer category",
+      referral: "How you heard about us",
+      purpose: "Purpose of visit",
+      buyer_type_other: "Buyer category — please specify",
+      referral_other: "How you heard about us — please specify",
+      purpose_other: "Purpose of visit — please specify",
+      age_confirmed: "Age confirmation (19+)",
+      privacy_consent: "Consent to personal data processing",
     },
     otherPlaceholder: "Please specify",
 
@@ -211,6 +243,13 @@ export const buyerContent: Record<"ko" | "en", BuyerContent> = {
       "Your data is stored with Supabase (Seoul region) as our processor and is not shared with third parties.",
     privacyLink: "Read the full privacy policy",
 
+    fileHint: "JPG · PNG · WEBP · HEIC · PDF · max 10MB",
+    fileChoose: "Choose file",
+    fileNone: "No file selected",
+    requiredText: "This field is required.",
+    requiredChoice: "Please make a selection.",
+    requiredFile: "Please attach your business card.",
+    emailInvalid: "Please enter a valid email address.",
     submit: "Submit application",
     submitting: "Submitting...",
     requiredMark: "required",
