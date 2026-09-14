@@ -23,13 +23,13 @@ const TICKET_EN = "1-day ticket KRW 50,000 (regular KRW 60,000)"
 
 const GUIDE_KO = [
   "행사 당일 현장 등록 데스크에서 성함을 말씀해 주시면 확인 후 안내해 드립니다.",
-  "본인 확인을 위해 신분증을 반드시 지참해 주시기 바랍니다.",
+  "현장 등록 데스크에서 신분증 대조가 이루어집니다. <strong>반드시 명함 정보와 동일한 신분증을 지참</strong>해 주세요.",
   `바이어 할인가로 티켓을 구매하실 수 있습니다. ${TICKET_KO}`,
 ]
 
 const GUIDE_EN = [
   "Please give your name at the registration desk on the day of the event.",
-  "A photo ID is required for identity verification.",
+  "Identity is verified at the desk. Please bring a photo ID matching the details on your business card.",
   `You may purchase a ticket at the buyer rate: ${TICKET_EN}`,
 ]
 
@@ -58,7 +58,7 @@ export function buildApprovalEmail(app: BuyerApplication) {
     `  참관일   ${visitDayKo(app.visit_day)}`,
     "",
     "■ 현장 안내",
-    ...GUIDE_KO.map((line) => `  · ${line}`),
+    ...GUIDE_KO.map((line) => `  · ${stripTags(line)}`),
     "─────────────────────────",
     "",
     "행사 관련 문의는 본 메일 주소로 회신해 주시기 바랍니다.",
@@ -206,6 +206,11 @@ export function buildApprovalEmail(app: BuyerApplication) {
 </html>`
 
   return { subject, text, html }
+}
+
+/** 텍스트 전용 본문에서 강조 태그를 걷어낸다. */
+function stripTags(html: string) {
+  return html.replace(/<[^>]+>/g, "")
 }
 
 function infoRow(label: string, value: string, small = false) {

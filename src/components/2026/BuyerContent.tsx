@@ -165,7 +165,7 @@ function Inner() {
             </dl>
           </div>
 
-          <p className="mt-4 pt-4 border-t border-[#7d0b1c]/20 text-[13px] font-bold text-[#7d0b1c] leading-relaxed">
+          <p className="mt-4 pt-4 border-t border-[#7d0b1c]/20 text-[14px] md:text-[15px] font-bold text-[#1a1a1a] leading-relaxed break-keep">
             {t.ticketWarning}
           </p>
         </div>
