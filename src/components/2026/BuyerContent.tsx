@@ -13,15 +13,24 @@ const inputErrorClass =
 const labelClass = "block text-[13px] font-semibold mb-1.5"
 
 /**
- * 섹션 제목. 이 폼은 모든 항목이 필수라 제목 옆에 별표를 둔다.
+ * 섹션 제목. 필수 항목만으로 이루어진 섹션은 제목 옆에 별표를 둔다.
+ * 선택 항목이 섞인 섹션은 required={false} 로 별표를 뺀다.
  * 선택형 섹션은 오류 문구도 제목 옆에 붙여야 눈에 들어온다.
  */
-function SectionTitle({ children, error }: { children: React.ReactNode; error?: string }) {
+function SectionTitle({
+  children,
+  error,
+  required = true,
+}: {
+  children: React.ReactNode
+  error?: string
+  required?: boolean
+}) {
   return (
     <h2 className="text-[17px] md:text-[19px] font-extrabold pb-3 mb-6 border-b border-black/10 flex flex-wrap items-baseline gap-x-3 gap-y-1">
       <span>
         {children}
-        <span className="text-[#7d0b1c] ml-1">*</span>
+        {required && <span className="text-[#7d0b1c] ml-1">*</span>}
       </span>
       {error && (
         <span className="cc-alert-bounce text-[13px] md:text-[14px] font-bold text-[#7d0b1c]">
@@ -422,7 +431,7 @@ function Inner() {
 
           {/* 6. 확인 및 동의 */}
           <fieldset>
-            <SectionTitle error={errors.age_confirmed ?? errors.privacy_consent}>
+            <SectionTitle required={false} error={errors.age_confirmed ?? errors.privacy_consent}>
               {t.sectionConsent}
             </SectionTitle>
 
