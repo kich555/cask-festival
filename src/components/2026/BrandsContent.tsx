@@ -23,7 +23,7 @@ function IconLink({
       rel="noopener noreferrer"
       aria-label={label}
       title={label}
-      className="w-8 h-8 rounded-full border border-black/12 flex items-center justify-center text-[#666] transition-colors hover:border-[#7d0b1c] hover:text-[#7d0b1c]"
+      className="w-7 h-7 rounded-full border border-black/12 flex items-center justify-center text-[#666] transition-colors hover:border-[#7d0b1c] hover:text-[#7d0b1c]"
     >
       {children}
     </a>
@@ -58,7 +58,7 @@ function Inner({ brands }: { brands: Brand[] }) {
       <PageHeader2026 title={b.title} subtitle={b.subtitle} watermark="BRANDS" />
 
       <div className="max-w-[1100px] mx-auto px-5 md:px-10 py-12 md:py-16">
-        <ul className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
+        <ul className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 gap-2 md:gap-3">
           {sorted.map((brand) => {
             const primary =
               lang === "ko" ? brand.nameKo || brand.nameEn : brand.nameEn || brand.nameKo
@@ -67,7 +67,7 @@ function Inner({ brands }: { brands: Brand[] }) {
             return (
               <li
                 key={brand.slug}
-                className="border border-black/10 rounded bg-white p-4 flex flex-col items-center text-center transition-colors hover:border-[#7d0b1c]/40"
+                className="border border-black/10 rounded bg-white p-2.5 md:p-3 flex flex-col items-center text-center transition-colors hover:border-[#7d0b1c]/40"
               >
                 <div
                   className="relative w-full aspect-square rounded flex items-center justify-center overflow-hidden"
@@ -80,38 +80,38 @@ function Inner({ brands }: { brands: Brand[] }) {
                       src={brand.logo}
                       alt={primary}
                       fill
-                      sizes="(max-width: 640px) 45vw, (max-width: 1024px) 30vw, 22vw"
-                      className="object-contain p-3"
+                      sizes="(max-width: 640px) 30vw, (max-width: 1024px) 22vw, 160px"
+                      className="object-contain p-2"
                     />
                   ) : (
                     <span
                       aria-hidden
-                      className="text-[clamp(22px,5vw,30px)] font-extrabold tracking-tight text-[#c4bcbf] select-none"
+                      className="text-[clamp(16px,4vw,22px)] font-extrabold tracking-tight text-[#c4bcbf] select-none"
                     >
                       {brandInitials(brand.nameEn)}
                     </span>
                   )}
                 </div>
 
-                <h2 className="text-[14px] md:text-[15px] font-extrabold leading-snug break-keep mt-3.5">
+                <h2 className="text-[12px] md:text-[13px] font-extrabold leading-snug break-keep mt-2.5">
                   {primary}
                 </h2>
 
-                <p className="text-[12px] text-[#888] mt-1.5 inline-flex items-center gap-1.5">
+                <p className="text-[11px] text-[#888] mt-1 inline-flex items-center gap-1.5">
                   {flag && <span aria-hidden>{flag}</span>}
                   {countryName(brand, lang)}
                 </p>
 
                 {(brand.website || brand.instagram) && (
-                  <div className="flex items-center justify-center gap-2 mt-3">
+                  <div className="flex items-center justify-center gap-1.5 mt-2">
                     {brand.website && (
                       <IconLink href={brand.website} label={`${primary} 홈페이지`}>
-                        <Globe size={15} strokeWidth={1.8} />
+                        <Globe size={13} strokeWidth={1.8} />
                       </IconLink>
                     )}
                     {brand.instagram && (
                       <IconLink href={brand.instagram} label={`${primary} 인스타그램`}>
-                        <Instagram size={15} strokeWidth={1.8} />
+                        <Instagram size={13} strokeWidth={1.8} />
                       </IconLink>
                     )}
                   </div>
