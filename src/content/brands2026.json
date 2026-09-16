@@ -12,6 +12,18 @@
     "logoBg": null
   },
   {
+    "slug": "ant-international",
+    "nameKo": "앤트 인터내셔널",
+    "nameEn": "Ant International",
+    "country": "KR",
+    "countryKo": "한국",
+    "website": null,
+    "instagram": "https://www.instagram.com/ant.inter.kr/",
+    "booths": 1,
+    "logo": null,
+    "logoBg": null
+  },
+  {
     "slug": "jinmac-distillery",
     "nameKo": "진맥 디스틸러리",
     "nameEn": "JINMAC Distillery",
@@ -154,6 +166,18 @@
     "booths": 1,
     "logo": "/brands/waoak-distillery.jpg",
     "logoBg": "#ffffff"
+  },
+  {
+    "slug": "ayoung-fbc",
+    "nameKo": "아영 FBC",
+    "nameEn": "Ayoung FBC",
+    "country": "KR",
+    "countryKo": "한국",
+    "website": "https://www.winenara.com/",
+    "instagram": "https://www.instagram.com/ayoungfbc/",
+    "booths": 1,
+    "logo": null,
+    "logoBg": null
   },
   {
     "slug": "dram-mars-whisky",
