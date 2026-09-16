@@ -118,10 +118,10 @@ export async function POST(request: NextRequest) {
     return fail("이메일 형식을 확인해 주세요.")
   }
 
-  // 2. 참관 희망일
+  // 2. 방문 희망일
   const visitDay = str(form, "visit_day")
   if (!VISIT_DAYS.includes(visitDay as VisitDay)) {
-    return fail("참관 희망일을 선택해 주세요.")
+    return fail("방문 희망일을 선택해 주세요.")
   }
 
   // 3. 바이어 구분 (필수)
@@ -144,13 +144,13 @@ export async function POST(request: NextRequest) {
     )
   }
 
-  // 5. 참관 목적 (필수)
+  // 5. 방문 목적 (필수)
   const purpose = readChoice(form, "purpose", PURPOSES)
   if (!purpose.value || purpose.invalid) {
     return fail(
       purpose.value === null && !purpose.invalid
-        ? "참관 목적을 선택해 주세요."
-        : "참관 목적의 기타 항목을 입력해 주세요.",
+        ? "방문 목적을 선택해 주세요."
+        : "방문 목적의 기타 항목을 입력해 주세요.",
     )
   }
 

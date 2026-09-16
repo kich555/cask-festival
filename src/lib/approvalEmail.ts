@@ -34,15 +34,15 @@ const GUIDE_EN = [
 ]
 
 export function buildApprovalEmail(app: BuyerApplication) {
-  const subject = `[${EVENT.name}] 바이어 참관 신청 승인 안내 / Buyer Registration Approved`
+  const subject = `[${EVENT.name}] 바이어 등록 승인 안내 / Buyer Registration Approved`
 
   const text = [
     `${app.name}님께,`,
     "",
     `안녕하세요. ${EVENT.nameKo} 사무국입니다.`,
     "",
-    "먼저 바이어 참관 신청에 관심을 가져주셔서 진심으로 감사드립니다.",
-    "제출해 주신 내용을 검토한 결과, 귀하의 바이어 참관 신청이 승인되었음을 안내드립니다.",
+    "먼저 바이어 등록에 관심을 가져주셔서 진심으로 감사드립니다.",
+    "제출해 주신 내용을 검토한 결과, 귀하의 바이어 등록이 승인되었음을 안내드립니다.",
     "",
     "─────────────────────────",
     "■ 행사 개요",
@@ -55,7 +55,7 @@ export function buildApprovalEmail(app: BuyerApplication) {
     "■ 신청 내역",
     `  성함     ${app.name}`,
     `  소속     ${app.company}`,
-    `  참관일   ${visitDayKo(app.visit_day)}`,
+    `  방문일   ${visitDayKo(app.visit_day)}`,
     "",
     "■ 현장 안내",
     ...GUIDE_KO.map((line) => `  · ${stripTags(line)}`),
@@ -108,14 +108,14 @@ export function buildApprovalEmail(app: BuyerApplication) {
 
         <tr>
           <td style="padding:36px 36px 8px;">
-            <div style="display:inline-block;background:#7d0b1c;color:#ffffff;font-size:12px;font-weight:700;padding:6px 14px;letter-spacing:0.04em;">바이어 참관 신청 승인</div>
+            <div style="display:inline-block;background:#7d0b1c;color:#ffffff;font-size:12px;font-weight:700;padding:6px 14px;letter-spacing:0.04em;">바이어 등록 승인</div>
 
             <p style="margin:22px 0 0;font-size:16px;font-weight:700;line-height:1.6;">${app.name} 님께</p>
 
             <p style="margin:16px 0 0;font-size:14px;line-height:1.85;color:#444;">
               안녕하세요. ${EVENT.nameKo} 사무국입니다.<br>
-              바이어 참관 신청에 관심을 가져주셔서 진심으로 감사드립니다.<br>
-              제출해 주신 내용을 검토한 결과, <strong style="color:#7d0b1c;">귀하의 바이어 참관 신청이 승인</strong>되었음을 안내드립니다.
+              바이어 등록에 관심을 가져주셔서 진심으로 감사드립니다.<br>
+              제출해 주신 내용을 검토한 결과, <strong style="color:#7d0b1c;">귀하의 바이어 등록이 승인</strong>되었음을 안내드립니다.
             </p>
           </td>
         </tr>
@@ -139,7 +139,7 @@ export function buildApprovalEmail(app: BuyerApplication) {
             <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;font-size:14px;">
               ${infoRow("성함", app.name)}
               ${infoRow("소속", app.company)}
-              ${infoRow("참관일", visitDayKo(app.visit_day))}
+              ${infoRow("방문일", visitDayKo(app.visit_day))}
             </table>
           </td>
         </tr>
@@ -194,7 +194,7 @@ export function buildApprovalEmail(app: BuyerApplication) {
 
         <tr>
           <td style="background:#faf9f9;padding:18px 36px;font-size:11px;color:#999;line-height:1.7;border-top:1px solid rgba(0,0,0,0.06);">
-            본 메일은 ${EVENT.nameKo} 바이어 참관 신청자에게 발송되었습니다.<br>
+            본 메일은 ${EVENT.nameKo} 바이어 등록자에게 발송되었습니다.<br>
             ${EVENT.instagram} · © 2026 ${EVENT.host}
           </td>
         </tr>

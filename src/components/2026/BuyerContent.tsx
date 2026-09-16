@@ -356,7 +356,7 @@ function Inner() {
             </div>
           </fieldset>
 
-          {/* 2. 참관 희망일 */}
+          {/* 2. 방문 희망일 */}
           <fieldset>
             <SectionTitle error={errors.visit_day}>{t.sectionVisitDay}</SectionTitle>
             <div
@@ -407,7 +407,7 @@ function Inner() {
             />
           </fieldset>
 
-          {/* 5. 참관 목적 */}
+          {/* 5. 방문 목적 */}
           <fieldset>
             <SectionTitle error={errors.purpose}>{t.sectionPurpose}</SectionTitle>
             <ChoiceGroup

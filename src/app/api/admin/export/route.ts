@@ -65,7 +65,7 @@ const COLUMNS: { header: string; width: number; get: (r: BuyerApplication) => st
     { header: "연락처", width: 16, get: (r) => r.phone },
     { header: "이메일", width: 28, get: (r) => r.email },
     { header: "회사이메일여부", width: 14, get: (r) => (isFreeEmail(r.email) ? "개인" : "회사") },
-    { header: "참관일", width: 12, get: (r) => DAY_LABEL[r.visit_day] ?? r.visit_day },
+    { header: "방문일", width: 12, get: (r) => DAY_LABEL[r.visit_day] ?? r.visit_day },
     {
       header: "바이어 구분",
       width: 22,
@@ -77,7 +77,7 @@ const COLUMNS: { header: string; width: number; get: (r: BuyerApplication) => st
       get: (r) => labelOf(REFERRAL_LABEL, r.referral, r.referral_other),
     },
     {
-      header: "참관 목적",
+      header: "방문 목적",
       width: 22,
       get: (r) => labelOf(PURPOSE_LABEL, r.purpose, r.purpose_other),
     },
@@ -111,7 +111,7 @@ export async function GET() {
   const rows = (data ?? []) as BuyerApplication[]
 
   const wb = new ExcelJS.Workbook()
-  const ws = wb.addWorksheet("바이어 신청")
+  const ws = wb.addWorksheet("바이어 등록")
 
   ws.columns = COLUMNS.map((c) => ({ header: c.header, width: c.width }))
   ws.getRow(1).font = { bold: true, color: { argb: "FFFFFFFF" } }

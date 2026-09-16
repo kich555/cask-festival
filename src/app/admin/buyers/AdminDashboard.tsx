@@ -191,7 +191,7 @@ export default function AdminDashboard({ initialRows }: { initialRows: BuyerAppl
       <header className="bg-[#1a1a1a] text-white">
         <div className="max-w-[1280px] mx-auto px-5 md:px-8 py-5 flex items-center gap-4">
           <div className="flex-1">
-            <h1 className="text-[17px] font-extrabold tracking-tight">바이어 신청 관리</h1>
+            <h1 className="text-[17px] font-extrabold tracking-tight">바이어 등록 관리</h1>
             <p className="text-white/50 text-[12px] mt-0.5">CASK CARNIVAL 2026</p>
           </div>
           <a
@@ -339,10 +339,10 @@ export default function AdminDashboard({ initialRows }: { initialRows: BuyerAppl
                   {[
                     ["연락처", r.phone],
                     ["이메일", r.email],
-                    ["참관일", DAY_LABEL[r.visit_day] ?? r.visit_day],
+                    ["방문일", DAY_LABEL[r.visit_day] ?? r.visit_day],
                     ["바이어 구분", labelOf(TYPE_LABEL, r.buyer_type, r.buyer_type_other)],
                     ["인지 경로", labelOf(REFERRAL_LABEL, r.referral, r.referral_other)],
-                    ["참관 목적", labelOf(PURPOSE_LABEL, r.purpose, r.purpose_other)],
+                    ["방문 목적", labelOf(PURPOSE_LABEL, r.purpose, r.purpose_other)],
                     ["광고 수신", r.marketing_opt_in ? "동의" : "미동의"],
                   ]
                     .filter(([, v]) => v)

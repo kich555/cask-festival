@@ -1,4 +1,4 @@
-// 바이어 신청 페이지 전용 문구.
+// 바이어 등록 페이지 전용 문구.
 // 폼 항목이 많아 content2026 과 분리한다. (content2026 인터페이스에 영향 없음)
 
 export interface Choice {
@@ -59,11 +59,11 @@ export interface BuyerContent {
 
 export const buyerContent: Record<"ko" | "en", BuyerContent> = {
   ko: {
-    title: "바이어 참관 신청",
+    title: "바이어 등록",
     subtitle: "업계 관계자를 위한 사전 등록입니다.",
     intro: [
-      "캐스크 카니발 2026은 주류 업계 관계자를 위한 바이어 참관 등록을 운영합니다.",
-      "업계 관계자 확인을 위해 명함 첨부가 필요하며, 신청 내용 검토 후 담당자가 개별 연락드립니다.",
+      "캐스크 카니발 2026은 주류 업계 관계자를 위한 바이어 등록을 운영합니다.",
+      "업계 관계자 확인을 위해 명함 첨부가 필요하며, 등록 내용 검토 후 담당자가 개별 연락드립니다.",
     ],
     pressNote:
       "＊ 프레스/미디어 담당자께서는 캐스크 카니발 공식 메일(caskcarnival@whiskynavi.com)로 별도 문의 부탁드립니다.",
@@ -74,11 +74,11 @@ export const buyerContent: Record<"ko" | "en", BuyerContent> = {
       "현장 등록 데스크에서 신분증 대조가 이루어집니다. 반드시 명함 정보와 동일한 신분증을 지참해 주세요.",
     ticketRows: [{ label: "일일권", was: "60,000원", now: "50,000원" }],
 
-    sectionApplicant: "1. 신청자 정보",
-    sectionVisitDay: "2. 참관 희망일",
+    sectionApplicant: "1. 등록자 정보",
+    sectionVisitDay: "2. 방문 희망일",
     sectionBuyerType: "3. 바이어 구분",
     sectionReferral: "4. 인지 경로",
-    sectionPurpose: "5. 참관 목적",
+    sectionPurpose: "5. 방문 목적",
     sectionConsent: "6. 확인 및 동의",
 
     labels: {
@@ -88,13 +88,13 @@ export const buyerContent: Record<"ko" | "en", BuyerContent> = {
       phone: "연락처",
       email: "이메일",
       business_card: "명함 이미지",
-      visit_day: "참관 희망일",
+      visit_day: "방문 희망일",
       buyer_type: "바이어 구분",
       referral: "인지 경로",
-      purpose: "참관 목적",
+      purpose: "방문 목적",
       buyer_type_other: "바이어 구분 — 기타 직접 입력",
       referral_other: "인지 경로 — 기타 직접 입력",
-      purpose_other: "참관 목적 — 기타 직접 입력",
+      purpose_other: "방문 목적 — 기타 직접 입력",
       age_confirmed: "만 19세 이상 확인",
       privacy_consent: "개인정보 수집·이용 동의",
     },
@@ -137,7 +137,7 @@ export const buyerContent: Record<"ko" | "en", BuyerContent> = {
     marketingAgree: "광고성 정보 수신에 동의합니다.",
     privacyTitle: "개인정보 수집·이용 동의",
     privacyBody:
-      "수집 항목: 성명, 회사명, 직함, 연락처, 이메일, 명함 이미지\n수집 목적: 바이어 자격 확인, 참관 등록 및 행사 운영 안내\n보유 기간: 행사 종료 후 6개월 이내 파기\n동의를 거부하실 수 있으나, 이 경우 바이어 참관 신청이 제한됩니다.",
+      "수집 항목: 성명, 회사명, 직함, 연락처, 이메일, 명함 이미지\n수집 목적: 바이어 자격 확인, 바이어 등록 및 행사 운영 안내\n보유 기간: 행사 종료 후 6개월 이내 파기\n동의를 거부하실 수 있으나, 이 경우 바이어 등록이 제한됩니다.",
     privacyAgree: "개인정보 수집 및 이용에 동의합니다.",
     privacyProcessor:
       "제출하신 정보는 Supabase(서울 리전)에 위탁 보관되며, 제3자에게 제공되지 않습니다.",
@@ -151,14 +151,14 @@ export const buyerContent: Record<"ko" | "en", BuyerContent> = {
     requiredChoice: "필수 선택 사항입니다.",
     requiredFile: "명함 이미지를 첨부해 주세요.",
     emailInvalid: "이메일 형식이 올바르지 않습니다. 다시 확인해 주세요.",
-    submit: "신청하기",
+    submit: "등록하기",
     submitting: "제출 중...",
     requiredMark: "필수",
     optional: "선택",
-    successTitle: "신청이 접수되었습니다.",
+    successTitle: "등록이 접수되었습니다.",
     successBody:
       "담당자가 제출해 주신 내용을 확인한 뒤 기재하신 연락처로 개별 안내드립니다. 확인에는 영업일 기준 며칠이 소요될 수 있습니다.",
-    errorPrefix: "신청을 완료하지 못했습니다",
+    errorPrefix: "등록을 완료하지 못했습니다",
   },
 
   en: {

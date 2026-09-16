@@ -1,4 +1,4 @@
-// 바이어 신청 도메인 정의 — 클라이언트/서버 공용.
+// 바이어 등록 도메인 정의 — 클라이언트/서버 공용.
 // 여기의 타입과 선택지 정의가 폼 UI와 서버 검증의 단일 기준이다.
 
 /** 바이어 구분 */
@@ -26,7 +26,7 @@ export const REFERRALS = [
 ] as const
 export type Referral = (typeof REFERRALS)[number]
 
-/** 참관 목적 */
+/** 방문 목적 */
 export const PURPOSES = [
   "new_products",
   "market_research",
@@ -57,7 +57,7 @@ export type BuyerApplication = {
   /** Storage 경로 (공개 URL 아님) */
   business_card_path: string
 
-  /** 2. 참관 희망일 */
+  /** 2. 방문 희망일 */
   visit_day: VisitDay
 
   /** 3. 바이어 구분 — other 인 경우 buyer_type_other 에 직접 입력값 */
@@ -68,7 +68,7 @@ export type BuyerApplication = {
   referral: Referral | null
   referral_other: string | null
 
-  /** 5. 참관 목적 */
+  /** 5. 방문 목적 */
   purpose: Purpose | null
   purpose_other: string | null
 
