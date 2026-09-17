@@ -7,7 +7,11 @@ export const runtime = "nodejs"
 
 type Ctx = { params: Promise<{ slug: string }> }
 
-const EXT: Record<string, string> = { "image/png": "png", "image/jpeg": "jpg", "image/webp": "webp" }
+const EXT: Record<string, string> = {
+  "image/png": "png",
+  "image/jpeg": "jpg",
+  "image/webp": "webp",
+}
 const MAX_BYTES = 5 * 1024 * 1024
 
 async function currentLogo(slug: string) {

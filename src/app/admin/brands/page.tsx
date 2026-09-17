@@ -15,10 +15,7 @@ export const dynamic = "force-dynamic"
 export default async function AdminBrandsPage() {
   if (!(await isAdminRequest())) return <AdminLogin />
 
-  const { data, error } = await getSupabaseAdmin()
-    .from(BRAND_TABLE)
-    .select("*")
-    .order("sort_order")
+  const { data, error } = await getSupabaseAdmin().from(BRAND_TABLE).select("*").order("sort_order")
 
   return (
     <>

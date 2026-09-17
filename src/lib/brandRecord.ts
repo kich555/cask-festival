@@ -106,9 +106,11 @@ export function parseBrandInput(raw: unknown): ParseResult {
   if (!country) return { ok: false, error: "국가를 선택해 주세요." }
 
   const website = optionalUrl(r.website)
-  if (website === undefined) return { ok: false, error: "홈페이지는 http(s):// 로 시작해야 합니다." }
+  if (website === undefined)
+    return { ok: false, error: "홈페이지는 http(s):// 로 시작해야 합니다." }
   const instagram = optionalUrl(r.instagram)
-  if (instagram === undefined) return { ok: false, error: "인스타그램은 http(s):// 로 시작해야 합니다." }
+  if (instagram === undefined)
+    return { ok: false, error: "인스타그램은 http(s):// 로 시작해야 합니다." }
 
   const booths = Number(r.booths)
   if (!Number.isInteger(booths) || booths < 1) {

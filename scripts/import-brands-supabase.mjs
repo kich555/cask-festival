@@ -12,13 +12,22 @@ import { BRAND_BUCKET_NAME, COUNTRY_CODES, slugify } from "../src/lib/brandRecor
 const ROOT = fileURLToPath(new URL("..", import.meta.url))
 const EXCEL = path.join(ROOT, "..", "캐스크카니발_참가업체_목록.xlsx")
 const JSON_PATH = path.join(ROOT, "src", "content", "brands2026.json")
-const MIME = { ".png": "image/png", ".jpg": "image/jpeg", ".jpeg": "image/jpeg", ".webp": "image/webp" }
+const MIME = {
+  ".png": "image/png",
+  ".jpg": "image/jpeg",
+  ".jpeg": "image/jpeg",
+  ".webp": "image/webp",
+}
 
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY, {
   auth: { persistSession: false },
 })
 
-const norm = (s) => String(s ?? "").normalize("NFC").replace(/\s+/g, "").toLowerCase()
+const norm = (s) =>
+  String(s ?? "")
+    .normalize("NFC")
+    .replace(/\s+/g, "")
+    .toLowerCase()
 const text = (v) => {
   if (v == null) return null
   const t = String(typeof v === "object" ? (v.text ?? v.hyperlink ?? "") : v)

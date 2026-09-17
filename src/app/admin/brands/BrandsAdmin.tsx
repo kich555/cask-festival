@@ -4,32 +4,30 @@ import { useMemo, useState } from "react"
 import type { BrandRow } from "@/lib/brandRecord"
 import BrandEditor from "./BrandEditor"
 
-type Filter = "all" | "visible" | "hidden" | "nologo"
+type Filter = "hidden" | "visible" | "all"
 
 const FILTER_LABEL: Record<Filter, string> = {
+  hidden: "게시 예정",
+  visible: "게시 완료",
   all: "전체",
-  visible: "노출중",
-  hidden: "숨김",
-  nologo: "로고 없음",
 }
 
 function matches(row: BrandRow, f: Filter) {
   if (f === "visible") return row.visible
   if (f === "hidden") return !row.visible
-  if (f === "nologo") return !row.logo
   return true
 }
 
 export default function BrandsAdmin({ initialRows }: { initialRows: BrandRow[] }) {
   const [rows, setRows] = useState(initialRows)
-  const [filter, setFilter] = useState<Filter>("all")
+  const [filter, setFilter] = useState<Filter>("hidden")
   const [query, setQuery] = useState("")
   // undefined: 닫힘, null: 새 브랜드, string: 편집 중인 slug
   const [editing, setEditing] = useState<string | null | undefined>(undefined)
   const [message, setMessage] = useState<string | null>(null)
 
   const counts = useMemo(() => {
-    const c = { all: 0, visible: 0, hidden: 0, nologo: 0 } as Record<Filter, number>
+    const c = { hidden: 0, visible: 0, all: 0 } as Record<Filter, number>
     for (const r of rows) for (const f of Object.keys(c) as Filter[]) if (matches(r, f)) c[f]++
     return c
   }, [rows])
@@ -53,7 +51,11 @@ export default function BrandsAdmin({ initialRows }: { initialRows: BrandRow[] }
 
   async function toggle(row: BrandRow) {
     const next = !row.visible
-    if (next && !row.logo && !window.confirm(`'${row.name_ko}'은(는) 로고가 없습니다. 로고 없이 노출할까요?`)) {
+    if (
+      next &&
+      !row.logo &&
+      !window.confirm(`'${row.name_ko}'은(는) 로고가 없습니다. 로고 없이 노출할까요?`)
+    ) {
       return
     }
     setMessage(null)
@@ -72,7 +74,8 @@ export default function BrandsAdmin({ initialRows }: { initialRows: BrandRow[] }
     }
   }
 
-  const editingRow = typeof editing === "string" ? (rows.find((r) => r.slug === editing) ?? null) : null
+  const editingRow =
+    typeof editing === "string" ? (rows.find((r) => r.slug === editing) ?? null) : null
 
   return (
     <div className="min-h-screen bg-[#f6f5f5] text-[#1a1a1a]">
@@ -80,7 +83,9 @@ export default function BrandsAdmin({ initialRows }: { initialRows: BrandRow[] }
         <div className="max-w-[1280px] mx-auto px-5 md:px-8 py-5 flex items-center gap-4">
           <div className="flex-1">
             <h1 className="text-[17px] font-extrabold tracking-tight">브랜드 관리</h1>
-            <p className="text-white/50 text-[12px] mt-0.5">노출중인 브랜드만 참가업체 페이지에 보입니다</p>
+            <p className="text-white/50 text-[12px] mt-0.5">
+              노출중인 브랜드만 참가업체 페이지에 보입니다
+            </p>
           </div>
           <button
             type="button"
@@ -124,7 +129,7 @@ export default function BrandsAdmin({ initialRows }: { initialRows: BrandRow[] }
               <button
                 type="button"
                 onClick={() => setEditing(row.slug)}
-                className="flex items-center gap-3 flex-1 min-w-0 text-left"
+                className="flex items-center gap-3 flex-1 min-w-0 text-left cursor-pointer"
               >
                 <span className="w-12 h-12 shrink-0 rounded bg-[#f6f5f5] flex items-center justify-center overflow-hidden">
                   {row.logo ? (
@@ -145,7 +150,7 @@ export default function BrandsAdmin({ initialRows }: { initialRows: BrandRow[] }
                 type="button"
                 onClick={() => toggle(row)}
                 aria-pressed={row.visible}
-                className={`shrink-0 rounded-full px-3 py-1.5 text-[12px] font-bold border ${
+                className={`shrink-0 cursor-pointer rounded-full px-3 py-1.5 text-[12px] font-bold border ${
                   row.visible
                     ? "bg-[#2e7d32]/10 text-[#2e7d32] border-[#2e7d32]/30"
                     : "bg-black/5 text-[#777] border-black/15"
@@ -155,7 +160,9 @@ export default function BrandsAdmin({ initialRows }: { initialRows: BrandRow[] }
               </button>
             </li>
           ))}
-          {shown.length === 0 && <li className="px-4 py-10 text-center text-[13px] text-[#888]">결과가 없습니다.</li>}
+          {shown.length === 0 && (
+            <li className="px-4 py-10 text-center text-[13px] text-[#888]">결과가 없습니다.</li>
+          )}
         </ul>
       </div>
 

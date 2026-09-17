@@ -145,7 +145,9 @@ export default function BrandEditor({
                   </button>
                 )}
               </div>
-              <p className="text-[11px] text-[#aaa] mt-2">PNG·JPG·WebP, 5MB 이하. 투명 배경 정사각형 권장</p>
+              <p className="text-[11px] text-[#aaa] mt-2">
+                PNG·JPG·WebP, 5MB 이하. 투명 배경 정사각형 권장
+              </p>
             </div>
             <input
               ref={fileRef}
@@ -172,7 +174,12 @@ export default function BrandEditor({
           </label>
           <label>
             국가 *
-            <select name="country_ko" required defaultValue={row?.country_ko ?? ""} className={inputCls}>
+            <select
+              name="country_ko"
+              required
+              defaultValue={row?.country_ko ?? ""}
+              className={inputCls}
+            >
               <option value="" disabled>
                 선택
               </option>
@@ -196,18 +203,33 @@ export default function BrandEditor({
           </label>
           <label className="col-span-2">
             홈페이지
-            <input name="website" type="url" defaultValue={row?.website ?? ""} className={inputCls} />
+            <input
+              name="website"
+              type="url"
+              defaultValue={row?.website ?? ""}
+              className={inputCls}
+            />
           </label>
           <label className="col-span-2">
             인스타그램
-            <input name="instagram" type="url" defaultValue={row?.instagram ?? ""} className={inputCls} />
+            <input
+              name="instagram"
+              type="url"
+              defaultValue={row?.instagram ?? ""}
+              className={inputCls}
+            />
           </label>
 
           {error && <p className="col-span-2 text-[#7d0b1c] font-semibold">{error}</p>}
 
           <div className="col-span-2 flex items-center gap-2 mt-2">
             {row && (
-              <button type="button" disabled={busy} onClick={remove} className="text-[#7d0b1c] font-semibold">
+              <button
+                type="button"
+                disabled={busy}
+                onClick={remove}
+                className="text-[#7d0b1c] font-semibold"
+              >
                 브랜드 삭제
               </button>
             )}
