@@ -88,7 +88,7 @@ function Inner({ brands }: { brands: Brand[] }) {
                       aria-hidden
                       className="text-[clamp(16px,4vw,22px)] font-extrabold tracking-tight text-[#c4bcbf] select-none"
                     >
-                      {brandInitials(brand.nameEn)}
+                      {brandInitials(brand.nameEn, brand.nameKo)}
                     </span>
                   )}
                 </div>

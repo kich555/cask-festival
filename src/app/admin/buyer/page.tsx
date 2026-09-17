@@ -2,8 +2,9 @@ import type { Metadata } from "next"
 import { isAdminRequest } from "@/lib/adminAuth"
 import type { BuyerApplication } from "@/lib/buyer"
 import { BUYER_TABLE, getSupabaseAdmin } from "@/lib/supabaseAdmin"
+import AdminLogin from "../AdminLogin"
+import AdminTabs from "../AdminTabs"
 import AdminDashboard from "./AdminDashboard"
-import AdminLogin from "./AdminLogin"
 
 // 관리자 화면은 검색엔진에 노출되지 않아야 하고, 항상 최신 데이터를 보여줘야 한다.
 export const metadata: Metadata = {
@@ -12,7 +13,7 @@ export const metadata: Metadata = {
 }
 export const dynamic = "force-dynamic"
 
-export default async function AdminBuyersPage() {
+export default async function AdminBuyerPage() {
   if (!(await isAdminRequest())) {
     return <AdminLogin />
   }
@@ -34,5 +35,10 @@ export default async function AdminBuyersPage() {
   }
 
   // supabase-js 의 select("*") 추론이 버전에 따라 달라 명시적으로 좁힌다.
-  return <AdminDashboard initialRows={(data ?? []) as BuyerApplication[]} />
+  return (
+    <>
+      <AdminTabs active="buyer" />
+      <AdminDashboard initialRows={(data ?? []) as BuyerApplication[]} />
+    </>
+  )
 }

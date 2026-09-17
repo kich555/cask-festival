@@ -1,29 +1,9 @@
-// 참가 업체 데이터 로더 + 유틸.
-// 데이터 출처는 src/content/brands2026.json (엑셀에서 변환해 수동 관리).
+// 참가 업체 표시용 유틸. 클라이언트 컴포넌트도 import 하므로 서버 전용 코드를 두지 않는다.
+// 데이터 로더는 brandsServer.ts 에 있다.
 
-import brandsData from "@/content/brands2026.json"
+import type { Brand } from "./brandRecord"
 
-export interface Brand {
-  /** kebab-case 고유 키. 로고 파일명 규약(public/brands/<slug>.png)으로도 쓴다. */
-  slug: string
-  nameKo: string
-  nameEn: string
-  /** ISO 3166-1 alpha-2. 스코틀랜드는 GB-SCT 로 구분해 전용 국기를 쓴다. */
-  country: string
-  /** 한국어 화면에 표시할 국가명 */
-  countryKo: string
-  website: string | null
-  instagram: string | null
-  booths: number
-  /** 로고 경로. null 이면 이니셜 플레이스홀더를 표시. */
-  logo: string | null
-  /** 로고 이미지에서 추출한 배경색. null 이면 투명 로고이거나 판별 불가. */
-  logoBg?: string | null
-}
-
-export function getBrands(): Brand[] {
-  return brandsData as Brand[]
-}
+export type { Brand }
 
 const COUNTRY_EN: Record<string, string> = {
   KR: "Korea",
@@ -53,10 +33,10 @@ export function countryFlag(code: string): string {
   return String.fromCodePoint(...[...c].map((ch) => 0x1f1e6 + ch.charCodeAt(0) - 65))
 }
 
-/** 로고가 없을 때 쓰는 이니셜 (영문명 기준, 최대 2자). */
-export function brandInitials(nameEn: string): string {
+/** 로고가 없을 때 쓰는 이니셜 (영문명 기준, 최대 2자). 영문명이 없으면 한글명 앞 2자. */
+export function brandInitials(nameEn: string, nameKo = ""): string {
   const words = nameEn.trim().split(/\s+/).filter(Boolean)
-  if (words.length === 0) return "?"
+  if (words.length === 0) return nameKo.trim().slice(0, 2) || "?"
   if (words.length === 1) return words[0].slice(0, 2).toUpperCase()
   return (words[0][0] + words[1][0]).toUpperCase()
 }

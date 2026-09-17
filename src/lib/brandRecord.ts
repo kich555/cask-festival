@@ -19,7 +19,7 @@ export interface Brand {
 }
 
 /** Supabase public.brands 행 */
-export interface BrandRow {
+export type BrandRow = {
   slug: string
   name_ko: string
   name_en: string | null

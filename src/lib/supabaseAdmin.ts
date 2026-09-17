@@ -2,6 +2,7 @@
 // service role 키를 쓰므로 절대 클라이언트 컴포넌트에서 import 하지 않는다.
 import "server-only"
 import { createClient, type SupabaseClient } from "@supabase/supabase-js"
+import type { BrandRow } from "./brandRecord"
 import type { BuyerApplication } from "./buyer"
 
 /** 테이블 스키마 타입 — supabase-js 가 select/insert 결과를 추론하는 데 쓴다. */
@@ -18,6 +19,15 @@ export interface Database {
         Update: Partial<BuyerApplication>
         Relationships: []
       }
+      brands: {
+        Row: BrandRow
+        Insert: Omit<BrandRow, "created_at" | "updated_at"> & {
+          created_at?: string
+          updated_at?: string
+        }
+        Update: Partial<BrandRow>
+        Relationships: []
+      }
     }
     Views: Record<string, never>
     Functions: Record<string, never>
@@ -28,6 +38,8 @@ export interface Database {
 
 export const BUYER_TABLE = "buyer_applications"
 export const BUYER_BUCKET = "buyer-uploads"
+export const BRAND_TABLE = "brands"
+export { BRAND_BUCKET_NAME as BRAND_BUCKET } from "./brandRecord"
 
 let cached: SupabaseClient<Database> | null = null
 

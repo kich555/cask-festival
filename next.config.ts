@@ -4,6 +4,18 @@ const nextConfig: NextConfig = {
   // next/image가 전달 시점에 AVIF/WebP로 변환하도록 명시 (원본 PNG는 그대로 두고 응답만 경량화)
   images: {
     formats: ["image/avif", "image/webp"],
+    // 관리자 페이지에서 올린 로고 (Supabase Storage public 버킷)
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "*.supabase.co",
+        pathname: "/storage/v1/object/public/brand-logos/**",
+      },
+    ],
+  },
+  async redirects() {
+    // 공개 사이트 /buyer 와 맞추기 위해 이름을 바꿨다. 예전 북마크를 살린다.
+    return [{ source: "/admin/buyers", destination: "/admin/buyer", permanent: true }]
   },
   async headers() {
     return [
