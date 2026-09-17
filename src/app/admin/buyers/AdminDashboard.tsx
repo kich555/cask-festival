@@ -75,17 +75,29 @@ export default function AdminDashboard({ initialRows }: { initialRows: BuyerAppl
   const [rows, setRows] = useState(initialRows)
   // 새로 들어온 신청부터 보는 게 기본. '전체'는 맨 뒤에 둔다.
   const [filter, setFilter] = useState<"pending" | "approved" | "rejected" | "all">("pending")
+  // 승인 탭 안에서 메일 발송 여부로 한 번 더 나눈다. 남은 발송 작업이 먼저 보이도록 미발송이 기본.
+  const [mailFilter, setMailFilter] = useState<"unsent" | "sent">("unsent")
   const [selected, setSelected] = useState<Set<string>>(new Set())
   const [busy, setBusy] = useState(false)
   const [message, setMessage] = useState<{ kind: "ok" | "error"; text: string } | null>(null)
 
   const counts = useMemo(() => {
-    const c = { all: rows.length, pending: 0, approved: 0, rejected: 0 }
-    for (const r of rows) c[r.status] += 1
+    const c = { all: rows.length, pending: 0, approved: 0, rejected: 0, unsent: 0, sent: 0 }
+    for (const r of rows) {
+      c[r.status] += 1
+      if (r.status === "approved") c[r.approval_email_sent_at ? "sent" : "unsent"] += 1
+    }
     return c
   }, [rows])
 
-  const visible = filter === "all" ? rows : rows.filter((r) => r.status === filter)
+  const visible = rows.filter((r) => {
+    if (filter === "all") return true
+    if (r.status !== filter) return false
+    if (filter === "approved") {
+      return mailFilter === "sent" ? Boolean(r.approval_email_sent_at) : !r.approval_email_sent_at
+    }
+    return true
+  })
   const visibleIds = visible.map((r) => r.id)
   const selectedVisible = visibleIds.filter((id) => selected.has(id))
   const allVisibleSelected = visibleIds.length > 0 && selectedVisible.length === visibleIds.length
@@ -216,7 +228,10 @@ export default function AdminDashboard({ initialRows }: { initialRows: BuyerAppl
             <button
               key={k}
               type="button"
-              onClick={() => setFilter(k)}
+              onClick={() => {
+                setFilter(k)
+                if (k === "approved") setMailFilter("unsent")
+              }}
               className={`px-4 py-2 rounded text-[13px] font-semibold border transition-colors ${
                 filter === k
                   ? "bg-[#7d0b1c] text-white border-[#7d0b1c]"
@@ -227,6 +242,25 @@ export default function AdminDashboard({ initialRows }: { initialRows: BuyerAppl
             </button>
           ))}
         </div>
+
+        {filter === "approved" && (
+          <div className="flex flex-wrap gap-2 mb-4">
+            {(["unsent", "sent"] as const).map((k) => (
+              <button
+                key={k}
+                type="button"
+                onClick={() => setMailFilter(k)}
+                className={`px-3 py-1.5 rounded text-[12px] font-semibold border transition-colors ${
+                  mailFilter === k
+                    ? "bg-white text-[#7d0b1c] border-[#7d0b1c]"
+                    : "bg-white text-[#666] border-black/10 hover:border-black/25"
+                }`}
+              >
+                {k === "unsent" ? "메일 미발송" : "메일 발송 완료"} {counts[k]}
+              </button>
+            ))}
+          </div>
+        )}
 
         {/* 일괄 처리 바 */}
         {visible.length > 0 && (
