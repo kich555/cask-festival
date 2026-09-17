@@ -58,7 +58,8 @@ function Inner({ brands }: { brands: Brand[] }) {
       <PageHeader2026 title={b.title} subtitle={b.subtitle} watermark="BRANDS" />
 
       <div className="max-w-[1100px] mx-auto px-5 md:px-10 py-12 md:py-16">
-        <ul className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 gap-2 md:gap-3">
+        {/* 표 형태: 칸마다 테두리를 두르고 -1px 겹쳐 선이 한 줄로 보이게 한다. 브랜드가 있는 칸까지만 선이 그려진다. */}
+        <ul className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 pt-px pl-px">
           {sorted.map((brand) => {
             const primary =
               lang === "ko" ? brand.nameKo || brand.nameEn : brand.nameEn || brand.nameKo
@@ -67,7 +68,7 @@ function Inner({ brands }: { brands: Brand[] }) {
             return (
               <li
                 key={brand.slug}
-                className="border border-black/10 rounded bg-white p-2.5 md:p-3 flex flex-col items-center text-center transition-colors hover:border-[#7d0b1c]/40"
+                className="-mt-px -ml-px border border-black/10 bg-white p-2.5 md:p-3 flex flex-col items-center text-center"
               >
                 <div
                   className="relative w-full aspect-square rounded flex items-center justify-center overflow-hidden"
@@ -93,7 +94,8 @@ function Inner({ brands }: { brands: Brand[] }) {
                   )}
                 </div>
 
-                <h2 className="text-[12px] md:text-[13px] font-extrabold leading-snug break-keep mt-2.5">
+                {/* 긴 이름이 두 줄이 돼도 칸마다 배치가 같도록 이름 영역을 항상 두 줄 높이로 잡는다. */}
+                <h2 className="text-[12px] md:text-[13px] font-extrabold leading-snug break-keep mt-2.5 min-h-[2.75em] flex items-center justify-center">
                   {primary}
                 </h2>
 
