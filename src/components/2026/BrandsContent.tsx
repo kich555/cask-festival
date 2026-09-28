@@ -1,6 +1,6 @@
 "use client"
 
-import { Globe, Instagram } from "lucide-react"
+import { Facebook, Globe, Instagram } from "lucide-react"
 import Image from "next/image"
 import { Suspense, useMemo } from "react"
 import { useContent2026 } from "@/i18n/useContent2026"
@@ -104,7 +104,7 @@ function Inner({ brands }: { brands: Brand[] }) {
                   {countryName(brand, lang)}
                 </p>
 
-                {(brand.website || brand.instagram) && (
+                {(brand.website || brand.instagram || brand.facebook) && (
                   <div className="flex items-center justify-center gap-1.5 mt-2">
                     {brand.website && (
                       <IconLink href={brand.website} label={`${primary} 홈페이지`}>
@@ -114,6 +114,11 @@ function Inner({ brands }: { brands: Brand[] }) {
                     {brand.instagram && (
                       <IconLink href={brand.instagram} label={`${primary} 인스타그램`}>
                         <Instagram size={13} strokeWidth={1.8} />
+                      </IconLink>
+                    )}
+                    {brand.facebook && (
+                      <IconLink href={brand.facebook} label={`${primary} 페이스북`}>
+                        <Facebook size={13} strokeWidth={1.8} />
                       </IconLink>
                     )}
                   </div>

@@ -219,6 +219,15 @@ export default function BrandEditor({
               className={inputCls}
             />
           </label>
+          <label className="col-span-2">
+            페이스북
+            <input
+              name="facebook"
+              type="url"
+              defaultValue={row?.facebook ?? ""}
+              className={inputCls}
+            />
+          </label>
 
           {error && <p className="col-span-2 text-[#7d0b1c] font-semibold">{error}</p>}
 

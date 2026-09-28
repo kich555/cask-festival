@@ -7,6 +7,7 @@ create table if not exists public.brands (
   country_ko text not null,
   website text,
   instagram text,
+  facebook text,
   booths int not null default 1 check (booths >= 1),
   logo text,
   logo_bg text,
@@ -18,3 +19,6 @@ create table if not exists public.brands (
 
 -- 정책을 두지 않아 anon 접근은 모두 막히고 service role 만 통과한다.
 alter table public.brands enable row level security;
+
+-- 기존 테이블에 페이스북 컬럼 추가 (2026-09 추가)
+alter table public.brands add column if not exists facebook text;

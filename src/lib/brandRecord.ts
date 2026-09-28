@@ -11,6 +11,7 @@ export interface Brand {
   countryKo: string
   website: string | null
   instagram: string | null
+  facebook: string | null
   booths: number
   /** 로고 URL. null 이면 이니셜 플레이스홀더 */
   logo: string | null
@@ -27,6 +28,7 @@ export type BrandRow = {
   country_ko: string
   website: string | null
   instagram: string | null
+  facebook: string | null
   booths: number
   logo: string | null
   logo_bg: string | null
@@ -76,6 +78,7 @@ export interface BrandInput {
   country_ko: string
   website: string | null
   instagram: string | null
+  facebook: string | null
   booths: number
 }
 
@@ -111,6 +114,9 @@ export function parseBrandInput(raw: unknown): ParseResult {
   const instagram = optionalUrl(r.instagram)
   if (instagram === undefined)
     return { ok: false, error: "인스타그램은 http(s):// 로 시작해야 합니다." }
+  const facebook = optionalUrl(r.facebook)
+  if (facebook === undefined)
+    return { ok: false, error: "페이스북은 http(s):// 로 시작해야 합니다." }
 
   const booths = Number(r.booths)
   if (!Number.isInteger(booths) || booths < 1) {
@@ -126,6 +132,7 @@ export function parseBrandInput(raw: unknown): ParseResult {
       country_ko,
       website,
       instagram,
+      facebook,
       booths,
     },
   }
@@ -140,6 +147,7 @@ export function rowToBrand(row: BrandRow): Brand {
     countryKo: row.country_ko,
     website: row.website,
     instagram: row.instagram,
+    facebook: row.facebook ?? null,
     booths: row.booths,
     logo: row.logo,
     logoBg: row.logo_bg,

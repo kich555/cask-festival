@@ -26,6 +26,7 @@ test("parseBrandInput: 정상 입력을 정규화한다", () => {
     country_ko: "한국",
     website: "https://a.com",
     instagram: "",
+    facebook: "https://facebook.com/weoak",
     booths: "2",
   })
   assert.deepEqual(r, {
@@ -37,6 +38,7 @@ test("parseBrandInput: 정상 입력을 정규화한다", () => {
       country_ko: "한국",
       website: "https://a.com",
       instagram: null,
+      facebook: "https://facebook.com/weoak",
       booths: 2,
     },
   })
@@ -47,6 +49,7 @@ test("parseBrandInput: 한글명 누락·알 수 없는 국가·잘못된 URL·�
   assert.equal(parseBrandInput({ ...base, name_ko: " " }).ok, false)
   assert.equal(parseBrandInput({ ...base, country_ko: "화성" }).ok, false)
   assert.equal(parseBrandInput({ ...base, website: "a.com" }).ok, false)
+  assert.equal(parseBrandInput({ ...base, facebook: "fb.com" }).ok, false)
   assert.equal(parseBrandInput({ ...base, booths: 0 }).ok, false)
   assert.equal(parseBrandInput(null).ok, false)
 })
@@ -64,6 +67,7 @@ test("rowToBrand: snake_case 행을 공개 Brand 로 바꾼다", () => {
     country_ko: "한국",
     website: null,
     instagram: null,
+    facebook: null,
     booths: 1,
     logo: "https://p.supabase.co/storage/v1/object/public/brand-logos/x.png",
     logo_bg: null,
@@ -80,6 +84,7 @@ test("rowToBrand: snake_case 행을 공개 Brand 로 바꾼다", () => {
     countryKo: "한국",
     website: null,
     instagram: null,
+    facebook: null,
     booths: 1,
     logo: "https://p.supabase.co/storage/v1/object/public/brand-logos/x.png",
     logoBg: null,
