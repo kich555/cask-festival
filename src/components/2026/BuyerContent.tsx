@@ -248,7 +248,16 @@ function Inner() {
     first.querySelector<HTMLElement>("input, textarea, select")?.focus({ preventScroll: true })
   }, [errors])
 
-  const missingLabels = FIELD_ORDER.filter((key) => errors[key]).map((key) => t.labels[key])
+  // 용량 초과는 미입력이 아니므로 '미입력 항목' 요약에서 뺀다
+  const missingLabels = FIELD_ORDER.filter(
+    (key) => errors[key] && errors[key] !== t.fileTooLarge,
+  ).map((key) => t.labels[key])
+
+  /** 명함 칸과 제출 버튼 아래 양쪽에 용량 초과 안내를 띄운다. */
+  function showTooLarge() {
+    setErrors({ business_card: t.fileTooLarge })
+    setError(t.fileTooLarge)
+  }
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
@@ -264,14 +273,14 @@ function Inner() {
       const card = formData.get("business_card") as File
       const shrunk = await shrinkImage(card)
       if (shrunk.size > MAX_UPLOAD_BYTES) {
-        setErrors({ business_card: t.fileTooLarge })
+        showTooLarge()
         return
       }
       if (shrunk !== card) formData.set("business_card", shrunk)
 
       const res = await fetch("/api/buyer", { method: "POST", body: formData })
       if (res.status === 413) {
-        setErrors({ business_card: t.fileTooLarge })
+        showTooLarge()
         return
       }
       const data = (await res.json().catch(() => ({ ok: false }))) as {
@@ -285,7 +294,10 @@ function Inner() {
       setDone(true)
       window.scrollTo({ top: 0, behavior: "smooth" })
     } catch {
-      setError(`${t.errorPrefix}. (network)`)
+      // 큰 파일은 업로드 도중 연결이 끊겨 413 대신 여기로 오기도 한다
+      const card = formData.get("business_card")
+      if (card instanceof File && card.size > 3 * 1024 * 1024) showTooLarge()
+      else setError(`${t.errorPrefix}. (network)`)
     } finally {
       setSubmitting(false)
     }
