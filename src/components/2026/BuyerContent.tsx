@@ -3,6 +3,7 @@
 import { Suspense, useEffect, useState } from "react"
 import { useLanguage } from "@/i18n"
 import { buyerContent, type Choice } from "@/i18n/buyerContent"
+import { MAX_UPLOAD_BYTES } from "@/lib/buyer"
 import PageHeader2026 from "./PageHeader2026"
 
 const inputClass =
@@ -168,6 +169,35 @@ const FIELD_ORDER = [
   "privacy_consent",
 ]
 
+/** 명함 사진 긴 변 최대 픽셀. 글자를 읽기엔 충분하고 용량은 1MB 안팎이 된다. */
+const CARD_MAX_SIDE = 2000
+
+/**
+ * 휴대폰 사진은 수 MB라 Vercel 요청 한도(4.5MB)를 넘기 쉽다.
+ * 브라우저가 해석할 수 있는 이미지면 줄여서 JPEG로 바꾼다.
+ * PDF나 해석 못 하는 형식(크롬의 HEIC 등)은 원본을 그대로 돌려준다.
+ */
+async function shrinkImage(file: File): Promise<File> {
+  if (!file.type.startsWith("image/") || file.size < 1024 * 1024) return file
+  try {
+    const bitmap = await createImageBitmap(file)
+    const scale = Math.min(1, CARD_MAX_SIDE / Math.max(bitmap.width, bitmap.height))
+    const canvas = document.createElement("canvas")
+    canvas.width = Math.round(bitmap.width * scale)
+    canvas.height = Math.round(bitmap.height * scale)
+    canvas.getContext("2d")?.drawImage(bitmap, 0, 0, canvas.width, canvas.height)
+    bitmap.close()
+    const blob = await new Promise<Blob | null>((resolve) =>
+      canvas.toBlob(resolve, "image/jpeg", 0.85),
+    )
+    if (!blob || blob.size >= file.size) return file
+    const name = `${file.name.replace(/\.[^.]+$/, "")}.jpg`
+    return new File([blob], name, { type: "image/jpeg" })
+  } catch {
+    return file
+  }
+}
+
 function Inner() {
   const lang = useLanguage()
   const t = buyerContent[lang]
@@ -231,8 +261,23 @@ function Inner() {
 
     setSubmitting(true)
     try {
+      const card = formData.get("business_card") as File
+      const shrunk = await shrinkImage(card)
+      if (shrunk.size > MAX_UPLOAD_BYTES) {
+        setErrors({ business_card: t.fileTooLarge })
+        return
+      }
+      if (shrunk !== card) formData.set("business_card", shrunk)
+
       const res = await fetch("/api/buyer", { method: "POST", body: formData })
-      const data = (await res.json()) as { ok: boolean; error?: string }
+      if (res.status === 413) {
+        setErrors({ business_card: t.fileTooLarge })
+        return
+      }
+      const data = (await res.json().catch(() => ({ ok: false }))) as {
+        ok: boolean
+        error?: string
+      }
       if (!res.ok || !data.ok) {
         setError(data.error ?? `${t.errorPrefix}.`)
         return

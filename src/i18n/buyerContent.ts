@@ -47,6 +47,7 @@ export interface BuyerContent {
   requiredText: string
   requiredChoice: string
   requiredFile: string
+  fileTooLarge: string
   emailInvalid: string
   submit: string
   submitting: string
@@ -143,13 +144,14 @@ export const buyerContent: Record<"ko" | "en", BuyerContent> = {
       "제출하신 정보는 Supabase(서울 리전)에 위탁 보관되며, 제3자에게 제공되지 않습니다.",
     privacyLink: "개인정보처리방침 전문 보기",
 
-    fileHint: "JPG · PNG · WEBP · HEIC · PDF · 10MB 이하",
+    fileHint: "JPG · PNG · WEBP · HEIC · PDF · 4MB 이하 (사진은 자동으로 줄여 올립니다)",
     fileChoose: "파일 선택",
     fileNone: "선택된 파일 없음",
     missingSummary: "미입력 항목",
     requiredText: "필수 기재 사항입니다.",
     requiredChoice: "필수 선택 사항입니다.",
     requiredFile: "명함 이미지를 첨부해 주세요.",
+    fileTooLarge: "파일이 너무 큽니다. 4MB 이하의 JPG·PNG 사진으로 다시 첨부해 주세요.",
     emailInvalid: "이메일 형식이 올바르지 않습니다. 다시 확인해 주세요.",
     submit: "등록하기",
     submitting: "제출 중...",
@@ -245,13 +247,14 @@ export const buyerContent: Record<"ko" | "en", BuyerContent> = {
       "Your data is stored with Supabase (Seoul region) as our processor and is not shared with third parties.",
     privacyLink: "Read the full privacy policy",
 
-    fileHint: "JPG · PNG · WEBP · HEIC · PDF · max 10MB",
+    fileHint: "JPG · PNG · WEBP · HEIC · PDF · max 4MB (photos are resized automatically)",
     fileChoose: "Choose file",
     fileNone: "No file selected",
     missingSummary: "Missing fields",
     requiredText: "This field is required.",
     requiredChoice: "Please make a selection.",
     requiredFile: "Please attach your business card.",
+    fileTooLarge: "The file is too large. Please attach a JPG or PNG photo under 4MB.",
     emailInvalid: "Please enter a valid email address.",
     submit: "Submit application",
     submitting: "Submitting...",

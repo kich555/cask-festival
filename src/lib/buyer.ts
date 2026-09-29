@@ -105,7 +105,8 @@ export function isFreeEmail(email: string): boolean {
   return domain ? FREE_EMAIL_DOMAINS.has(domain) : false
 }
 
-export const MAX_UPLOAD_BYTES = 10 * 1024 * 1024 // 10MB
+// Vercel 함수는 요청 본문을 4.5MB까지만 받는다. 다른 입력값 몫을 남겨 4MB로 둔다.
+export const MAX_UPLOAD_BYTES = 4 * 1024 * 1024 // 4MB
 export const ACCEPTED_UPLOAD_TYPES = [
   "image/jpeg",
   "image/png",

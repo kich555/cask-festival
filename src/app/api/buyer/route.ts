@@ -42,7 +42,7 @@ function fail(message: string, status = 400) {
 
 async function uploadFile(file: File, dir: string, name: string) {
   if (file.size > MAX_UPLOAD_BYTES) {
-    throw new Error("파일 용량은 10MB 이하여야 합니다.")
+    throw new Error("파일 용량은 4MB 이하여야 합니다.")
   }
   if (!ACCEPTED_UPLOAD_TYPES.includes(file.type)) {
     throw new Error("이미지(JPG, PNG, WEBP, HEIC) 또는 PDF 파일만 업로드할 수 있습니다.")
@@ -176,7 +176,7 @@ export async function POST(request: NextRequest) {
   } catch (e) {
     console.error("[buyer] upload error", e)
     const message =
-      e instanceof Error && /10MB|업로드할 수 있습니다/.test(e.message)
+      e instanceof Error && /4MB|업로드할 수 있습니다/.test(e.message)
         ? e.message
         : "파일 업로드에 실패했습니다. 잠시 후 다시 시도해 주세요."
     return fail(message, 500)
