@@ -18,17 +18,28 @@ import { BUYER_BUCKET, BUYER_TABLE, type Database, getSupabaseAdmin } from "@/li
 
 export const runtime = "nodejs"
 
-/** 아주 단순한 제출 속도 제한 (인스턴스 메모리 기준, 봇 연타 방지용) */
+/**
+ * 아주 단순한 제출 속도 제한 (인스턴스 메모리 기준, 봇 연타 방지용)
+ * 실패한 제출은 세지 않는다. 사진 문제로 몇 번 실패한 사람이 막히면 안 되기 때문.
+ * 한 사무실처럼 같은 IP로 여러 명이 신청할 수 있어 한도를 넉넉히 둔다.
+ */
 const recentSubmits = new Map<string, number[]>()
 const RATE_WINDOW_MS = 10 * 60 * 1000
-const RATE_MAX = 3
+const RATE_MAX = 10
 
-function rateLimited(ip: string): boolean {
+function recentHits(ip: string): number[] {
   const now = Date.now()
   const hits = (recentSubmits.get(ip) ?? []).filter((t) => now - t < RATE_WINDOW_MS)
-  hits.push(now)
   recentSubmits.set(ip, hits)
-  return hits.length > RATE_MAX
+  return hits
+}
+
+function rateLimited(ip: string): boolean {
+  return recentHits(ip).length >= RATE_MAX
+}
+
+function recordSubmit(ip: string) {
+  recentHits(ip).push(Date.now())
 }
 
 function str(form: FormData, key: string): string {
@@ -210,5 +221,6 @@ export async function POST(request: NextRequest) {
     return fail("신청 저장에 실패했습니다. 잠시 후 다시 시도해 주세요.", 500)
   }
 
+  recordSubmit(ip)
   return NextResponse.json({ ok: true })
 }
