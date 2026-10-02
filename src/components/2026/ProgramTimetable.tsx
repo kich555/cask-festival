@@ -125,13 +125,13 @@ export default function ProgramTimetable({ days = program2026 }: { days?: Progra
               <span className="text-[14px] font-bold">{start}</span>
               <span className="text-[12px] text-[#888]">~ {endTime(start)}</span>
             </div>
-            <div className="grid grid-cols-3 gap-2">
+            <div className="grid grid-cols-3 divide-x divide-black/10">
               {HALLS.map((h) => at(start, h))
                 .filter((s): s is ProgramSession => !!s)
                 .map((s) => (
                   <div
                     key={s.hall}
-                    className="flex flex-col border border-black/10 rounded-md px-1.5 pt-1.5 pb-2.5"
+                    className="flex flex-col px-1.5 pt-0.5 pb-1"
                   >
                     <div className="flex items-center justify-center gap-1 text-[11px] font-semibold text-[#777] mb-1.5">
                       <Dot kind={s.kind} small />
