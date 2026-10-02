@@ -131,7 +131,7 @@ export default function ProgramTimetable({ days = program2026 }: { days?: Progra
                 .map((s) => (
                   <div
                     key={s.hall}
-                    className="flex flex-col bg-[#f7f6f4] rounded-md px-1.5 pt-1.5 pb-2.5"
+                    className="flex flex-col border border-black/10 rounded-md px-1.5 pt-1.5 pb-2.5"
                   >
                     <div className="flex items-center justify-center gap-1 text-[11px] font-semibold text-[#777] mb-1.5">
                       <Dot kind={s.kind} small />
