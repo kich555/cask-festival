@@ -193,6 +193,37 @@ export default function AdminDashboard({ initialRows }: { initialRows: BuyerAppl
     }
   }
 
+  async function remove(ids: string[]) {
+    if (ids.length === 0) return
+    setBusy(true)
+    setMessage(null)
+    try {
+      const res = await fetch("/api/admin/delete", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ids }),
+      })
+      const data = (await res.json()) as { ok: boolean; error?: string; deleted?: number }
+      if (!data.ok) {
+        setMessage({ kind: "error", text: data.error ?? "삭제에 실패했습니다." })
+        return
+      }
+      const set = new Set(ids)
+      setRows((prev) => prev.filter((r) => !set.has(r.id)))
+      setSelected((prev) => new Set([...prev].filter((id) => !set.has(id))))
+      setMessage({ kind: "ok", text: `${data.deleted ?? ids.length}건을 삭제했습니다.` })
+    } catch {
+      setMessage({ kind: "error", text: "삭제에 실패했습니다." })
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  /** 되돌리기 어려운 작업은 한 번 더 묻는다. */
+  function confirmThen(text: string, run: () => void) {
+    if (window.confirm(text)) run()
+  }
+
   async function logout() {
     await fetch("/api/admin/logout", { method: "POST" })
     window.location.reload()
@@ -234,7 +265,7 @@ export default function AdminDashboard({ initialRows }: { initialRows: BuyerAppl
               }}
               className={`px-4 py-2 rounded text-[13px] font-semibold border transition-colors ${
                 filter === k
-                  ? "bg-[#7d0b1c] text-white border-[#7d0b1c]"
+                  ? "bg-[#1a1a1a] text-white border-[#1a1a1a]"
                   : "bg-white border-black/10 hover:border-black/25"
               }`}
             >
@@ -252,7 +283,7 @@ export default function AdminDashboard({ initialRows }: { initialRows: BuyerAppl
                 onClick={() => setMailFilter(k)}
                 className={`px-3 py-1.5 rounded text-[12px] font-semibold border transition-colors ${
                   mailFilter === k
-                    ? "bg-white text-[#7d0b1c] border-[#7d0b1c]"
+                    ? "bg-white text-[#1d5fbf] border-[#1d5fbf]"
                     : "bg-white text-[#666] border-black/10 hover:border-black/25"
                 }`}
               >
@@ -285,7 +316,12 @@ export default function AdminDashboard({ initialRows }: { initialRows: BuyerAppl
               <button
                 type="button"
                 disabled={busy || selectedVisible.length === 0}
-                onClick={() => updateStatus(selectedVisible, "approved")}
+                onClick={() =>
+                  confirmThen(
+                    `선택한 ${selectedVisible.length}건을 정말로 일괄 승인하시겠습니까?`,
+                    () => updateStatus(selectedVisible, "approved"),
+                  )
+                }
                 className="text-[13px] font-bold bg-[#2e7d32] text-white rounded px-4 py-2 disabled:opacity-30"
               >
                 일괄 승인
@@ -293,18 +329,41 @@ export default function AdminDashboard({ initialRows }: { initialRows: BuyerAppl
               <button
                 type="button"
                 disabled={busy || selectedVisible.length === 0}
-                onClick={() => updateStatus(selectedVisible, "rejected")}
-                className="text-[13px] font-bold border border-black/20 rounded px-4 py-2 disabled:opacity-30"
+                onClick={() =>
+                  confirmThen(
+                    `선택한 ${selectedVisible.length}건을 정말로 일괄 반려하시겠습니까?`,
+                    () => updateStatus(selectedVisible, "rejected"),
+                  )
+                }
+                className="text-[13px] font-bold bg-[#d32f2f] text-white rounded px-4 py-2 disabled:opacity-30"
               >
                 일괄 반려
               </button>
               <button
                 type="button"
                 disabled={busy || selectedVisible.length === 0}
-                onClick={() => sendApproval(selectedVisible)}
-                className="text-[13px] font-bold bg-[#7d0b1c] text-white rounded px-4 py-2 disabled:opacity-30"
+                onClick={() =>
+                  confirmThen(
+                    `선택한 ${selectedVisible.length}건에 승인 메일을 정말로 일괄 발송하시겠습니까?`,
+                    () => sendApproval(selectedVisible),
+                  )
+                }
+                className="text-[13px] font-bold bg-[#1d5fbf] text-white rounded px-4 py-2 disabled:opacity-30"
               >
                 일괄 승인 메일 발송
+              </button>
+              <button
+                type="button"
+                disabled={busy || selectedVisible.length === 0}
+                onClick={() =>
+                  confirmThen(
+                    `선택한 ${selectedVisible.length}건을 정말로 삭제하시겠습니까?\n삭제하면 되돌릴 수 없습니다.`,
+                    () => remove(selectedVisible),
+                  )
+                }
+                className="text-[13px] font-bold border border-black/20 text-[#555] rounded px-4 py-2 disabled:opacity-30"
+              >
+                선택 삭제
               </button>
             </div>
           </div>
@@ -402,8 +461,13 @@ export default function AdminDashboard({ initialRows }: { initialRows: BuyerAppl
                     <button
                       type="button"
                       disabled={busy}
-                      onClick={() => sendApproval([r.id], Boolean(r.approval_email_sent_at))}
-                      className="text-[13px] font-bold bg-[#7d0b1c] text-white rounded px-4 py-2 disabled:opacity-30"
+                      onClick={() =>
+                        confirmThen(
+                          `${r.name}(${r.company})님께 승인 메일을 ${r.approval_email_sent_at ? "다시 " : ""}발송하시겠습니까?`,
+                          () => sendApproval([r.id], Boolean(r.approval_email_sent_at)),
+                        )
+                      }
+                      className="text-[13px] font-bold bg-[#1d5fbf] text-white rounded px-4 py-2 disabled:opacity-30"
                     >
                       {r.approval_email_sent_at ? "승인 메일 재발송" : "승인 메일 보내기"}
                     </button>
@@ -422,7 +486,7 @@ export default function AdminDashboard({ initialRows }: { initialRows: BuyerAppl
                       type="button"
                       disabled={busy || r.status === "rejected"}
                       onClick={() => updateStatus([r.id], "rejected")}
-                      className="text-[13px] font-bold border border-black/20 rounded px-4 py-2 disabled:opacity-30"
+                      className="text-[13px] font-bold bg-[#d32f2f] text-white rounded px-4 py-2 disabled:opacity-30"
                     >
                       반려
                     </button>
@@ -436,6 +500,19 @@ export default function AdminDashboard({ initialRows }: { initialRows: BuyerAppl
                         대기로
                       </button>
                     )}
+                    <button
+                      type="button"
+                      disabled={busy}
+                      onClick={() =>
+                        confirmThen(
+                          `${r.name}(${r.company})님의 신청을 정말로 삭제하시겠습니까?\n삭제하면 되돌릴 수 없습니다.`,
+                          () => remove([r.id]),
+                        )
+                      }
+                      className="text-[13px] text-[#888] px-2 hover:text-[#d32f2f] disabled:opacity-30"
+                    >
+                      삭제
+                    </button>
                   </div>
                 </div>
               </article>
