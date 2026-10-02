@@ -12,7 +12,7 @@ function Inner({ days }: { days: ProgramDay[] }) {
 
   return (
     <div className="bg-white text-[#1a1a1a] flex flex-col flex-1">
-      <PageHeader2026 title={p.title} subtitle={p.subtitle} watermark="PROGRAM" compact />
+      <PageHeader2026 title={p.title} subtitle={p.subtitle} watermark="PROGRAM" />
       <section className="w-full max-w-[1100px] mx-auto px-4 md:px-8 py-5 md:py-6">
         <ProgramTimetable days={days} />
       </section>
