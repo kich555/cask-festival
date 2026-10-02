@@ -80,8 +80,7 @@ export const program2026: ProgramDay[] = [
         kind: "masterclass",
         nameKo: "위스키내비",
         nameEn: "WhiskyNavi",
-        logo: "/lineup/whiskynavi0.png",
-        logoBg: "#241c20",
+        logo: "/program/whiskynavi.png",
       },
       {
         hall: 1,
@@ -184,8 +183,7 @@ export const program2026: ProgramDay[] = [
         kind: "masterclass",
         nameKo: "위스키내비",
         nameEn: "WhiskyNavi",
-        logo: "/lineup/whiskynavi0.png",
-        logoBg: "#241c20",
+        logo: "/program/whiskynavi.png",
       },
       {
         hall: 2,

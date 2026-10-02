@@ -309,7 +309,7 @@ function Inner() {
         <PageHeader2026 title={t.title} subtitle={t.subtitle} watermark="BUYER" />
         <div className="max-w-[700px] mx-auto px-5 md:px-10 py-24 md:py-32 text-center">
           <h2 className="text-[clamp(22px,3.5vw,28px)] font-extrabold">{t.successTitle}</h2>
-          <p className="text-[#666] text-[15px] mt-5 leading-relaxed">{t.successBody}</p>
+          <p className="text-[#666] text-[15px] mt-5 leading-relaxed whitespace-pre-line">{t.successBody}</p>
         </div>
       </div>
     )

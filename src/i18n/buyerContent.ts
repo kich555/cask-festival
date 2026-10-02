@@ -159,7 +159,7 @@ export const buyerContent: Record<"ko" | "en", BuyerContent> = {
     optional: "선택",
     successTitle: "등록이 접수되었습니다.",
     successBody:
-      "담당자가 제출해 주신 내용을 확인한 뒤 기재하신 연락처로 개별 안내드립니다. 확인에는 영업일 기준 며칠이 소요될 수 있습니다.",
+      "담당자가 제출해 주신 내용을 확인한 뒤 기재하신 연락처로 개별 안내드립니다.\n확인에는 영업일 기준 며칠이 소요될 수 있습니다.",
     errorPrefix: "등록을 완료하지 못했습니다",
   },
 
