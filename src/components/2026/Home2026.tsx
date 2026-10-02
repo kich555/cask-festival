@@ -4,7 +4,9 @@ import Image from "next/image"
 import Link from "next/link"
 import { useSearchParams } from "next/navigation"
 import { Suspense } from "react"
+import type { ProgramDay } from "@/content/program2026"
 import { useContent2026 } from "@/i18n/useContent2026"
+import ProgramTimetable from "./ProgramTimetable"
 
 const TASTING_NOTES = [
   { icon: "🍇", en: "Dried Fruits", ko: "건과일" },
@@ -14,7 +16,7 @@ const TASTING_NOTES = [
   { icon: "🍊", en: "Orange Peel", ko: "오렌지 필" },
 ]
 
-function HomeContent() {
+function HomeContent({ program }: { program: ProgramDay[] }) {
   const { c, lang } = useContent2026()
   const searchParams = useSearchParams()
   const qs = searchParams.get("lang") ? `?lang=${searchParams.get("lang")}` : ""
@@ -178,19 +180,11 @@ function HomeContent() {
         </div>
       </section>
 
-      {/* MASTER CLASS TEASER — Coming Soon 박스(프로그램 페이지와 동일 디자인) */}
+      {/* MASTER CLASS — 프로그램 페이지와 같은 시간표 */}
       <section className="py-20 md:py-24 text-center">
         <div className="max-w-[1100px] mx-auto px-5 md:px-10">
           <h2 className="text-[clamp(24px,4vw,32px)] font-extrabold mb-9">{c.masterclass.title}</h2>
-          <div className="border border-[#7d0b1c]/30 rounded-xl py-16 md:py-24 px-6 bg-[#faf8f6]">
-            <p className="text-[#7d0b1c] tracking-[2px] text-[13px] font-semibold">
-              {c.programP.comingEyebrow}
-            </p>
-            <h3 className="text-[clamp(22px,4vw,28px)] font-extrabold mt-4">
-              {c.programP.comingTitle}
-            </h3>
-            <p className="text-[#888] mt-3">{c.programP.comingBody}</p>
-          </div>
+          <ProgramTimetable days={program} />
         </div>
       </section>
 
@@ -230,10 +224,10 @@ function HomeContent() {
   )
 }
 
-export default function Home2026() {
+export default function Home2026({ program }: { program: ProgramDay[] }) {
   return (
     <Suspense fallback={null}>
-      <HomeContent />
+      <HomeContent program={program} />
     </Suspense>
   )
 }

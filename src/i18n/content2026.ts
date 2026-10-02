@@ -70,9 +70,18 @@ export interface Content2026 {
   programP: {
     title: string
     subtitle: string
-    comingEyebrow: string
-    comingTitle: string
-    comingBody: string
+    days: { sat: string; sun: string }
+    hall: string
+    cols: {
+      time: string
+      hall: string
+      kind: string
+      brand: string
+      speaker: string
+      title: string
+    }
+    kinds: { masterclass: string; tasting: string; lecture: string }
+    notice: { lead: string; items: string[] }
   }
   brandsP: {
     title: string
@@ -288,11 +297,27 @@ export const content2026: Record<"ko" | "en", Content2026> = {
     },
     programP: {
       title: "프로그램",
-      subtitle:
-        "마스터클래스와 테이스팅 세션으로 구성된 캐스크 카니발 2026의 프로그램 일정을 안내합니다.",
-      comingEyebrow: "Coming Soon",
-      comingTitle: "2026 마스터클래스 라인업",
-      comingBody: "추후 공개 예정",
+      subtitle: "캐스크 카니발 2026 프로그램 상세 일정 및 세부 정보",
+      days: { sat: "11.21 (토)", sun: "11.22 (일)" },
+      hall: "{n}관",
+      cols: {
+        time: "시간",
+        hall: "관",
+        kind: "구분",
+        brand: "브랜드",
+        speaker: "강연자",
+        title: "강연 제목",
+      },
+      kinds: { masterclass: "마스터클래스", tasting: "테이스팅 세션", lecture: "강연" },
+      notice: {
+        lead: "토요일과 일요일의 프로그램 시작 시각이 상이하오니, 요일별 진행 시간을 반드시 확인해주세요.",
+        items: [
+          "모든 프로그램은 최대 90분간 진행됩니다.",
+          "각 프로그램은 해당 요일의 입장권과 프로그램 티켓을 모두 예매하신 분에 한해 참여 가능합니다. (예: 토요일 입장권으로 일요일 마스터클래스 참여 불가)",
+          "프로그램 티켓은 추후 별도 판매될 예정입니다.",
+          "프로그램 세부 일정은 참가사의 사정에 의해 불가피하게 변경될 수 있습니다.",
+        ],
+      },
     },
     brandsP: {
       title: "참가 업체",
@@ -499,10 +524,27 @@ export const content2026: Record<"ko" | "en", Content2026> = {
     },
     programP: {
       title: "Program",
-      subtitle: "Explore the Cask Carnival 2026 schedule of master classes and tasting sessions.",
-      comingEyebrow: "Coming Soon",
-      comingTitle: "2026 Master Class Lineup",
-      comingBody: "To be announced",
+      subtitle: "Cask Carnival 2026 detailed program schedule and information",
+      days: { sat: "Sat, Nov 21", sun: "Sun, Nov 22" },
+      hall: "Hall {n}",
+      cols: {
+        time: "Time",
+        hall: "Hall",
+        kind: "Type",
+        brand: "Brand",
+        speaker: "Speaker",
+        title: "Title",
+      },
+      kinds: { masterclass: "Master Class", tasting: "Tasting Session", lecture: "Lecture" },
+      notice: {
+        lead: "Program start times differ between Saturday and Sunday. Please check the schedule for each day.",
+        items: [
+          "Each program runs up to 90 minutes.",
+          "Admission to a program requires both an entry ticket for that day and a program ticket. (e.g. a Saturday entry ticket cannot be used for a Sunday master class.)",
+          "Program tickets will be sold separately at a later date.",
+          "Program details may change due to unavoidable circumstances of participating brands.",
+        ],
+      },
     },
     brandsP: {
       title: "Exhibitors",
