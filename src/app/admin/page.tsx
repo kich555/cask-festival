@@ -22,7 +22,7 @@ export default async function AdminHomePage() {
           { href: "/admin/brands", label: "브랜드 관리" },
           { href: "/admin/program", label: "프로그램 관리" },
           { href: "/admin/buyer", label: "바이어 관리" },
-          { href: "/admin/exhibitor", label: "참가업체 부스·신청" },
+          { href: "/admin/exhibitor", label: "부대시설 신청" },
         ].map((b) => (
           <Link
             key={b.href}
