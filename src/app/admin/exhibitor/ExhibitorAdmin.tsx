@@ -41,7 +41,7 @@ function Tag({ tone, children }: { tone: keyof typeof TONE; children: React.Reac
 function boothTag(r: ExhibitorOverview) {
   if (r.booth_status === "revised")
     return r.booth_ack_at ? <Tag tone="blue">수정확인</Tag> : <Tag tone="amber">수정요청</Tag>
-  if (r.booth_status === "approved") return <Tag tone="green">승인</Tag>
+  if (r.booth_status === "approved") return <Tag tone="green">확인</Tag>
   return <Tag tone="gray">미확인</Tag>
 }
 
@@ -104,7 +104,7 @@ function ExtraDetail({ req }: { req: ExtraRequest }) {
 }
 
 const LOG_KIND: Record<ExhibitorLogKind, { label: string; cls: string }> = {
-  booth_approve: { label: "부스 승인", cls: "text-[#2e7d32]" },
+  booth_approve: { label: "부스 확인", cls: "text-[#2e7d32]" },
   booth_revise: { label: "부스 수정요청", cls: "text-[#8a6100]" },
   extra: { label: "부대시설 신청", cls: "text-[#7d0b1c]" },
   extra_change: { label: "부대시설 변경요청", cls: "text-[#8a6100]" },
@@ -115,7 +115,7 @@ const LOG_KIND: Record<ExhibitorLogKind, { label: string; cls: string }> = {
 }
 
 /** 내역 한 줄: 무엇을 했는지 + 그때 보낸 내용 */
-function LogEntry({ log, name }: { log: ExhibitorLogRow; name?: string }) {
+function LogEntry({ log }: { log: ExhibitorLogRow }) {
   const k = LOG_KIND[log.kind] ?? { label: log.kind, cls: "" }
   const d = log.data
   return (
@@ -125,7 +125,6 @@ function LogEntry({ log, name }: { log: ExhibitorLogRow; name?: string }) {
       </span>
       <div className="flex-1 min-w-0">
         <p>
-          {name && <b className="mr-2">{name}</b>}
           <span className={`font-bold ${k.cls}`}>{k.label}</span>
         </p>
         {log.kind === "booth_revise" && (
@@ -151,24 +150,69 @@ function LogEntry({ log, name }: { log: ExhibitorLogRow; name?: string }) {
 
 const actionBtn = "rounded px-4 py-2 text-[13px] font-bold disabled:opacity-50"
 
-export default function ExhibitorAdmin({ rows: initialRows }: { rows: ExhibitorOverview[] }) {
-  const [rows, setRows] = useState(initialRows)
-  const [open, setOpen] = useState<string | null>(null)
-  const [view, setView] = useState<"brands" | "log">("brands")
-  const [busy, setBusy] = useState(false)
+const FILTERS = {
+  all: { label: "전체", test: () => true },
+  todo: { label: "처리 필요", test: needsAction },
+  booth_none: { label: "부스 미확인", test: (r: ExhibitorOverview) => !r.booth_status },
+  booth_revised: {
+    label: "부스 수정요청",
+    test: (r: ExhibitorOverview) => r.booth_status === "revised",
+  },
+  extra_yes: {
+    label: "부대시설 신청",
+    test: (r: ExhibitorOverview) => Boolean(r.extra_submitted_at),
+  },
+  extra_no: { label: "부대시설 미신청", test: (r: ExhibitorOverview) => !r.extra_submitted_at },
+} as const
+type FilterKey = keyof typeof FILTERS
 
-  const allLogs = rows
-    .flatMap((r) => r.logs.map((log) => ({ log, name: r.defaults.name_ko })))
-    .sort((a, b) => b.log.created_at.localeCompare(a.log.created_at))
+const lastActivity = (r: ExhibitorOverview) => r.logs[0]?.created_at ?? ""
+const byName = (a: ExhibitorOverview, b: ExhibitorOverview) =>
+  a.defaults.name_ko.localeCompare(b.defaults.name_ko, "ko")
+
+const SORTS = {
+  todo: {
+    label: "처리 필요 우선",
+    cmp: (a: ExhibitorOverview, b: ExhibitorOverview) =>
+      Number(needsAction(b)) - Number(needsAction(a)) ||
+      lastActivity(b).localeCompare(lastActivity(a)) ||
+      byName(a, b),
+  },
+  recent: {
+    label: "최근 활동순",
+    cmp: (a: ExhibitorOverview, b: ExhibitorOverview) =>
+      lastActivity(b).localeCompare(lastActivity(a)) || byName(a, b),
+  },
+  name: { label: "업체명순", cmp: byName },
+  amount: {
+    label: "신청 금액순",
+    cmp: (a: ExhibitorOverview, b: ExhibitorOverview) =>
+      currentExtra(b).total - currentExtra(a).total || byName(a, b),
+  },
+} as const
+type SortKey = keyof typeof SORTS
+
+function matches(r: ExhibitorOverview, q: string) {
+  if (!q) return true
+  const hay = [r.defaults.name_ko, r.defaults.name_en, r.booth_name_ko, r.booth_name_en, r.login_id]
+    .filter(Boolean)
+    .join(" ")
+    .toLowerCase()
+  return hay.includes(q.toLowerCase())
+}
+
+export default function ExhibitorAdmin({ rows }: { rows: ExhibitorOverview[] }) {
+  const [open, setOpen] = useState<string | null>(null)
+  const [busy, setBusy] = useState(false)
+  const [query, setQuery] = useState("")
+  const [filter, setFilter] = useState<FilterKey>("all")
+  const [sort, setSort] = useState<SortKey>("todo")
+
   const todo = rows.filter(needsAction).length
   const extraRows = rows.filter((r) => r.extra_submitted_at)
   const grand = extraRows.reduce((s, r) => s + currentExtra(r).total, 0)
-  const sorted = [...rows].sort(
-    (a, b) =>
-      Number(needsAction(b)) - Number(needsAction(a)) ||
-      Number(Boolean(b.booth_status)) - Number(Boolean(a.booth_status)) ||
-      a.defaults.name_ko.localeCompare(b.defaults.name_ko, "ko"),
-  )
+  const searched = rows.filter((r) => matches(r, query.trim()))
+  const sorted = searched.filter(FILTERS[filter].test).sort(SORTS[sort].cmp)
 
   async function act(slug: string, action: string, confirmText: string) {
     if (!window.confirm(confirmText)) return
@@ -194,7 +238,7 @@ export default function ExhibitorAdmin({ rows: initialRows }: { rows: ExhibitorO
       <div className="max-w-[1180px] mx-auto px-5 md:px-8 py-8">
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div>
-            <h1 className="text-[22px] font-extrabold">참가업체 부스 확인 · 추가 신청</h1>
+            <h1 className="text-[22px] font-extrabold">부대시설 신청</h1>
             <p className="text-[13px] text-[#777] mt-1">
               계정 {rows.length}개 · 부스 확인 {rows.filter((r) => r.booth_status).length}곳 ·
               부대시설 신청 {extraRows.length}곳 ({won(grand)}) · 업체용 주소{" "}
@@ -211,57 +255,69 @@ export default function ExhibitorAdmin({ rows: initialRows }: { rows: ExhibitorO
           </a>
         </div>
 
-        {todo > 0 && (
-          <p className="mt-4 rounded bg-[#f0ad4e]/15 border border-[#f0ad4e]/40 px-4 py-3 text-[14px] font-bold text-[#8a6100]">
-            처리할 요청이 {todo}건 있습니다. (목록 맨 위)
-          </p>
+        {todo > 0 && filter !== "todo" && (
+          <button
+            type="button"
+            onClick={() => setFilter("todo")}
+            className="mt-4 w-full text-left rounded bg-[#f0ad4e]/15 border border-[#f0ad4e]/40 px-4 py-3 text-[14px] font-bold text-[#8a6100] hover:bg-[#f0ad4e]/25"
+          >
+            처리할 요청이 {todo}건 있습니다. 눌러서 보기 →
+          </button>
         )}
 
-        <div className="mt-6 flex gap-1">
-          {(
-            [
-              ["brands", "업체별 현황"],
-              ["log", `전체 내역 (${allLogs.length})`],
-            ] as const
-          ).map(([key, label]) => (
+        <div className="mt-6 flex flex-col md:flex-row gap-2">
+          <input
+            type="search"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="업체명(한글·영문) 또는 아이디로 검색"
+            className="flex-1 bg-white border border-black/15 rounded px-4 py-2.5 text-[14px] outline-none focus:border-[#7d0b1c]"
+          />
+          <select
+            value={sort}
+            onChange={(e) => setSort(e.target.value as SortKey)}
+            className="bg-white border border-black/15 rounded px-3 py-2.5 text-[14px] outline-none focus:border-[#7d0b1c]"
+          >
+            {(Object.keys(SORTS) as SortKey[]).map((k) => (
+              <option key={k} value={k}>
+                {SORTS[k].label}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div className="mt-3 flex flex-wrap gap-1.5">
+          {(Object.keys(FILTERS) as FilterKey[]).map((k) => (
             <button
-              key={key}
+              key={k}
               type="button"
-              onClick={() => setView(key)}
-              className={`px-4 py-2 rounded text-[14px] font-bold ${
-                view === key
+              onClick={() => setFilter(k)}
+              className={`px-3 py-1.5 rounded-full text-[13px] font-bold ${
+                filter === k
                   ? "bg-[#7d0b1c] text-white"
-                  : "bg-white border border-black/10 text-[#555]"
+                  : "bg-white border border-black/10 text-[#555] hover:border-black/30"
               }`}
             >
-              {label}
+              {FILTERS[k].label}{" "}
+              <span className={filter === k ? "text-white/70" : "text-[#aaa]"}>
+                {searched.filter(FILTERS[k].test).length}
+              </span>
             </button>
           ))}
         </div>
 
-        {view === "log" && (
-          <div className="mt-3 bg-white border border-black/10 rounded-lg px-5 divide-y divide-black/10">
-            {allLogs.map(({ log, name }) => (
-              <LogEntry key={log.id} log={log} name={name} />
-            ))}
-            {allLogs.length === 0 && (
-              <p className="py-10 text-center text-[#999]">아직 신청·수정 내역이 없습니다.</p>
-            )}
-          </div>
-        )}
-
-        <div
-          className={`mt-3 bg-white border border-black/10 rounded-lg divide-y divide-black/10 ${
-            view === "brands" ? "" : "hidden"
-          }`}
-        >
+        <div className="mt-3 bg-white border border-black/10 rounded-lg divide-y divide-black/10">
           <div className="hidden md:flex items-center gap-4 px-5 py-2 text-[12px] text-[#999] bg-black/[0.02]">
             <span className="w-[72px] text-center">부스 표기</span>
             <span className="w-[84px] text-center">부대시설</span>
             <span className="w-48">업체명</span>
             <span className="flex-1">신청 내용</span>
             <span className="w-28 text-right">금액</span>
+            <span className="w-24 text-right">최근 활동</span>
           </div>
+          {sorted.length === 0 && (
+            <p className="px-5 py-10 text-center text-[#999]">조건에 맞는 업체가 없습니다.</p>
+          )}
           {sorted.map((r) => {
             const isOpen = open === r.brand_slug
             const cur = currentExtra(r)
@@ -289,6 +345,9 @@ export default function ExhibitorAdmin({ rows: initialRows }: { rows: ExhibitorO
                   </span>
                   <span className="shrink-0 w-28 text-right text-[14px] font-bold tabular-nums">
                     {cur.total ? won(cur.total) : ""}
+                  </span>
+                  <span className="hidden md:block shrink-0 w-24 text-right text-[12px] text-[#999] tabular-nums">
+                    {r.logs[0] ? formatDate(r.logs[0].created_at) : ""}
                   </span>
                 </button>
                 {isOpen && (

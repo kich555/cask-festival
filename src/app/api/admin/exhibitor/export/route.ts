@@ -40,7 +40,7 @@ export async function GET() {
     sheet.addRow([
       r.defaults.name_ko,
       r.defaults.booths,
-      revised ? (r.booth_ack_at ? "수정확인" : "수정요청") : r.booth_status ? "승인" : "미확인",
+      revised ? (r.booth_ack_at ? "수정확인" : "수정요청") : r.booth_status ? "확인" : "미확인",
       revised ? r.booth_name_ko : r.defaults.name_ko,
       (revised ? r.booth_name_en : r.defaults.name_en) ?? "",
       r.booth_note ?? "",

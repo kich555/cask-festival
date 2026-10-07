@@ -169,7 +169,7 @@ function BoothSection({
         <div>
           <h2 className="text-[18px] font-extrabold">1. 부스 표기 정보 확인</h2>
           <p className="text-[14px] text-[#666] mt-1.5 leading-relaxed">
-            행사 부스에 아래 내용으로 표기됩니다. 맞으면 <b>승인</b>, 다르면 <b>수정</b>을 눌러
+            행사 부스에 아래 내용으로 표기됩니다. 맞으면 <b>확인</b>, 다르면 <b>수정</b>을 눌러
             주세요.
           </p>
         </div>
@@ -181,7 +181,7 @@ function BoothSection({
               <Badge tone="wait">수정 요청 접수</Badge>
             )
           ) : (
-            state.booth_status && <Badge tone="ok">승인 완료</Badge>
+            state.booth_status && <Badge tone="ok">확인 완료</Badge>
           ))}
       </div>
 
@@ -216,10 +216,10 @@ function BoothSection({
             <button
               type="button"
               disabled={busy}
-              onClick={() => send({ action: "approve" }, "승인되었습니다. 감사합니다.")}
+              onClick={() => send({ action: "approve" }, "확인되었습니다. 감사합니다.")}
               className={primaryBtn}
             >
-              승인
+              확인
             </button>
             <button
               type="button"
@@ -508,7 +508,7 @@ function ExtraSection({
               value={note}
               onChange={(e) => setNote(e.target.value)}
               rows={3}
-              placeholder="삼상 전기 등 사전 협의가 필요한 사항을 적어 주세요."
+              placeholder="커피머신·제빙기처럼 전력 소모가 큰 기기(삼상 전기) 등 사전 협의가 필요한 사항을 적어 주세요."
               className={`${inputCls} resize-y font-normal`}
             />
           </label>

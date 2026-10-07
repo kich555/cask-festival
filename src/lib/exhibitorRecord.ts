@@ -48,7 +48,7 @@ export const PAYMENT_INFO = {
   bank: "하나은행",
   account: "340-910050-94804",
   holder: "㈜위스키내비",
-  deadline: "10. 30(금)",
+  deadline: "11. 6(금)",
 }
 
 export type ExtraItems = Record<string, number>
