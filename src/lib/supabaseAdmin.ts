@@ -4,6 +4,7 @@ import "server-only"
 import { createClient, type SupabaseClient } from "@supabase/supabase-js"
 import type { BrandRow } from "./brandRecord"
 import type { BuyerApplication } from "./buyer"
+import type { ExhibitorAccountRow, ExhibitorLogRow } from "./exhibitorRecord"
 import type { ProgramSessionRow } from "./programRecord"
 
 /** 테이블 스키마 타입 — supabase-js 가 select/insert 결과를 추론하는 데 쓴다. */
@@ -27,6 +28,18 @@ export interface Database {
           updated_at?: string
         }
         Update: Partial<BrandRow>
+        Relationships: []
+      }
+      exhibitor_log: {
+        Row: ExhibitorLogRow
+        Insert: Omit<ExhibitorLogRow, "id" | "created_at"> & { id?: string; created_at?: string }
+        Update: Partial<ExhibitorLogRow>
+        Relationships: []
+      }
+      exhibitor_accounts: {
+        Row: ExhibitorAccountRow
+        Insert: Omit<ExhibitorAccountRow, "created_at"> & { created_at?: string }
+        Update: Partial<ExhibitorAccountRow>
         Relationships: []
       }
       program_sessions: {

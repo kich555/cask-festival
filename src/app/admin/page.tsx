@@ -17,11 +17,12 @@ export default async function AdminHomePage() {
       <h1 className="text-[22px] md:text-[26px] font-extrabold tracking-tight mb-10">
         CASK CARNIVAL 관리자 페이지
       </h1>
-      <div className="w-full max-w-[900px] grid sm:grid-cols-3 gap-4">
+      <div className="w-full max-w-[900px] grid sm:grid-cols-2 gap-4">
         {[
           { href: "/admin/brands", label: "브랜드 관리" },
           { href: "/admin/program", label: "프로그램 관리" },
           { href: "/admin/buyer", label: "바이어 관리" },
+          { href: "/admin/exhibitor", label: "참가업체 부스·신청" },
         ].map((b) => (
           <Link
             key={b.href}
