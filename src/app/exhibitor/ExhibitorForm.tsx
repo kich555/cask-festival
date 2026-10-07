@@ -77,6 +77,51 @@ function SectionTitle({ n, title, badge }: { n: number; title: string; badge?: R
   )
 }
 
+/** 수량 조절: [−] 숫자 [+]. 숫자는 직접 입력도 된다. */
+function QtyStepper({
+  label,
+  value,
+  onChange,
+}: {
+  label: string
+  value: number
+  onChange: (v: number) => void
+}) {
+  const set = (v: number) => onChange(Math.max(0, Math.min(99, v)))
+  const btn =
+    "w-10 h-10 flex items-center justify-center text-[20px] font-bold leading-none select-none hover:bg-black/[0.05] disabled:opacity-25 disabled:hover:bg-transparent"
+  return (
+    <div className="flex items-center border border-black/20 rounded-lg overflow-hidden bg-white">
+      <button
+        type="button"
+        onClick={() => set(value - 1)}
+        disabled={value <= 0}
+        aria-label={`${label} 수량 줄이기`}
+        className={btn}
+      >
+        −
+      </button>
+      <input
+        inputMode="numeric"
+        value={value}
+        onChange={(e) => set(Number(e.target.value.replace(/\D/g, "")) || 0)}
+        onFocus={(e) => e.target.select()}
+        aria-label={`${label} 수량`}
+        className={`w-10 h-10 text-center text-[16px] font-bold tabular-nums outline-none border-x border-black/10 ${value ? "" : "text-[#bbb]"}`}
+      />
+      <button
+        type="button"
+        onClick={() => set(value + 1)}
+        disabled={value >= 99}
+        aria-label={`${label} 수량 늘리기`}
+        className={btn}
+      >
+        +
+      </button>
+    </div>
+  )
+}
+
 /**
  * 섹션 하단 저장하기 버튼 + 결과 문구.
  * 고친 내용이 있으면 '저장하기', 저장된 내용만 있으면 '저장됨', 둘 다 없으면 버튼을 숨긴다.
@@ -266,7 +311,7 @@ export default function ExhibitorForm({ state: initial, defaults }: Props) {
   return (
     <div className="min-h-screen bg-[#f6f5f5] text-[#1a1a1a]">
       <header className="bg-[#1a1a1a] text-white">
-        <div className="max-w-[720px] mx-auto px-5 py-5 flex items-center justify-between gap-4">
+        <div className="max-w-[820px] mx-auto px-5 py-5 flex items-center justify-between gap-4">
           <div>
             <p className="text-[12px] text-white/50 font-bold tracking-wide">
               CASK CARNIVAL 2026 · 참가업체
@@ -292,7 +337,7 @@ export default function ExhibitorForm({ state: initial, defaults }: Props) {
         </div>
       </header>
 
-      <main className="max-w-[720px] mx-auto px-5 py-8 space-y-6">
+      <main className="max-w-[820px] mx-auto px-5 py-8 space-y-6">
         {!pwChanged && (
           <div className="rounded-lg border border-[#f0ad4e]/50 bg-[#f0ad4e]/10 px-5 py-4 flex flex-col sm:flex-row sm:items-center gap-3">
             <p className="flex-1 text-[14px] text-[#6b4b00] leading-relaxed">
@@ -516,19 +561,16 @@ export default function ExhibitorForm({ state: initial, defaults }: Props) {
                       </p>
                     </div>
                     <div className="flex items-center gap-1.5 shrink-0">
-                      <input
-                        type="number"
-                        inputMode="numeric"
-                        min={0}
-                        max={99}
-                        value={extra.qty[it.key] ?? ""}
-                        onChange={(e) => {
-                          setExtra({ ...extra, qty: { ...extra.qty, [it.key]: e.target.value } })
+                      <QtyStepper
+                        label={it.label}
+                        value={n}
+                        onChange={(v) => {
+                          setExtra({
+                            ...extra,
+                            qty: { ...extra.qty, [it.key]: v ? String(v) : "" },
+                          })
                           setExtraMsg(null)
                         }}
-                        placeholder="0"
-                        aria-label={`${it.label} 수량`}
-                        className="w-16 bg-white border border-black/15 rounded px-2 py-2 text-[15px] text-right outline-none focus:border-[#7d0b1c]"
                       />
                       <span className="w-8 text-[13px] text-[#777]">{it.unit}</span>
                     </div>
@@ -537,19 +579,9 @@ export default function ExhibitorForm({ state: initial, defaults }: Props) {
                     </p>
                   </div>
                   {it.key === "water" && n > 0 && (
-                    <label className="block mt-3 text-[13px] font-bold">
-                      급배수 설치 위치 *
-                      <textarea
-                        value={extra.water_location}
-                        onChange={(e) => {
-                          setExtra({ ...extra, water_location: e.target.value })
-                          setExtraMsg(null)
-                        }}
-                        rows={2}
-                        placeholder="예: 부스 뒤편 왼쪽 모서리 (준비 기간 중 위치 변경 불가)"
-                        className={`${inputCls} resize-y font-normal`}
-                      />
-                    </label>
+                    <p className="mt-2 text-[13px] text-[#555]">
+                      ※ 부스 내 설치 위치 확인을 위해 운영사무국에서 별도로 연락드릴 예정입니다.
+                    </p>
                   )}
                 </li>
               )

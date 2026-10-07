@@ -56,7 +56,7 @@ export const EXTRA_ITEMS = [
     desc: "24시간 사용 시 추가 신청",
   },
   { key: "outlet", label: "추가 콘센트", unit: "개소", price: 50_000, desc: "" },
-  { key: "water", label: "급배수", unit: "개소", price: 250_000, desc: "설치 위치 표시 필수" },
+  { key: "water", label: "급배수", unit: "개소", price: 250_000, desc: "설치 위치는 별도 연락" },
   { key: "lan", label: "인터넷 (LAN)", unit: "포트", price: 200_000, desc: "" },
 ] as const
 
@@ -65,8 +65,15 @@ export const EXTRA_NOTICES = [
   "커피머신·제빙기처럼 전력 소모가 큰 기기(삼상 전기)는 사전 협의가 필요합니다.",
   "임의 멀티탭 연결은 화재 위험으로 금지됩니다.",
   "전시장 내 무선 공유기 사용은 금지되어 있습니다. 적발 시 사용이 제한될 수 있습니다.",
-  "급배수는 설치 위치를 신청서에 표시해 주셔야 하며, 준비 기간 중 위치 변경이 불가합니다.",
+  "급배수 신청 시, 부스 내 설치 위치 확인을 위해 운영사무국에서 별도로 연락드릴 예정입니다.",
 ]
+
+/** 운영사무국 연락처 (로그인 화면 안내). kakao 에 채널 주소를 넣으면 카카오톡 버튼이 나타난다. */
+export const OFFICE_CONTACT = {
+  phone: "010-3351-6231",
+  email: "caskcarnival@whiskynavi.com",
+  kakao: null as string | null,
+}
 
 export const PAYMENT_INFO = {
   bank: "하나은행",

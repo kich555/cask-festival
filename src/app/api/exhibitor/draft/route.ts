@@ -37,11 +37,10 @@ export async function PUT(request: NextRequest) {
     draft.booth = { name_ko, name_en: text(d.name_en, 100), note: text(d.note, 1000) }
   } else if (body.section === "extra") {
     const items = sanitizeExtraItems(d.items)
-    const water = text(d.water_location, 500)
-    if (items.water && !water) return fail("급배수 설치 위치를 적어 주십시오.", 400)
     draft.extra = {
       items,
-      water_location: items.water ? water : null,
+      // 급배수 설치 위치는 사무국이 별도 연락으로 확인한다.
+      water_location: null,
       note: text(d.note, 1000) || null,
       total: extraTotal(items),
     }

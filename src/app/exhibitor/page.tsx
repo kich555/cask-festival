@@ -6,7 +6,7 @@ import ExhibitorLogin from "./ExhibitorLogin"
 
 // 참가업체에게 링크로만 전달하는 페이지. 메뉴·사이트맵에 넣지 않고 검색 노출도 막는다.
 export const metadata: Metadata = {
-  title: "참가업체 부스 확인 · 추가 신청",
+  title: "참가업체 전용 페이지",
   robots: { index: false, follow: false },
 }
 export const dynamic = "force-dynamic"
