@@ -386,7 +386,7 @@ export default function ExhibitorForm({ state: initial, defaults }: Props) {
               )
             }
           />
-          <Notes className="mt-2" items={["행사 부스에 아래 내용으로 표기됩니다."]} />
+          <Notes className="mt-2" items={["행사 부스에 아래 내용으로 표기됩니다.", "부스에 표기될 내용이오니, 맞춤법·띄어쓰기·오탈자 등을 세심하게 검토해 주시기 바랍니다."]} />
 
           {!boothEditing ? (
             <>
