@@ -53,3 +53,21 @@ alter table public.exhibitor_accounts
 
 -- 업체가 비밀번호를 직접 바꾼 시각 (null = 임시 비밀번호 사용 중)
 alter table public.exhibitor_accounts add column if not exists password_changed_at timestamptz;
+
+-- 입금 확인 (관리자가 처리). paid_amount = 확인 당시 신청 금액
+alter table public.exhibitor_accounts
+  add column if not exists paid_at timestamptz,
+  add column if not exists paid_amount integer;
+
+-- 올로로소 셰리 출품 제품 [{ id, name_ko, name_en, category, abv, volume, photos: [url] }]
+-- 사진은 공개 버킷 exhibitor-products (scripts/create-exhibitor-accounts.mjs 가 생성)
+alter table public.exhibitor_accounts
+  add column if not exists products jsonb not null default '[]'::jsonb,
+  add column if not exists products_updated_at timestamptz;
+
+-- 섹션별 임시 저장 → 제출하기로 최종 접수
+-- draft: { booth?: {name_ko,name_en,note}, extra?: {items,water_location,note,total}, products?: [...] }
+alter table public.exhibitor_accounts
+  add column if not exists draft jsonb,
+  add column if not exists draft_saved_at timestamptz,
+  add column if not exists submitted_at timestamptz;

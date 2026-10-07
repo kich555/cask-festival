@@ -2,7 +2,7 @@ import ExcelJS from "exceljs"
 import { NextResponse } from "next/server"
 import { isAdminRequest } from "@/lib/adminAuth"
 import { loadExhibitorOverview } from "@/lib/exhibitorAdmin"
-import { EXTRA_ITEMS, extraTotal } from "@/lib/exhibitorRecord"
+import { EXTRA_ITEMS, extraTotal, paymentStatus } from "@/lib/exhibitorRecord"
 
 export const runtime = "nodejs"
 
@@ -30,6 +30,9 @@ export async function GET() {
     { header: "기타 요청사항", width: 40 },
     { header: "추가신청 일시", width: 20 },
     { header: "변경 승인대기", width: 14 },
+    { header: "입금 상태", width: 12 },
+    { header: "입금 확인액(원)", width: 14 },
+    { header: "입금 확인일시", width: 20 },
   ]
   sheet.getRow(1).font = { bold: true, color: { argb: "FFFFFFFF" } }
   sheet.getRow(1).fill = { type: "pattern", pattern: "solid", fgColor: { argb: "FF7D0B1C" } }
@@ -51,7 +54,46 @@ export async function GET() {
       r.extra_note ?? "",
       dt(r.extra_submitted_at),
       r.extra_pending ? "있음 (승인 전)" : "",
+      { none: "", unpaid: "입금대기", paid: "입금확인", partial: "추가입금 필요" }[
+        paymentStatus(r).kind
+      ],
+      r.paid_at ? (r.paid_amount ?? 0) : "",
+      dt(r.paid_at),
     ])
+  }
+
+  const ps = ws.addWorksheet("올로로소 셰리 캐스크 출품 제품")
+  ps.columns = [
+    { header: "업체명", width: 24 },
+    { header: "제품명(한글)", width: 28 },
+    { header: "제품명(영문)", width: 32 },
+    { header: "주종", width: 12 },
+    { header: "도수(%)", width: 9 },
+    { header: "용량", width: 10 },
+    { header: "제품 설명", width: 60 },
+    { header: "사진1", width: 40 },
+    { header: "사진2", width: 40 },
+  ]
+  ps.getRow(1).font = { bold: true, color: { argb: "FFFFFFFF" } }
+  ps.getRow(1).fill = { type: "pattern", pattern: "solid", fgColor: { argb: "FF7D0B1C" } }
+  ps.views = [{ state: "frozen", ySplit: 1 }]
+  for (const r of rows) {
+    for (const p of r.products ?? []) {
+      const row = ps.addRow([
+        r.defaults.name_ko,
+        p.name_ko,
+        p.name_en,
+        p.category,
+        p.abv,
+        p.volume,
+        p.description ?? "",
+        ...p.photos.map(() => ""),
+      ])
+      p.photos.forEach((url, i) => {
+        row.getCell(8 + i).value = { text: `사진 ${i + 1}`, hyperlink: url }
+        row.getCell(8 + i).font = { color: { argb: "FF1F5FA8" }, underline: true }
+      })
+    }
   }
 
   const buffer = await ws.xlsx.writeBuffer()

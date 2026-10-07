@@ -8,7 +8,9 @@ import {
   type ExhibitorLogKind,
   type ExhibitorLogRow,
   type ExtraRequest,
+  hasExtra,
   itemsText,
+  paymentStatus,
   won,
 } from "@/lib/exhibitorRecord"
 
@@ -43,6 +45,14 @@ function boothTag(r: ExhibitorOverview) {
     return r.booth_ack_at ? <Tag tone="blue">수정확인</Tag> : <Tag tone="amber">수정요청</Tag>
   if (r.booth_status === "approved") return <Tag tone="green">확인</Tag>
   return <Tag tone="gray">미확인</Tag>
+}
+
+function payTag(r: ExhibitorOverview) {
+  const k = paymentStatus(r).kind
+  if (k === "paid") return <Tag tone="green">입금확인</Tag>
+  if (k === "partial") return <Tag tone="amber">추가입금</Tag>
+  if (k === "unpaid") return <Tag tone="gray">입금대기</Tag>
+  return null
 }
 
 /** 관리자가 처리해야 할 일이 있는 업체 */
@@ -88,7 +98,7 @@ function ExtraDetail({ req }: { req: ExtraRequest }) {
           <span className="tabular-nums">{won(req.items[i.key] * i.price)}</span>
         </div>
       ))}
-      {rows.length === 0 && <p className="text-[#999]">신청 항목 없음</p>}
+      {rows.length === 0 && <p className="text-[#999]">미신청 (모든 항목 0개)</p>}
       <div className="flex justify-between border-t border-black/10 mt-1.5 pt-1.5 font-bold">
         <span>합계</span>
         <span className="tabular-nums">{won(req.total)}</span>
@@ -112,6 +122,9 @@ const LOG_KIND: Record<ExhibitorLogKind, { label: string; cls: string }> = {
   booth_ack: { label: "[관리자] 수정요청 확인", cls: "text-[#1f5fa8]" },
   extra_approve: { label: "[관리자] 변경 승인", cls: "text-[#1f5fa8]" },
   extra_reject: { label: "[관리자] 변경 반려", cls: "text-[#1f5fa8]" },
+  payment_confirm: { label: "[관리자] 입금 확인", cls: "text-[#1f5fa8]" },
+  payment_cancel: { label: "[관리자] 입금 확인 취소", cls: "text-[#1f5fa8]" },
+  products: { label: "출품 제품 저장", cls: "text-[#555]" },
 }
 
 /** 내역 한 줄: 무엇을 했는지 + 그때 보낸 내용 */
@@ -133,15 +146,78 @@ function LogEntry({ log }: { log: ExhibitorLogRow }) {
             {d.note && <span className="block mt-1 whitespace-pre-wrap">메모: {d.note}</span>}
           </p>
         )}
+        {log.kind === "products" && <p className="mt-1 text-[#555]">{d.count ?? 0}개</p>}
+        {log.kind === "payment_confirm" && d.total ? (
+          <p className="mt-1 text-[#555]">{won(d.total)}</p>
+        ) : null}
         {(log.kind === "extra" || log.kind === "extra_change") && (
           <p className="mt-1 text-[#555]">
-            {itemsText(d.items ?? {}) || "신청 항목 없음"}
+            {itemsText(d.items ?? {}) || "모든 항목 0개"}
             {d.total ? <b className="ml-2 text-[#1a1a1a]">{won(d.total)}</b> : null}
             {d.water_location && (
               <span className="block mt-1">급배수 위치: {d.water_location}</span>
             )}
             {d.note && <span className="block mt-1 whitespace-pre-wrap">요청: {d.note}</span>}
           </p>
+        )}
+      </div>
+    </div>
+  )
+}
+
+function PaymentControl({
+  r,
+  busy,
+  act,
+}: {
+  r: ExhibitorOverview
+  busy: boolean
+  act: (slug: string, action: string, confirmText: string) => void
+}) {
+  const pay = paymentStatus(r)
+  if (pay.kind === "none" && !r.paid_at) return null
+  const name = r.defaults.name_ko
+  return (
+    <div className="mt-4 rounded bg-white border border-black/10 p-3">
+      <p className="font-bold mb-2">입금</p>
+      {r.paid_at && (
+        <p className="text-[13px] text-[#2e7d32] font-bold">
+          {formatDate(r.paid_at)} {won(pay.paid)} 입금 확인
+        </p>
+      )}
+      {pay.kind === "partial" && (
+        <p className="text-[13px] text-[#8a6100] font-bold mt-1">
+          변경 승인으로 {won(pay.due)} 추가 입금 필요 (현재 합계 {won(pay.total)})
+        </p>
+      )}
+      <div className="mt-2 flex flex-wrap gap-2">
+        {pay.kind !== "paid" && pay.total > 0 && (
+          <button
+            type="button"
+            disabled={busy}
+            onClick={() =>
+              act(
+                r.brand_slug,
+                "payment_confirm",
+                `${name}의 입금을 확인 처리할까요?\n금액: ${won(pay.total)}\n업체 화면에 '입금이 확인되었습니다'가 표시됩니다.`,
+              )
+            }
+            className={`${actionBtn} bg-[#2e7d32] text-white`}
+          >
+            {pay.kind === "partial"
+              ? `추가 입금 확인 (합계 ${won(pay.total)})`
+              : `입금 확인 (${won(pay.total)})`}
+          </button>
+        )}
+        {r.paid_at && (
+          <button
+            type="button"
+            disabled={busy}
+            onClick={() => act(r.brand_slug, "payment_cancel", `${name}의 입금 확인을 취소할까요?`)}
+            className={`${actionBtn} border border-black/20 bg-white`}
+          >
+            입금 확인 취소
+          </button>
         )}
       </div>
     </div>
@@ -160,9 +236,18 @@ const FILTERS = {
   },
   extra_yes: {
     label: "부대시설 신청",
-    test: (r: ExhibitorOverview) => Boolean(r.extra_submitted_at),
+    test: hasExtra,
   },
-  extra_no: { label: "부대시설 미신청", test: (r: ExhibitorOverview) => !r.extra_submitted_at },
+  extra_no: { label: "부대시설 미신청", test: (r: ExhibitorOverview) => !hasExtra(r) },
+  unpaid: {
+    label: "입금 대기",
+    test: (r: ExhibitorOverview) => ["unpaid", "partial"].includes(paymentStatus(r).kind),
+  },
+  paid: { label: "입금 완료", test: (r: ExhibitorOverview) => paymentStatus(r).kind === "paid" },
+  products: {
+    label: "출품 제품 등록",
+    test: (r: ExhibitorOverview) => (r.products?.length ?? 0) > 0,
+  },
 } as const
 type FilterKey = keyof typeof FILTERS
 
@@ -209,7 +294,7 @@ export default function ExhibitorAdmin({ rows }: { rows: ExhibitorOverview[] }) 
   const [sort, setSort] = useState<SortKey>("todo")
 
   const todo = rows.filter(needsAction).length
-  const extraRows = rows.filter((r) => r.extra_submitted_at)
+  const extraRows = rows.filter(hasExtra)
   const grand = extraRows.reduce((s, r) => s + currentExtra(r).total, 0)
   const searched = rows.filter((r) => matches(r, query.trim()))
   const sorted = searched.filter(FILTERS[filter].test).sort(SORTS[sort].cmp)
@@ -313,6 +398,7 @@ export default function ExhibitorAdmin({ rows }: { rows: ExhibitorOverview[] }) 
             <span className="w-48">업체명</span>
             <span className="flex-1">신청 내용</span>
             <span className="w-28 text-right">금액</span>
+            <span className="w-[72px] text-center">입금</span>
             <span className="w-24 text-right">최근 활동</span>
           </div>
           {sorted.length === 0 && (
@@ -333,19 +419,27 @@ export default function ExhibitorAdmin({ rows }: { rows: ExhibitorOverview[] }) 
                   <span className="w-[84px] shrink-0 flex justify-center">
                     {pending ? (
                       <Tag tone="amber">변경대기</Tag>
-                    ) : r.extra_submitted_at ? (
+                    ) : hasExtra(r) ? (
                       <Tag tone="green">신청</Tag>
                     ) : (
                       <Tag tone="gray">미신청</Tag>
                     )}
                   </span>
-                  <span className="w-48 shrink-0 font-bold truncate">{r.defaults.name_ko}</span>
+                  <span className="w-48 shrink-0 font-bold truncate">
+                    {r.defaults.name_ko}
+                    {r.products?.length ? (
+                      <span className="ml-1.5 text-[11px] font-bold text-[#7d0b1c]">
+                        출품 {r.products.length}
+                      </span>
+                    ) : null}
+                  </span>
                   <span className="flex-1 min-w-0 truncate text-[14px] text-[#555]">
-                    {r.extra_submitted_at ? itemsText(cur.items) || "신청 항목 없음" : ""}
+                    {hasExtra(r) ? itemsText(cur.items) : ""}
                   </span>
                   <span className="shrink-0 w-28 text-right text-[14px] font-bold tabular-nums">
                     {cur.total ? won(cur.total) : ""}
                   </span>
+                  <span className="w-[72px] shrink-0 flex justify-center">{payTag(r)}</span>
                   <span className="hidden md:block shrink-0 w-24 text-right text-[12px] text-[#999] tabular-nums">
                     {r.logs[0] ? formatDate(r.logs[0].created_at) : ""}
                   </span>
@@ -414,17 +508,18 @@ export default function ExhibitorAdmin({ rows }: { rows: ExhibitorOverview[] }) 
                     <div className="bg-black/[0.03] rounded p-4">
                       <p className="font-bold mb-2">
                         부대시설 추가 신청{" "}
-                        {r.extra_submitted_at && (
+                        {hasExtra(r) && r.extra_submitted_at && (
                           <span className="font-normal text-[12px] text-[#999]">
                             최초 {formatDate(r.extra_submitted_at)}
                           </span>
                         )}
                       </p>
-                      {r.extra_submitted_at ? (
+                      {hasExtra(r) ? (
                         <ExtraDetail req={cur} />
                       ) : (
                         <p className="text-[#999]">미신청</p>
                       )}
+                      <PaymentControl r={r} busy={busy} act={act} />
                       {pending && (
                         <div className="mt-4 rounded border-2 border-[#f0ad4e]/60 bg-white p-3">
                           <p className="font-bold text-[#8a6100] mb-1">
@@ -469,6 +564,49 @@ export default function ExhibitorAdmin({ rows }: { rows: ExhibitorOverview[] }) 
                         </div>
                       )}
                     </div>
+                    {r.products?.length ? (
+                      <div className="md:col-span-2 bg-black/[0.03] rounded p-4">
+                        <p className="font-bold mb-3">
+                          올로로소 셰리 캐스크 출품 제품 ({r.products.length}){" "}
+                          {r.products_updated_at && (
+                            <span className="font-normal text-[12px] text-[#999]">
+                              {formatDate(r.products_updated_at)}
+                            </span>
+                          )}
+                        </p>
+                        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                          {r.products.map((p, i) => (
+                            <div key={p.id} className="bg-white rounded border border-black/10 p-3">
+                              <p className="text-[12px] text-[#999]">제품 {i + 1}</p>
+                              <p className="font-bold">{p.name_ko}</p>
+                              {p.name_en && <p className="text-[13px] text-[#555]">{p.name_en}</p>}
+                              <p className="text-[13px] mt-1">
+                                {p.category} · {p.abv}% · {p.volume}
+                              </p>
+                              {p.description && (
+                                <p className="text-[13px] text-[#555] mt-2 whitespace-pre-wrap leading-relaxed">
+                                  {p.description}
+                                </p>
+                              )}
+                              {p.photos.length > 0 && (
+                                <div className="mt-2 flex gap-1.5">
+                                  {p.photos.map((url) => (
+                                    <a key={url} href={url} target="_blank" rel="noopener">
+                                      {/* biome-ignore lint/performance/noImgElement: 관리자 미리보기 */}
+                                      <img
+                                        src={url}
+                                        alt=""
+                                        className="w-16 h-16 object-cover rounded border border-black/10"
+                                      />
+                                    </a>
+                                  ))}
+                                </div>
+                              )}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    ) : null}
                     <div className="md:col-span-2">
                       <p className="font-bold">변경 내역 ({r.logs.length})</p>
                       {r.logs.length ? (

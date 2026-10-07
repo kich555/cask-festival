@@ -48,6 +48,19 @@ async function readExisting() {
   return map
 }
 
+// 출품 제품 사진 버킷 (공개 — 제품 사진이라 민감 정보 아님, 경로는 추측 불가)
+{
+  const { data } = await supabase.storage.getBucket("exhibitor-products")
+  if (!data) {
+    const { error } = await supabase.storage.createBucket("exhibitor-products", {
+      public: true,
+      fileSizeLimit: 10 * 1024 * 1024,
+      allowedMimeTypes: ["image/jpeg", "image/png", "image/webp"],
+    })
+    if (error) throw error
+  }
+}
+
 const { data: brands, error: bErr } = await supabase
   .from("brands")
   .select("slug,name_ko")

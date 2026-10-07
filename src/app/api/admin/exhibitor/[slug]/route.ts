@@ -1,12 +1,16 @@
 import { type NextRequest, NextResponse } from "next/server"
 import { isAdminRequest } from "@/lib/adminAuth"
+import { paymentStatus } from "@/lib/exhibitorRecord"
 import { applyExhibitorUpdate, fail, loadState } from "@/lib/exhibitorServer"
 
 export const runtime = "nodejs"
 
 type Ctx = { params: Promise<{ slug: string }> }
 
-/** 관리자 처리: booth_ack(수정 요청 확인) | extra_approve(변경 승인) | extra_reject(변경 반려) */
+/**
+ * 관리자 처리: booth_ack(수정 요청 확인) | extra_approve(변경 승인) | extra_reject(변경 반려)
+ *             | payment_confirm(입금 확인) | payment_cancel(입금 확인 취소)
+ */
 export async function POST(request: NextRequest, { params }: Ctx) {
   if (!(await isAdminRequest())) return fail("권한이 없습니다.", 401)
   const { slug } = await params
@@ -36,6 +40,21 @@ export async function POST(request: NextRequest, { params }: Ctx) {
         extra_decided_at: now,
       },
       { kind: action, data: p },
+    )
+  } else if (action === "payment_confirm") {
+    const { total } = paymentStatus(state)
+    if (total <= 0) return fail("입금할 금액이 없습니다.", 400)
+    r = await applyExhibitorUpdate(
+      slug,
+      { paid_at: now, paid_amount: total },
+      { kind: "payment_confirm", data: { total } },
+    )
+  } else if (action === "payment_cancel") {
+    if (!state.paid_at) return fail("입금 확인 내역이 없습니다.", 400)
+    r = await applyExhibitorUpdate(
+      slug,
+      { paid_at: null, paid_amount: null },
+      { kind: "payment_cancel", data: { total: state.paid_amount ?? 0 } },
     )
   } else {
     return fail("잘못된 요청입니다.", 400)
