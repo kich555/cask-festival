@@ -9,7 +9,7 @@ const url = (file: string) => `${ASSET_BASE}/${file}`
 /** 로고: 칸막이 선만 있는 한 장짜리 그리드. 흰색 로고만 어두운 칸에 둔다. */
 function LogoGrid({ items }: { items: DesignAsset[] }) {
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-3 gap-px bg-black/10 border border-black/10 rounded-lg overflow-hidden">
+    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-2 gap-px bg-black/10 border border-black/10 rounded-lg overflow-hidden">
       {items.map((a) => (
         <a
           key={a.file}
@@ -22,7 +22,7 @@ function LogoGrid({ items }: { items: DesignAsset[] }) {
               src={url(a.file)}
               alt={a.label}
               fill
-              sizes="(max-width: 640px) 50vw, 260px"
+              sizes="(max-width: 640px) 50vw, 200px"
               className="object-contain p-4 transition-transform group-hover:scale-[1.03]"
             />
           </div>
@@ -48,7 +48,7 @@ function PosterThumb({ a }: { a: DesignAsset }) {
           src={url(a.file)}
           alt={a.label}
           fill
-          sizes="(max-width: 640px) 50vw, 240px"
+          sizes="(max-width: 640px) 50vw, 200px"
           className="object-cover"
         />
       </div>
@@ -79,37 +79,40 @@ export default function DesignAssets() {
         </a>
       </div>
 
-      {ASSET_GROUPS.map((g) => (
-        <section key={g.title} className={cardCls}>
-          <h3 className="text-[16px] font-extrabold mb-4">{g.title}</h3>
-          {g.kind === "source" ? (
-            <ul className="divide-y divide-black/10 border border-black/10 rounded-lg">
-              {g.items.map((a) => (
-                <li key={a.file}>
-                  <a
-                    href={url(a.file)}
-                    download
-                    className="flex items-center justify-between gap-3 px-4 py-3 text-[14px] hover:bg-black/[0.03]"
-                  >
-                    <span>
-                      <b>{a.label}</b> <span className="text-[#888] text-[13px]">{a.file}</span>
-                    </span>
-                    <span className="shrink-0 text-[13px] text-[#888]">↓ {a.size}</span>
-                  </a>
-                </li>
-              ))}
-            </ul>
-          ) : g.kind === "logo" ? (
-            <LogoGrid items={g.items} />
-          ) : (
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-              {g.items.map((a) => (
-                <PosterThumb key={a.file} a={a} />
-              ))}
-            </div>
-          )}
-        </section>
-      ))}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 items-start">
+        {ASSET_GROUPS.map((g) => (
+          <section key={g.title} className={cardCls}>
+            <h3 className="text-[16px] font-extrabold mb-4">{g.title}</h3>
+            {g.kind === "source" ? (
+              <ul className="divide-y divide-black/10 border border-black/10 rounded-lg">
+                {g.items.map((a) => (
+                  <li key={a.file}>
+                    <a
+                      href={url(a.file)}
+                      download
+                      className="flex items-center justify-between gap-3 px-4 py-3 text-[14px] hover:bg-black/[0.03]"
+                    >
+                      <span className="min-w-0">
+                        <b className="block">{a.label}</b>
+                        <span className="block text-[#888] text-[12px] truncate">{a.file}</span>
+                      </span>
+                      <span className="shrink-0 text-[13px] text-[#888]">↓ {a.size}</span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            ) : g.kind === "logo" ? (
+              <LogoGrid items={g.items} />
+            ) : (
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-2 gap-4">
+                {g.items.map((a) => (
+                  <PosterThumb key={a.file} a={a} />
+                ))}
+              </div>
+            )}
+          </section>
+        ))}
+      </div>
     </>
   )
 }

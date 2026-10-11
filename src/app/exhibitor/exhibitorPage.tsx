@@ -17,6 +17,7 @@ type ExhibitorData = NonNullable<Awaited<ReturnType<typeof loadExhibitor>>>
 export async function renderExhibitorTab(
   active: ExhibitorTabKey,
   content: (data: ExhibitorData) => React.ReactNode,
+  opts: { wide?: boolean } = {},
 ) {
   const slug = await getExhibitorSlug()
   const data = slug ? await loadExhibitor(slug) : null
@@ -26,6 +27,7 @@ export async function renderExhibitorTab(
       name={data.defaults.name_ko}
       passwordChanged={Boolean(data.state.password_changed_at)}
       active={active}
+      wide={opts.wide}
     >
       {content(data)}
     </ExhibitorShell>

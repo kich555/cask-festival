@@ -5,5 +5,5 @@ export const metadata = exhibitorMetadata
 export const dynamic = "force-dynamic"
 
 export default function ExhibitorAssetsPage() {
-  return renderExhibitorTab("assets", () => <DesignAssets />)
+  return renderExhibitorTab("assets", () => <DesignAssets />, { wide: true })
 }

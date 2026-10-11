@@ -17,11 +17,14 @@ export default function ExhibitorShell({
   name,
   passwordChanged,
   active,
+  wide = false,
   children,
 }: {
   name: string
   passwordChanged: boolean
   active: ExhibitorTabKey
+  /** 본문만 넓게 (헤더·탭 폭은 그대로) */
+  wide?: boolean
   children: React.ReactNode
 }) {
   const [pwOpen, setPwOpen] = useState(false)
@@ -77,7 +80,7 @@ export default function ExhibitorShell({
         </nav>
       </header>
 
-      <main className="max-w-[820px] mx-auto px-5 py-8 space-y-6">
+      <main className={`${wide ? "max-w-[1200px]" : "max-w-[820px]"} mx-auto px-5 py-8 space-y-6`}>
         {!pwChanged && (
           <div className="rounded-lg border border-[#f0ad4e]/50 bg-[#f0ad4e]/10 px-5 py-4 flex flex-col sm:flex-row sm:items-center gap-3">
             <p className="flex-1 text-[14px] text-[#6b4b00] leading-relaxed">
