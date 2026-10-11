@@ -115,7 +115,7 @@ export default function DesignAssets() {
             부스 제작·홍보물에 사용하실 수 있는 캐스크 카니발 2026 로고와 포스터입니다.
           </p>
         </div>
-        <ZipBtn file={ASSET_ZIP.file} label="모든 에셋 한 번에 받기" size={ASSET_ZIP.size} />
+        <ZipBtn file={ASSET_ZIP.file} label="전체 다운로드" size={ASSET_ZIP.size} />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">

@@ -7,7 +7,7 @@ import { PasswordDialog } from "./exhibitorParts"
 
 const TABS = [
   { key: "apply", href: "/exhibitor", label: "부스 부대시설 신청" },
-  { key: "assets", href: "/exhibitor/assets", label: "디자인 에셋 다운로드" },
+  { key: "assets", href: "/exhibitor/assets", label: "자료실" },
   { key: "layout", href: "/exhibitor/layout", label: "부스 배치도" },
 ] as const
 
