@@ -6,25 +6,53 @@ import { cardCls } from "./exhibitorParts"
 
 const url = (file: string) => `${ASSET_BASE}/${file}`
 
-function Thumb({ a, tall }: { a: DesignAsset; tall: boolean }) {
+/** 로고: 칸막이 선만 있는 한 장짜리 그리드. 흰색 로고만 어두운 칸에 둔다. */
+function LogoGrid({ items }: { items: DesignAsset[] }) {
   return (
-    <a
-      href={url(a.file)}
-      download
-      className="group block rounded-lg border border-black/10 overflow-hidden hover:border-black/40"
-    >
-      <div
-        className={`relative ${tall ? "aspect-[4/5]" : "aspect-[3/2]"} ${a.dark ? "bg-[#1a1a1a]" : "bg-[#f4f2ef]"}`}
-      >
+    <div className="grid grid-cols-2 sm:grid-cols-3 gap-px bg-black/10 border border-black/10 rounded-lg overflow-hidden">
+      {items.map((a) => (
+        <a
+          key={a.file}
+          href={url(a.file)}
+          download
+          className={`group flex flex-col ${a.dark ? "bg-[#1a1a1a] text-white" : "bg-white"}`}
+        >
+          <div className="relative aspect-[3/2]">
+            <Image
+              src={url(a.file)}
+              alt={a.label}
+              fill
+              sizes="(max-width: 640px) 50vw, 260px"
+              className="object-contain p-4 transition-transform group-hover:scale-[1.03]"
+            />
+          </div>
+          <div className="px-4 pb-3 flex items-center justify-between gap-2 text-[13px]">
+            <span className="font-bold truncate">{a.label}</span>
+            <span
+              className={`shrink-0 ${a.dark ? "text-white/50 group-hover:text-white" : "text-[#888] group-hover:text-black"}`}
+            >
+              ↓ PNG
+            </span>
+          </div>
+        </a>
+      ))}
+    </div>
+  )
+}
+
+function PosterThumb({ a }: { a: DesignAsset }) {
+  return (
+    <a href={url(a.file)} download className="group block">
+      <div className="relative aspect-[4/5] bg-white border border-black/10 rounded-lg overflow-hidden group-hover:border-black/40">
         <Image
           src={url(a.file)}
           alt={a.label}
           fill
           sizes="(max-width: 640px) 50vw, 240px"
-          className={tall ? "object-cover" : "object-contain p-3"}
+          className="object-cover"
         />
       </div>
-      <div className="px-3 py-2 flex items-center justify-between gap-2 text-[13px]">
+      <div className="pt-2 flex items-center justify-between gap-2 text-[13px]">
         <span className="font-bold truncate">{a.label}</span>
         <span className="shrink-0 text-[#888] group-hover:text-black">↓ {a.size}</span>
       </div>
@@ -72,10 +100,12 @@ export default function DesignAssets() {
                   </li>
                 ))}
               </ul>
+            ) : g.kind === "logo" ? (
+              <LogoGrid items={g.items} />
             ) : (
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
                 {g.items.map((a) => (
-                  <Thumb key={a.file} a={a} tall={g.kind === "poster"} />
+                  <PosterThumb key={a.file} a={a} />
                 ))}
               </div>
             )}

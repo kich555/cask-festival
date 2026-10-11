@@ -34,8 +34,8 @@ export const ASSET_GROUPS: {
     kind: "poster",
     items: [
       { label: "포스터", file: "poster.png", size: "1.8MB" },
-      { label: "포맷 아웃라인 · 적", file: "format-outline-red.png", size: "5.2MB" },
-      { label: "포맷 아웃라인 · 백", file: "format-outline-white.png", size: "2.3MB", dark: true },
+      { label: "Format Outline Red", file: "format-outline-red.png", size: "5.2MB" },
+      { label: "Format Outline White", file: "format-outline-white.png", size: "2.3MB" },
     ],
   },
   {
