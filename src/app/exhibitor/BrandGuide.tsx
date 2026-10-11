@@ -9,12 +9,12 @@ const COLORS = [
   { hex: "#F2F2F2", rgb: "242, 242, 242", cmyk: "0, 0, 0, 5", light: true },
 ]
 
-/** 로고 조합: [배경, 로고색, 이름]. Paper가 흰색 역할 */
+/** 로고 조합: [배경, 로고색, 이름]. 흰색은 #F2F2F2 */
 const USAGE = [
-  ["#F2F2F2", "#7D0B1C", "Red on Paper"],
-  ["#F2F2F2", "#231E20", "Black on Paper"],
-  ["#231E20", "#F2F2F2", "Paper on Black"],
-  ["#7D0B1C", "#F2F2F2", "Paper on Red"],
+  ["#F2F2F2", "#7D0B1C", "Red on White"],
+  ["#F2F2F2", "#231E20", "Black on White"],
+  ["#231E20", "#F2F2F2", "White on Black"],
+  ["#7D0B1C", "#F2F2F2", "White on Red"],
 ] as const
 
 const [MAIN, ...SUBS] = COLORS
