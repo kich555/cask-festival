@@ -17,13 +17,19 @@ def nfc(s: str) -> str:
     return unicodedata.normalize("NFC", s)
 
 
+LOGO_AI = "cc_2026 logo.ai"
+
 GROUPS = {
-    "cask-carnival-2026-logos.zip": ("캐스크 카니발 2026 로고", lambda p: "로고" in nfc(p.name)),
+    # 로고 PNG + 로고 AI
+    "cask-carnival-2026-logos.zip": (
+        "캐스크 카니발 2026 로고",
+        lambda p: "로고" in nfc(p.name) or p.name == LOGO_AI,
+    ),
+    # 포스터·포맷 PNG + 디자인 에셋 모음 AI
     "cask-carnival-2026-posters.zip": (
         "캐스크 카니발 2026 포스터·포맷",
-        lambda p: p.suffix == ".png" and "로고" not in nfc(p.name),
+        lambda p: "로고" not in nfc(p.name) and p.name != LOGO_AI and p.suffix in (".png", ".ai"),
     ),
-    "cask-carnival-2026-ai.zip": ("캐스크 카니발 2026 AI 원본", lambda p: p.suffix == ".ai"),
     "cask-carnival-2026-design-assets.zip": (
         "캐스크 카니발 2026 디자인 에셋",
         lambda p: p.suffix in (".png", ".ai"),

@@ -56,7 +56,7 @@ function ZipBtn({ file, label, size }: { file: string; label: string; size: stri
 /** 로고: 칸막이 선만 있는 한 장짜리 그리드. 흰색 로고만 어두운 칸에 둔다. */
 function LogoGrid({ items }: { items: DesignAsset[] }) {
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-2 gap-px bg-black/10 border border-black/10 rounded-lg overflow-hidden">
+    <div className="grid grid-cols-2 sm:grid-cols-3 gap-px bg-black/10 border border-black/10 rounded-lg overflow-hidden">
       {items.map((a) => (
         <a
           key={a.file}
@@ -118,39 +118,32 @@ export default function DesignAssets() {
         <ZipBtn file={ASSET_ZIP.file} label="모든 에셋 한 번에 받기" size={ASSET_ZIP.size} />
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
         {ASSET_GROUPS.map((g) => (
           <section key={g.title} className={`${cardCls} flex flex-col`}>
             <h3 className="text-[16px] font-extrabold mb-4">{g.title}</h3>
-            {g.kind === "source" ? (
-              <ul className="divide-y divide-black/10 border border-black/10 rounded-lg">
-                {g.items.map((a) => (
-                  <li key={a.file}>
-                    <a
-                      href={url(a.file)}
-                      download
-                      className="group flex items-center justify-between gap-3 px-4 py-3 text-[14px]"
-                    >
-                      <span className="min-w-0">
-                        <b className="block">{a.label}</b>
-                        <span className="block text-[#888] text-[12px] truncate">
-                          {a.file} · {a.size}
-                        </span>
-                      </span>
-                      <ItemBtn />
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            ) : g.kind === "logo" ? (
+            {g.kind === "logo" ? (
               <LogoGrid items={g.items} />
             ) : (
-              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
                 {g.items.map((a) => (
                   <PosterThumb key={a.file} a={a} />
                 ))}
               </div>
             )}
+            <a
+              href={url(g.source.file)}
+              download
+              className="group mt-4 flex items-center justify-between gap-3 border border-black/10 rounded-lg px-4 py-3 text-[14px]"
+            >
+              <span className="min-w-0">
+                <b className="block">{g.source.label}</b>
+                <span className="block text-[#888] text-[12px] truncate">
+                  Adobe Illustrator 원본 · {g.source.size}
+                </span>
+              </span>
+              <ItemBtn />
+            </a>
             <div className="mt-auto pt-5">
               <ZipBtn file={g.zip.file} label={g.zipLabel} size={g.zip.size} />
             </div>
