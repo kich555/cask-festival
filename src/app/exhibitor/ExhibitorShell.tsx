@@ -62,7 +62,25 @@ export default function ExhibitorShell({
             </button>
           </div>
         </div>
-        <nav className="max-w-[1200px] mx-auto px-5 mt-5 grid grid-cols-3 border-t border-white/10">
+        {/* 임시 비밀번호 안내: 탭마다 본문 폭이 달라도 같은 크기로 보이도록 헤더 안에 둔다 */}
+        {!pwChanged && (
+          <div className="max-w-[1200px] mx-auto px-5 mt-4">
+            <div className="rounded-md bg-[#f0ad4e]/15 border border-[#f0ad4e]/40 px-4 py-2.5 flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
+              <p className="flex-1 text-[13px] text-[#f5c77e] leading-relaxed">
+                <b className="text-[#ffd591]">임시 비밀번호로 로그인하셨습니다.</b> 보안을 위해
+                원하시는 비밀번호로 변경해 주세요.
+              </p>
+              <button
+                type="button"
+                onClick={() => setPwOpen(true)}
+                className="shrink-0 self-start sm:self-auto bg-[#f0ad4e] text-[#1a1a1a] rounded px-4 py-1.5 text-[13px] font-bold hover:bg-[#f5bd68]"
+              >
+                비밀번호 변경
+              </button>
+            </div>
+          </div>
+        )}
+        <nav className="max-w-[1200px] mx-auto px-5 mt-4 grid grid-cols-3 border-t border-white/10">
           {TABS.map((t) => (
             <Link
               key={t.key}
@@ -81,21 +99,6 @@ export default function ExhibitorShell({
       </header>
 
       <main className={`${wide ? "max-w-[1200px]" : "max-w-[820px]"} mx-auto px-5 py-8 space-y-6`}>
-        {!pwChanged && (
-          <div className="rounded-lg border border-[#f0ad4e]/50 bg-[#f0ad4e]/10 px-5 py-4 flex flex-col sm:flex-row sm:items-center gap-3">
-            <p className="flex-1 text-[14px] text-[#6b4b00] leading-relaxed">
-              <b>임시 비밀번호로 로그인하셨습니다.</b>
-              <br className="hidden sm:block" /> 보안을 위해 원하시는 비밀번호로 변경해 주세요.
-            </p>
-            <button
-              type="button"
-              onClick={() => setPwOpen(true)}
-              className="shrink-0 bg-[#1a1a1a] text-white rounded px-5 py-2.5 text-[14px] font-bold"
-            >
-              비밀번호 변경
-            </button>
-          </div>
-        )}
         {children}
       </main>
 
