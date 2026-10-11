@@ -39,12 +39,22 @@ function ItemBtn({ dark = false }: { dark?: boolean }) {
   )
 }
 
-function ZipBtn({ file, label, size }: { file: string; label: string; size: string }) {
+function ZipBtn({
+  file,
+  label,
+  size,
+  red = false,
+}: {
+  file: string
+  label: string
+  size: string
+  red?: boolean
+}) {
   return (
     <a
       href={url(file)}
       download
-      className="flex items-center justify-center gap-2 bg-[#1a1a1a] text-white rounded px-5 py-3 text-[14px] font-bold hover:bg-black"
+      className={`flex items-center justify-center gap-2 text-white rounded px-5 py-3 text-[14px] font-bold ${red ? "bg-[#7d0b1c] hover:bg-[#650916]" : "bg-[#1a1a1a] hover:bg-black"}`}
     >
       <DownloadIcon />
       {label}
@@ -115,7 +125,7 @@ export default function DesignAssets() {
             부스 제작·홍보물에 사용하실 수 있는 캐스크 카니발 2026 로고와 포스터입니다.
           </p>
         </div>
-        <ZipBtn file={ASSET_ZIP.file} label="전체 다운로드" size={ASSET_ZIP.size} />
+        <ZipBtn file={ASSET_ZIP.file} label="전체 다운로드" size={ASSET_ZIP.size} red />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
