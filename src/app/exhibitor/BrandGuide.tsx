@@ -3,10 +3,10 @@
 import { ASSET_BASE } from "./designAssetList"
 
 const COLORS = [
-  { name: "Cask Red", hex: "#7D0B1C", rgb: "125, 11, 28", cmyk: "0, 91, 78, 51", light: false },
-  { name: "Ink Black", hex: "#231E20", rgb: "35, 30, 32", cmyk: "0, 14, 9, 86", light: false },
-  { name: "Sand", hex: "#F0C79C", rgb: "240, 199, 156", cmyk: "0, 17, 35, 6", light: true },
-  { name: "Paper", hex: "#F2F2F2", rgb: "242, 242, 242", cmyk: "0, 0, 0, 5", light: true },
+  { hex: "#7D0B1C", rgb: "125, 11, 28", cmyk: "0, 91, 78, 51", light: false },
+  { hex: "#231E20", rgb: "35, 30, 32", cmyk: "0, 14, 9, 86", light: false },
+  { hex: "#F0C79C", rgb: "240, 199, 156", cmyk: "0, 17, 35, 6", light: true },
+  { hex: "#F2F2F2", rgb: "242, 242, 242", cmyk: "0, 0, 0, 5", light: true },
 ]
 
 /** 로고 조합: [배경, 로고색, 이름]. Paper가 흰색 역할 */
@@ -22,12 +22,9 @@ type Color = (typeof COLORS)[number]
 
 function ColorInfo({ c, big = false }: { c: Color; big?: boolean }) {
   return (
-    <div>
-      <p className={`font-extrabold ${big ? "text-[18px] mb-1.5" : "text-[14px] mb-0.5"}`}>
-        {c.name}
-      </p>
-      <p>
-        HEX <b className="select-all">{c.hex}</b>
+    <div className={big ? "text-[15px] leading-relaxed" : "text-[13px] leading-snug"}>
+      <p className={`font-extrabold select-all ${big ? "text-[26px] mb-2" : "text-[18px] mb-1"}`}>
+        {c.hex}
       </p>
       <p>RGB {c.rgb}</p>
       <p>CMYK {c.cmyk}</p>
@@ -79,7 +76,7 @@ export default function BrandGuide() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
         <section>
           <SectionLabel en="Color System" ko="전용 색상" />
-          <div className="grid grid-cols-[1.3fr_1fr] min-h-[300px] text-[12px] leading-relaxed">
+          <div className="grid grid-cols-[1.3fr_1fr] min-h-[330px]">
             <div className="flex flex-col justify-between p-5 bg-[#7D0B1C] text-white">
               <ColorInfo c={MAIN} big />
               <TintedLogo color="#F2F2F2" className="w-[110px] self-end" />
