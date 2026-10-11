@@ -1,7 +1,6 @@
 // 자료실 브랜드 가이드: 전용 색상 · 전용 서체 · 로고 색상 조합
 
 import { ASSET_BASE } from "./designAssetList"
-import { cardCls } from "./exhibitorParts"
 
 const COLORS = [
   { name: "Cask Red", hex: "#7D0B1C", rgb: "125, 11, 28", cmyk: "0, 91, 78, 51", light: false },
@@ -40,8 +39,16 @@ const FONT_URL = "https://corp.gmarket.com/fonts/"
 const gm = { fontFamily: '"Gmarket Sans", sans-serif' }
 
 /** 투명 PNG 로고를 마스크로 써서 원하는 색으로 칠한다 */
-function TintedLogo({ color, className }: { color: string; className: string }) {
-  const mask = `url(${ASSET_BASE}/logo-circle-black.png) center / contain no-repeat`
+export function TintedLogo({
+  color,
+  className,
+  variant = "circle",
+}: {
+  color: string
+  className: string
+  variant?: "circle" | "text"
+}) {
+  const mask = `url(${ASSET_BASE}/logo-${variant}-black.png) center / contain no-repeat`
   return (
     <span
       role="img"
@@ -52,20 +59,24 @@ function TintedLogo({ color, className }: { color: string; className: string }) 
   )
 }
 
-function Title({ title, sub }: { title: string; sub: string }) {
+/** A4 가이드식 섹션 라벨: 영문 굵게 + 한글 작게, 아래 가는 선 */
+export function SectionLabel({ en, ko }: { en: string; ko: string }) {
   return (
-    <h3 className="text-[16px] font-extrabold mb-4">
-      {title} <span className="text-[13px] font-medium text-[#888] ml-1">{sub}</span>
-    </h3>
+    <div className="mb-5">
+      <h3 className="text-[20px] font-extrabold text-[#231E20]">
+        {en} <span className="text-[13px] font-medium text-[#888] ml-1">{ko}</span>
+      </h3>
+      <hr className="mt-3 border-black/15" />
+    </div>
   )
 }
 
 export default function BrandGuide() {
   return (
     <>
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
-        <section className={cardCls}>
-          <Title title="전용 색상" sub="Color System" />
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+        <section>
+          <SectionLabel en="Color System" ko="전용 색상" />
           <div className="grid grid-cols-[1.3fr_1fr] min-h-[300px] text-[12px] leading-relaxed">
             <div className="flex flex-col justify-between p-5 bg-[#7D0B1C] text-white">
               <ColorInfo c={MAIN} big />
@@ -88,32 +99,35 @@ export default function BrandGuide() {
           </p>
         </section>
 
-        <section className={`${cardCls} flex flex-col`}>
-          <Title title="전용 서체" sub="Typography" />
-          <div className="grid grid-cols-2 gap-3 flex-1">
+        <section className="flex flex-col">
+          <SectionLabel en="Typography" ko="전용 서체" />
+          <div className="grid grid-cols-2 flex-1">
             {[
               { w: 700, name: "Gmarket Sans Bold", use: "제목 · 부스명 · 강조" },
               { w: 500, name: "Gmarket Sans Medium", use: "본문 · 안내 문구 · 가격표" },
-            ].map((f) => (
-              <div key={f.w} className="rounded-lg border border-black/10 px-4 py-4 flex flex-col">
+            ].map((f, i) => (
+              <div
+                key={f.w}
+                className={`flex flex-col ${i ? "border-l border-black/15 pl-6" : "pr-6"}`}
+              >
                 <p
-                  className="text-[44px] leading-none text-[#7D0B1C]"
+                  className="text-[56px] leading-none text-[#7D0B1C]"
                   style={{ ...gm, fontWeight: f.w }}
                 >
                   가 Aa
                 </p>
-                <p className="text-[14px] mt-3" style={{ ...gm, fontWeight: f.w }}>
+                <p className="text-[15px] mt-4" style={{ ...gm, fontWeight: f.w }}>
                   {f.name}
                 </p>
                 <p
-                  className="text-[13px] mt-2 leading-relaxed text-[#444]"
+                  className="text-[14px] mt-2 leading-relaxed text-[#444]"
                   style={{ ...gm, fontWeight: f.w }}
                 >
                   캐스크 카니발 2026
                   <br />
                   CASK CARNIVAL SEOUL
                 </p>
-                <p className="text-[12px] text-[#888] mt-auto pt-3">{f.use}</p>
+                <p className="text-[12px] text-[#888] mt-auto pt-4">{f.use}</p>
               </div>
             ))}
           </div>
@@ -121,25 +135,25 @@ export default function BrandGuide() {
             href={FONT_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="mt-4 flex items-center justify-center gap-2 border border-black/25 rounded px-5 py-3 text-[14px] font-bold hover:border-black"
+            className="mt-6 flex items-center justify-center gap-2 border border-black/25 rounded px-5 py-3 text-[14px] font-bold hover:border-black"
           >
             G마켓 산스 무료 다운로드 ↗
           </a>
         </section>
       </div>
 
-      <section className={cardCls}>
-        <Title title="로고 색상 조합" sub="Color Usage" />
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-px bg-black/10 border border-black/10 rounded-lg overflow-hidden">
+      <section>
+        <SectionLabel en="Color Usage" ko="로고 색상 조합" />
+        <div className="grid grid-cols-2 lg:grid-cols-4 border border-black/10">
           {USAGE.map(([bg, fg, name]) => (
             <div
               key={name}
-              className="relative h-[120px] flex items-center justify-center"
+              className="relative h-[150px] flex items-center justify-center"
               style={{ backgroundColor: bg }}
             >
-              <TintedLogo color={fg} className="w-[130px]" />
+              <TintedLogo color={fg} className="w-[140px]" />
               <span
-                className="absolute left-2.5 bottom-2 text-[11px] opacity-70"
+                className="absolute left-3 bottom-2.5 text-[11px] opacity-70"
                 style={{ color: fg }}
               >
                 {name}

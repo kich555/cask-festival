@@ -15,6 +15,8 @@ export type DesignAsset = {
 export const ASSET_GROUPS: {
   title: string
   kind: "logo" | "poster"
+  /** 섹션 라벨 영문 */
+  en: string
   zip: { file: string; size: string }
   zipLabel: string
   items: DesignAsset[]
@@ -23,6 +25,7 @@ export const ASSET_GROUPS: {
 }[] = [
   {
     title: "로고",
+    en: "Logotype",
     kind: "logo",
     zip: { file: "cask-carnival-2026-logos.zip", size: "0.8MB" },
     zipLabel: "로고 전체 다운로드",
@@ -38,6 +41,7 @@ export const ASSET_GROUPS: {
   },
   {
     title: "포스터 · 포맷 아웃라인",
+    en: "Poster & Format",
     kind: "poster",
     zip: { file: "cask-carnival-2026-posters.zip", size: "9.7MB" },
     zipLabel: "포스터·포맷 전체 다운로드",
