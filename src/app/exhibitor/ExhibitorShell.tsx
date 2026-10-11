@@ -6,7 +6,7 @@ import { useState } from "react"
 import { PasswordDialog } from "./exhibitorParts"
 
 const TABS = [
-  { key: "apply", href: "/exhibitor", label: "부스 부대시설 신청" },
+  { key: "apply", href: "/exhibitor", label: "부스 정보 · 부대시설 신청" },
   { key: "assets", href: "/exhibitor/assets", label: "자료실" },
   { key: "layout", href: "/exhibitor/layout", label: "부스 배치도 (추후 업데이트 예정)" },
 ] as const
