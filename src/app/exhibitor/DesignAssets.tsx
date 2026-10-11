@@ -1,7 +1,13 @@
 // /exhibitor 디자인 에셋 다운로드 섹션 (로그인 후 화면에만 노출)
 
 import Image from "next/image"
-import { ASSET_BASE, ASSET_GROUPS, ASSET_ZIP, type DesignAsset } from "./designAssetList"
+import {
+  ASSET_BASE,
+  ASSET_GROUPS,
+  ASSET_ZIP,
+  BRAND_GUIDE,
+  type DesignAsset,
+} from "./designAssetList"
 import { cardCls } from "./exhibitorParts"
 
 const url = (file: string) => `${ASSET_BASE}/${file}`
@@ -122,11 +128,53 @@ export default function DesignAssets() {
         <div>
           <h2 className="text-[18px] font-extrabold">디자인 에셋</h2>
           <p className="text-[13px] text-[#666] mt-1">
-            부스 제작·홍보물에 사용하실 수 있는 캐스크 카니발 2026 로고와 포스터입니다.
+            부스 제작·홍보물에 사용하실 수 있는 캐스크 카니발 2026 브랜드 가이드, 로고,
+            포스터입니다.
           </p>
         </div>
         <ZipBtn file={ASSET_ZIP.file} label="전체 다운로드" size={ASSET_ZIP.size} red />
       </div>
+
+      <section className={`${cardCls} flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6`}>
+        <a
+          href={url(BRAND_GUIDE.pdf.file)}
+          download
+          className="shrink-0 relative w-[96px] aspect-[1/1.414] border border-black/10 rounded overflow-hidden hover:border-black/40"
+        >
+          <Image
+            src={url(BRAND_GUIDE.png.file)}
+            alt="브랜드 가이드"
+            fill
+            sizes="96px"
+            className="object-cover"
+          />
+        </a>
+        <div className="flex-1 min-w-0">
+          <h3 className="text-[16px] font-extrabold">브랜드 가이드</h3>
+          <p className="text-[13px] text-[#666] mt-1 leading-relaxed">
+            로고 사용법, 전용 색상(HEX·RGB·CMYK), 전용 서체(G마켓 산스 Medium·Bold)를 한 장에
+            정리했습니다. 부스·홍보물 제작 시 참고해 주십시오.
+          </p>
+        </div>
+        <div className="flex sm:flex-col gap-2 shrink-0">
+          <a
+            href={url(BRAND_GUIDE.pdf.file)}
+            download
+            className="flex-1 flex items-center justify-center gap-2 bg-[#1a1a1a] text-white rounded px-5 py-2.5 text-[14px] font-bold hover:bg-black"
+          >
+            <DownloadIcon />
+            PDF <span className="font-normal text-white/60">{BRAND_GUIDE.pdf.size}</span>
+          </a>
+          <a
+            href={url(BRAND_GUIDE.png.file)}
+            download
+            className="flex-1 flex items-center justify-center gap-2 border border-black/25 rounded px-5 py-2.5 text-[14px] font-bold hover:border-black"
+          >
+            <DownloadIcon />
+            PNG <span className="font-normal text-[#888]">{BRAND_GUIDE.png.size}</span>
+          </a>
+        </div>
+      </section>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
         {ASSET_GROUPS.map((g) => (

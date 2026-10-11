@@ -42,4 +42,7 @@ for zip_name, (folder, pick) in GROUPS.items():
     with zipfile.ZipFile(out, "w", zipfile.ZIP_DEFLATED) as z:
         for p in files:
             z.write(p, nfc(f"{folder}/{p.name}"))
+        if zip_name == "cask-carnival-2026-design-assets.zip":
+            # 브랜드 가이드 (scripts/brand-guide/build.sh 로 생성)
+            z.write(OUT / "cask-carnival-2026-brand-guide.pdf", nfc(f"{folder}/브랜드 가이드.pdf"))
     print(f"{zip_name}: {len(files)} files, {out.stat().st_size / 1e6:.1f}MB")
