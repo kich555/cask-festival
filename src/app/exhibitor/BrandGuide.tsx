@@ -10,15 +10,31 @@ const COLORS = [
   { name: "Paper", hex: "#F2F2F2", rgb: "242, 242, 242", cmyk: "0, 0, 0, 5", light: true },
 ]
 
-/** 로고 조합: [배경, 로고색, 이름] */
+/** 로고 조합: [배경, 로고색, 이름]. Paper가 흰색 역할 */
 const USAGE = [
-  ["#FFFFFF", "#7D0B1C", "Red on White"],
-  ["#FFFFFF", "#231E20", "Black on White"],
   ["#F2F2F2", "#7D0B1C", "Red on Paper"],
-  ["#231E20", "#FFFFFF", "White on Black"],
-  ["#7D0B1C", "#FFFFFF", "White on Red"],
-  ["#F0C79C", "#7D0B1C", "Red on Sand"],
+  ["#F2F2F2", "#231E20", "Black on Paper"],
+  ["#231E20", "#F2F2F2", "Paper on Black"],
+  ["#7D0B1C", "#F2F2F2", "Paper on Red"],
 ] as const
+
+const [MAIN, ...SUBS] = COLORS
+type Color = (typeof COLORS)[number]
+
+function ColorInfo({ c, big = false }: { c: Color; big?: boolean }) {
+  return (
+    <div>
+      <p className={`font-extrabold ${big ? "text-[18px] mb-1.5" : "text-[14px] mb-0.5"}`}>
+        {c.name}
+      </p>
+      <p>
+        HEX <b className="select-all">{c.hex}</b>
+      </p>
+      <p>RGB {c.rgb}</p>
+      <p>CMYK {c.cmyk}</p>
+    </div>
+  )
+}
 
 const FONT_URL = "https://corp.gmarket.com/fonts/"
 const gm = { fontFamily: '"Gmarket Sans", sans-serif' }
@@ -50,25 +66,22 @@ export default function BrandGuide() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
         <section className={cardCls}>
           <Title title="전용 색상" sub="Color System" />
-          <div className="grid grid-cols-2 gap-3">
-            {COLORS.map((c) => (
-              <div key={c.hex} className="rounded-lg overflow-hidden border border-black/10">
+          <div className="grid grid-cols-[1.3fr_1fr] min-h-[300px] text-[12px] leading-relaxed">
+            <div className="flex flex-col justify-between p-5 bg-[#7D0B1C] text-white">
+              <ColorInfo c={MAIN} big />
+              <TintedLogo color="#F2F2F2" className="w-[110px] self-end" />
+            </div>
+            <div className="grid grid-rows-3">
+              {SUBS.map((c) => (
                 <div
-                  className={`h-[84px] px-4 py-3 font-extrabold text-[15px] ${c.light ? "text-[#231E20]" : "text-white"}`}
+                  key={c.hex}
+                  className={`px-4 py-3 ${c.light ? "text-[#231E20]" : "text-white"}`}
                   style={{ backgroundColor: c.hex }}
                 >
-                  {c.name}
+                  <ColorInfo c={c} />
                 </div>
-                <dl className="px-4 py-3 text-[13px] grid grid-cols-[48px_1fr] gap-y-0.5 bg-white">
-                  <dt className="text-[#888]">HEX</dt>
-                  <dd className="font-bold select-all">{c.hex}</dd>
-                  <dt className="text-[#888]">RGB</dt>
-                  <dd>{c.rgb}</dd>
-                  <dt className="text-[#888]">CMYK</dt>
-                  <dd>{c.cmyk}</dd>
-                </dl>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
           <p className="text-[12px] text-[#888] mt-3">
             CMYK는 RGB 기준 환산값입니다. 인쇄 시 교정 출력으로 색상을 확인해 주십시오.
@@ -117,14 +130,14 @@ export default function BrandGuide() {
 
       <section className={cardCls}>
         <Title title="로고 색상 조합" sub="Color Usage" />
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-px bg-black/10 border border-black/10 rounded-lg overflow-hidden">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-px bg-black/10 border border-black/10 rounded-lg overflow-hidden">
           {USAGE.map(([bg, fg, name]) => (
             <div
               key={name}
               className="relative h-[120px] flex items-center justify-center"
               style={{ backgroundColor: bg }}
             >
-              <TintedLogo color={fg} className="w-[110px]" />
+              <TintedLogo color={fg} className="w-[130px]" />
               <span
                 className="absolute left-2.5 bottom-2 text-[11px] opacity-70"
                 style={{ color: fg }}
