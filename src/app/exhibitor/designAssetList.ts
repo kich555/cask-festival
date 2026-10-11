@@ -2,7 +2,7 @@
 // 파일을 바꾸면 ZIP도 다시 만들 것: python3 scripts/build-exhibitor-assets.py
 
 export const ASSET_BASE = "/exhibitor-assets"
-export const ASSET_ZIP = { file: "cask-carnival-2026-design-assets.zip", size: "10.5MB" }
+export const ASSET_ZIP = { file: "cask-carnival-2026-design-assets.zip", size: "29.1MB" }
 
 export type DesignAsset = {
   label: string
@@ -27,17 +27,17 @@ export const ASSET_GROUPS: {
     title: "로고",
     en: "Logotype",
     kind: "logo",
-    zip: { file: "cask-carnival-2026-logos.zip", size: "0.8MB" },
+    zip: { file: "cask-carnival-2026-logos.zip", size: "19.3MB" },
     zipLabel: "로고 전체 다운로드",
     items: [
       { label: "원형 로고 · 적", file: "logo-circle-red.png", size: "132KB" },
       { label: "원형 로고 · 흑", file: "logo-circle-black.png", size: "132KB" },
       { label: "원형 로고 · 백", file: "logo-circle-white.png", size: "151KB", dark: true },
-      { label: "텍스트 로고 · 적", file: "logo-text-red.png", size: "105KB" },
-      { label: "텍스트 로고 · 흑", file: "logo-text-black.png", size: "104KB" },
-      { label: "텍스트 로고 · 백", file: "logo-text-white.png", size: "116KB", dark: true },
+      { label: "텍스트 로고 · 적", file: "logo-text-red-v2.png", size: "96KB" },
+      { label: "텍스트 로고 · 흑", file: "logo-text-black-v2.png", size: "95KB" },
+      { label: "텍스트 로고 · 백", file: "logo-text-white-v2.png", size: "111KB", dark: true },
     ],
-    source: { label: "캐스크 카니발 2026 로고 (AI)", file: "cc2026-logo.ai", size: "582KB" },
+    source: { label: "캐스크 카니발 2026 로고 (AI)", file: "cc2026-logo.ai", size: "19.4MB" },
   },
   {
     title: "포스터 · 포맷 아웃라인",

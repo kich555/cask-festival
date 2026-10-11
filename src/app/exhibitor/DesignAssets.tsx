@@ -120,13 +120,9 @@ export default function DesignAssets() {
     <div className="bg-white border border-black/10 rounded-lg overflow-hidden">
       {/* A4 가이드와 같은 빨간 헤더 밴드 */}
       <div className="relative bg-[#7D0B1C] text-white overflow-hidden px-6 md:px-10 pt-7 pb-8">
-        <TintedLogo
-          color="rgba(255,255,255,.07)"
-          className="absolute -right-16 -top-10 w-[420px] pointer-events-none"
-        />
         <div className="relative flex justify-between gap-4 text-[13px] md:text-[14px]">
           <p>Brand Assets</p>
-          <p>CASK CARNIVAL 2026 · SEOUL</p>
+          <p>CASK CARNIVAL 2026</p>
         </div>
         <TintedLogo
           color="#FFFFFF"

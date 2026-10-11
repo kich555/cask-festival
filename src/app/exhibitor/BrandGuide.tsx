@@ -48,7 +48,9 @@ export function TintedLogo({
   className: string
   variant?: "circle" | "text"
 }) {
-  const mask = `url(${ASSET_BASE}/logo-${variant}-black.png) center / contain no-repeat`
+  // 텍스트 로고는 2026-10 교체본(-v2). PNG는 1년 캐시라 교체 시 파일명을 바꾼다
+  const file = variant === "text" ? "logo-text-black-v2.png" : "logo-circle-black.png"
+  const mask = `url(${ASSET_BASE}/${file}) center / contain no-repeat`
   return (
     <span
       role="img"
@@ -125,7 +127,7 @@ export default function BrandGuide() {
                 >
                   캐스크 카니발 2026
                   <br />
-                  CASK CARNIVAL SEOUL
+                  CASK CARNIVAL 2026
                 </p>
                 <p className="text-[12px] text-[#888] mt-auto pt-4">{f.use}</p>
               </div>
