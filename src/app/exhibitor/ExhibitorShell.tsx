@@ -38,7 +38,7 @@ export default function ExhibitorShell({
   return (
     <div className="min-h-screen bg-[#f6f5f5] text-[#1a1a1a]">
       <header className="bg-[#1a1a1a] text-white">
-        <div className="max-w-[820px] mx-auto px-5 pt-5 flex items-center justify-between gap-4">
+        <div className="max-w-[1200px] mx-auto px-5 pt-5 flex items-center justify-between gap-4">
           <div>
             <p className="text-[12px] text-white/50 font-bold tracking-wide">
               CASK CARNIVAL 2026 · 참가업체
@@ -62,13 +62,13 @@ export default function ExhibitorShell({
             </button>
           </div>
         </div>
-        <nav className="max-w-[820px] mx-auto px-5 mt-4 flex gap-1 overflow-x-auto">
+        <nav className="max-w-[1200px] mx-auto px-5 mt-5 grid grid-cols-3 border-t border-white/10">
           {TABS.map((t) => (
             <Link
               key={t.key}
               href={t.href}
               aria-current={active === t.key ? "page" : undefined}
-              className={`shrink-0 px-3 sm:px-4 py-3 text-[13px] sm:text-[14px] font-bold border-b-[3px] transition-colors ${
+              className={`text-center px-2 py-3.5 text-[13px] sm:text-[15px] font-bold border-b-[3px] transition-colors ${
                 active === t.key
                   ? "border-[#7d0b1c] text-white"
                   : "border-transparent text-white/50 hover:text-white"
