@@ -2,12 +2,7 @@
 // 파일을 바꾸면 ZIP도 다시 만들 것: python3 scripts/build-exhibitor-assets.py
 
 export const ASSET_BASE = "/exhibitor-assets"
-// 로고·색상·서체 가이드 (scripts/brand-guide/build.sh 로 생성)
-export const BRAND_GUIDE = {
-  pdf: { file: "cask-carnival-2026-brand-guide.pdf", size: "0.6MB" },
-  png: { file: "cask-carnival-2026-brand-guide.png", size: "0.7MB" },
-}
-export const ASSET_ZIP = { file: "cask-carnival-2026-design-assets.zip", size: "10.9MB" }
+export const ASSET_ZIP = { file: "cask-carnival-2026-design-assets.zip", size: "10.5MB" }
 
 export type DesignAsset = {
   label: string

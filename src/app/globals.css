@@ -26,6 +26,26 @@
     url("/2026/fonts/D-DINCondensed-Bold.otf") format("opentype");
 }
 
+/* 참가업체 자료실 서체 견본 (G마켓 산스) — 자료실에서만 쓰이므로 사용 시에만 로드됨 */
+@font-face {
+  font-family: "Gmarket Sans";
+  font-weight: 500;
+  font-display: swap;
+  src:
+    local("Gmarket Sans Medium"),
+    url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff")
+    format("woff");
+}
+@font-face {
+  font-family: "Gmarket Sans";
+  font-weight: 700;
+  font-display: swap;
+  src:
+    local("Gmarket Sans Bold"),
+    url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansBold.woff")
+    format("woff");
+}
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
