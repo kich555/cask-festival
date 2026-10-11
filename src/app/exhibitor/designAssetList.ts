@@ -46,6 +46,6 @@ export const ASSET_GROUPS: {
       { label: "Format Outline Red", file: "format-outline-red.png", size: "5.2MB" },
       { label: "Format Outline White", file: "format-outline-white.png", size: "2.3MB" },
     ],
-    source: { label: "디자인 에셋 모음 (AI)", file: "cc2026-assets.ai", size: "1.2MB" },
+    source: { label: "포스터 · 포맷 아웃라인 (AI)", file: "cc2026-assets.ai", size: "1.2MB" },
   },
 ]

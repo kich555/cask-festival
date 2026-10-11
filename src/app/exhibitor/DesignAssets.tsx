@@ -131,10 +131,12 @@ export default function DesignAssets() {
                 ))}
               </div>
             )}
+            {/* AI 행과 ZIP 버튼을 박스 바닥에 붙여 양쪽 높이를 맞춘다 */}
+            <div className="flex-1 min-h-4" />
             <a
               href={url(g.source.file)}
               download
-              className="group mt-4 flex items-center justify-between gap-3 border border-black/10 rounded-lg px-4 py-3 text-[14px]"
+              className="group flex items-center justify-between gap-3 border border-black/10 rounded-lg px-4 py-3 text-[14px]"
             >
               <span className="min-w-0">
                 <b className="block">{g.source.label}</b>
@@ -144,7 +146,7 @@ export default function DesignAssets() {
               </span>
               <ItemBtn />
             </a>
-            <div className="mt-auto pt-5">
+            <div className="pt-5">
               <ZipBtn file={g.zip.file} label={g.zipLabel} size={g.zip.size} />
             </div>
           </section>
