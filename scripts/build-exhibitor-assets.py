@@ -18,6 +18,8 @@ def nfc(s: str) -> str:
 
 
 LOGO_AI = "cc_2026 logo.ai"
+# 폴더에 있어도 배포하지 않는 파일 (참고 자료 등)
+SKIP = {"예시"}
 # 압축 안에서만 바꿔 넣는 이름 (원본 파일명은 그대로)
 RENAME = {"Poster.png": "Official Poster.png"}
 
@@ -39,7 +41,9 @@ GROUPS = {
 }
 
 for zip_name, (folder, pick) in GROUPS.items():
-    files = sorted(p for p in SRC.iterdir() if pick(p) and not p.name.startswith("~"))
+    files = sorted(
+        p for p in SRC.iterdir() if pick(p) and not p.name.startswith("~") and nfc(p.stem) not in SKIP
+    )
     out = OUT / zip_name
     with zipfile.ZipFile(out, "w", zipfile.ZIP_DEFLATED) as z:
         for p in files:
