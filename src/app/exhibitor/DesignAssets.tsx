@@ -62,8 +62,8 @@ function PosterThumb({ a }: { a: DesignAsset }) {
 
 export default function DesignAssets() {
   return (
-    <section className={cardCls}>
-      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
+    <>
+      <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3">
         <div>
           <h2 className="text-[18px] font-extrabold">디자인 에셋</h2>
           <p className="text-[13px] text-[#666] mt-1">
@@ -79,39 +79,37 @@ export default function DesignAssets() {
         </a>
       </div>
 
-      <div className="mt-5 space-y-6">
-        {ASSET_GROUPS.map((g) => (
-          <div key={g.title}>
-            <h3 className="text-[14px] font-bold text-[#444] mb-2.5">{g.title}</h3>
-            {g.kind === "source" ? (
-              <ul className="divide-y divide-black/10 border border-black/10 rounded-lg">
-                {g.items.map((a) => (
-                  <li key={a.file}>
-                    <a
-                      href={url(a.file)}
-                      download
-                      className="flex items-center justify-between gap-3 px-4 py-3 text-[14px] hover:bg-black/[0.03]"
-                    >
-                      <span>
-                        <b>{a.label}</b> <span className="text-[#888] text-[13px]">{a.file}</span>
-                      </span>
-                      <span className="shrink-0 text-[13px] text-[#888]">↓ {a.size}</span>
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            ) : g.kind === "logo" ? (
-              <LogoGrid items={g.items} />
-            ) : (
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-                {g.items.map((a) => (
-                  <PosterThumb key={a.file} a={a} />
-                ))}
-              </div>
-            )}
-          </div>
-        ))}
-      </div>
-    </section>
+      {ASSET_GROUPS.map((g) => (
+        <section key={g.title} className={cardCls}>
+          <h3 className="text-[16px] font-extrabold mb-4">{g.title}</h3>
+          {g.kind === "source" ? (
+            <ul className="divide-y divide-black/10 border border-black/10 rounded-lg">
+              {g.items.map((a) => (
+                <li key={a.file}>
+                  <a
+                    href={url(a.file)}
+                    download
+                    className="flex items-center justify-between gap-3 px-4 py-3 text-[14px] hover:bg-black/[0.03]"
+                  >
+                    <span>
+                      <b>{a.label}</b> <span className="text-[#888] text-[13px]">{a.file}</span>
+                    </span>
+                    <span className="shrink-0 text-[13px] text-[#888]">↓ {a.size}</span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          ) : g.kind === "logo" ? (
+            <LogoGrid items={g.items} />
+          ) : (
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+              {g.items.map((a) => (
+                <PosterThumb key={a.file} a={a} />
+              ))}
+            </div>
+          )}
+        </section>
+      ))}
+    </>
   )
 }

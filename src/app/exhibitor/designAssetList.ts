@@ -30,7 +30,7 @@ export const ASSET_GROUPS: {
     ],
   },
   {
-    title: "포스터 · 포맷",
+    title: "포스터 · 포맷 아웃라인",
     kind: "poster",
     items: [
       { label: "포스터", file: "poster.png", size: "1.8MB" },
@@ -39,7 +39,7 @@ export const ASSET_GROUPS: {
     ],
   },
   {
-    title: "원본 (Adobe Illustrator)",
+    title: "AI 원본 파일 (Adobe Illustrator)",
     kind: "source",
     items: [
       { label: "캐스크 카니발 2026 로고", file: "cc2026-logo.ai", size: "582KB" },
