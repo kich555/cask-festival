@@ -18,6 +18,8 @@ def nfc(s: str) -> str:
 
 
 LOGO_AI = "cc_2026 logo.ai"
+# 압축 안에서만 바꿔 넣는 이름 (원본 파일명은 그대로)
+RENAME = {"Poster.png": "Official Poster.png"}
 
 GROUPS = {
     # 로고 PNG + 로고 AI
@@ -41,5 +43,5 @@ for zip_name, (folder, pick) in GROUPS.items():
     out = OUT / zip_name
     with zipfile.ZipFile(out, "w", zipfile.ZIP_DEFLATED) as z:
         for p in files:
-            z.write(p, nfc(f"{folder}/{p.name}"))
+            z.write(p, nfc(f"{folder}/{RENAME.get(p.name, p.name)}"))
     print(f"{zip_name}: {len(files)} files, {out.stat().st_size / 1e6:.1f}MB")

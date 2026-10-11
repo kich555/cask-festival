@@ -46,7 +46,7 @@ export const ASSET_GROUPS: {
     zip: { file: "cask-carnival-2026-posters.zip", size: "9.7MB" },
     zipLabel: "포스터·포맷 전체 다운로드",
     items: [
-      { label: "포스터", file: "poster.png", size: "1.8MB" },
+      { label: "Official Poster", file: "official-poster.png", size: "1.8MB" },
       { label: "Format Outline Red", file: "format-outline-red.png", size: "5.2MB" },
       { label: "Format Outline White", file: "format-outline-white.png", size: "2.3MB" },
     ],
