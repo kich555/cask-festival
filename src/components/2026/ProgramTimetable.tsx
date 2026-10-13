@@ -39,6 +39,7 @@ export default function ProgramTimetable({ days = program2026 }: { days?: Progra
   const ko = lang === "ko"
   const hallLabel = (n: number) => p.hall.replace("{n}", String(n))
   // 세션은 기본 90분이고 관끼리 90분씩 엇갈리므로 시작 시각 = 표의 한 행.
+  // 행 높이를 고정해 두 요일 표의 칸 크기를 모두 같게 한다.
   // 예외 시간 세션은 해당 행에 두고 칸 안에 실제 시간을 표시한다.
   const starts = [...new Set(day.sessions.map((s) => s.start))].sort(
     (a, b) => toMinutes(a) - toMinutes(b),
@@ -51,33 +52,46 @@ export default function ProgramTimetable({ days = program2026 }: { days?: Progra
     const brand = ko ? s.nameKo : s.nameEn
     const speaker = (ko ? s.speakerKo : s.speakerEn) ?? ""
     const title = (ko ? s.titleKo : s.titleEn) ?? ""
-    const logoH = compact ? "h-10" : "h-11"
     const strong = compact ? "text-[12px]" : "text-[13px] lg:text-[14px]"
     const sub = compact ? "text-[11px]" : "text-[12px] lg:text-[13px]"
     const range = actualRange(s)
+    // 로고 자리는 모든 칸에서 같은 높이로 두어 이름이 같은 위치에서 시작하게 한다.
+    // 가로로 긴 로고는 정사각형 로고와 눈에 보이는 크기가 비슷하도록 높이를 낮춘다.
+    const slotH = compact ? "h-11" : "h-16"
+    const logoBox = s.logoWide
+      ? compact
+        ? "w-[96px] h-8"
+        : "w-[120px] h-11"
+      : compact
+        ? "w-11 h-11"
+        : "w-16 h-16"
     return (
-      <div className="flex flex-col items-center text-center gap-1.5">
+      <div className={`flex flex-col items-center text-center ${compact ? "gap-2" : "gap-3"}`}>
         {range && (
-          <div className={`${sub} font-bold text-[#7d0b1c] leading-none whitespace-nowrap`}>
+          <div
+            className={`${sub} font-bold text-[#7d0b1c] leading-none whitespace-nowrap ${compact ? "" : "absolute top-2 inset-x-0"}`}
+          >
             {range}
           </div>
         )}
-        {s.kind !== "lecture" && (
-          <div
-            className={`${s.logoWide ? "w-full max-w-[130px]" : compact ? "w-10" : "w-11"} ${logoH} flex items-center justify-center overflow-hidden`}
-            style={{ backgroundColor: s.logoBg ?? "#ffffff" }}
-          >
-            {s.logo && (
-              <Image
-                src={s.logo}
-                alt={brand}
-                width={s.logoWide ? 130 : 48}
-                height={48}
-                className={`w-full h-full object-contain ${s.logoWide ? "" : "p-1"}`}
-              />
-            )}
-          </div>
-        )}
+        <div className={`${slotH} w-full flex items-center justify-center`}>
+          {(s.kind !== "lecture" || s.logo) && (
+            <div
+              className={`${logoBox} flex items-center justify-center overflow-hidden`}
+              style={{ backgroundColor: s.logoBg ?? "#ffffff" }}
+            >
+              {s.logo && (
+                <Image
+                  src={s.logo}
+                  alt={brand}
+                  width={s.logoWide ? 120 : 64}
+                  height={s.logoWide ? 44 : 64}
+                  className={`w-full h-full object-contain ${s.logoWide ? "" : "p-1"}`}
+                />
+              )}
+            </div>
+          )}
+        </div>
         <div className={`${strong} font-bold leading-snug break-keep`}>
           {!compact && (
             <span title={p.kinds[s.kind]} className="mr-1 relative -top-px">
@@ -137,16 +151,13 @@ export default function ProgramTimetable({ days = program2026 }: { days?: Progra
               {HALLS.map((h) => at(start, h))
                 .filter((s): s is ProgramSession => !!s)
                 .map((s) => (
-                  <div
-                    key={s.hall}
-                    className="flex flex-col px-1.5 pt-0.5 pb-1"
-                  >
+                  <div key={s.hall} className="min-h-[140px] flex flex-col px-1.5 pt-0.5 pb-1">
                     <div className="flex items-center justify-center gap-1 text-[11px] font-semibold text-[#777] mb-1.5">
                       <Dot kind={s.kind} small />
                       <span className="sr-only">{p.kinds[s.kind]}</span>
                       {hallLabel(s.hall)}
                     </div>
-                    <div className="flex-1 flex flex-col justify-center">{cell(s, true)}</div>
+                    <div className="flex-1 flex flex-col justify-start">{cell(s, true)}</div>
                   </div>
                 ))}
             </div>
@@ -181,15 +192,18 @@ export default function ProgramTimetable({ days = program2026 }: { days?: Progra
         </thead>
         <tbody>
           {starts.map((start) => (
-            <tr key={start} className="border-b border-black/10 align-middle">
-              <td className="bg-[#f3f1ee] py-2 px-1 border-r border-black/15 whitespace-nowrap text-center">
+            <tr key={start} className="h-[176px] border-b border-black/10 align-top">
+              <td className="bg-[#f3f1ee] py-2 px-1 border-r border-black/15 whitespace-nowrap text-center align-middle">
                 <div className="text-[14px] font-bold">{start}</div>
                 <div className="text-[12px] text-[#888]">~ {endTime(start)}</div>
               </td>
               {HALLS.map((h) => {
                 const s = at(start, h)
                 return (
-                  <td key={h} className="px-2 py-2 border-r last:border-r-0 border-black/10">
+                  <td
+                    key={h}
+                    className="relative px-2 pt-8 pb-3 border-r last:border-r-0 border-black/10"
+                  >
                     {s && cell(s)}
                   </td>
                 )
