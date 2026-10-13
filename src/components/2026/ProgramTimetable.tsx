@@ -3,6 +3,7 @@
 import Image from "next/image"
 import { useState } from "react"
 import {
+  actualRange,
   endTime,
   HALLS,
   type ProgramDay,
@@ -37,7 +38,8 @@ export default function ProgramTimetable({ days = program2026 }: { days?: Progra
 
   const ko = lang === "ko"
   const hallLabel = (n: number) => p.hall.replace("{n}", String(n))
-  // 세션이 모두 90분이고 관끼리 90분씩 엇갈리므로 시작 시각 = 표의 한 행.
+  // 세션은 기본 90분이고 관끼리 90분씩 엇갈리므로 시작 시각 = 표의 한 행.
+  // 예외 시간 세션은 해당 행에 두고 칸 안에 실제 시간을 표시한다.
   const starts = [...new Set(day.sessions.map((s) => s.start))].sort(
     (a, b) => toMinutes(a) - toMinutes(b),
   )
@@ -52,8 +54,14 @@ export default function ProgramTimetable({ days = program2026 }: { days?: Progra
     const logoH = compact ? "h-10" : "h-11"
     const strong = compact ? "text-[12px]" : "text-[13px] lg:text-[14px]"
     const sub = compact ? "text-[11px]" : "text-[12px] lg:text-[13px]"
+    const range = actualRange(s)
     return (
       <div className="flex flex-col items-center text-center gap-1.5">
+        {range && (
+          <div className={`${sub} font-bold text-[#7d0b1c] leading-none whitespace-nowrap`}>
+            {range}
+          </div>
+        )}
         {s.kind !== "lecture" && (
           <div
             className={`${s.logoWide ? "w-full max-w-[130px]" : compact ? "w-10" : "w-11"} ${logoH} flex items-center justify-center overflow-hidden`}

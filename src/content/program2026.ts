@@ -1,10 +1,13 @@
-// 캐스크 카니발 2026 프로그램 시간표. 모든 세션은 90분.
+// 캐스크 카니발 2026 프로그램 시간표. 세션은 기본 90분이며,
+// 예외로 시간이 다른 세션은 해당 줄(start)에 두고 actualStart/actualEnd 로 실제 시간을 적는다.
 
 export type SessionKind = "masterclass" | "tasting" | "lecture"
 
 export interface ProgramSession {
   hall: 1 | 2 | 3 | 4 | 5 | 6
-  start: string // "HH:MM"
+  start: string // "HH:MM" (시간표의 줄)
+  actualStart?: string // 예외 시간: 줄과 실제 시간이 다를 때만
+  actualEnd?: string
   kind: SessionKind
   nameKo: string // 브랜드명 (강연은 빈 값)
   nameEn: string
@@ -147,8 +150,10 @@ export const program2026: ProgramDay[] = [
         logo: "/brands/korea-bourbon-whisk-e-y-club.png",
       },
       {
-        hall: 5,
+        hall: 6,
         start: "16:30",
+        actualStart: "17:00",
+        actualEnd: "18:00",
         kind: "lecture",
         nameKo: "",
         nameEn: "",
@@ -275,4 +280,9 @@ export function fromMinutes(min: number): string {
 
 export function endTime(start: string): string {
   return fromMinutes(toMinutes(start) + SESSION_MINUTES)
+}
+
+/** 줄의 기본 시간과 다른 실제 시간이 있으면 "17:00 – 18:00", 없으면 null. */
+export function actualRange(s: Pick<ProgramSession, "actualStart" | "actualEnd">): string | null {
+  return s.actualStart && s.actualEnd ? `${s.actualStart} – ${s.actualEnd}` : null
 }

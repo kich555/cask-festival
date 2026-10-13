@@ -61,7 +61,7 @@ export default function ProgramAdmin({
           <div className="flex-1">
             <h1 className="text-[17px] font-extrabold tracking-tight">프로그램 관리</h1>
             <p className="text-white/50 text-[12px] mt-0.5">
-              저장하면 프로그램 페이지와 홈 시간표에 바로 반영됩니다 · 모든 세션은 90분
+              저장하면 프로그램 페이지와 홈 시간표에 바로 반영됩니다 · 세션은 기본 90분 (예외는 실제 시간 입력)
             </p>
           </div>
           <button
@@ -126,6 +126,11 @@ export default function ProgramAdmin({
                           {r ? (
                             <>
                               <span className={`w-2 h-2 rounded-full ${KIND_DOT[r.kind]}`} />
+                              {r.actual_start && r.actual_end && (
+                                <span className="text-[11px] font-bold text-[#7d0b1c]">
+                                  {r.actual_start} – {r.actual_end}
+                                </span>
+                              )}
                               {r.logo && (
                                 // biome-ignore lint/performance/noImgElement: 관리자 썸네일
                                 <img

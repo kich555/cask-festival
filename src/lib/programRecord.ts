@@ -1,7 +1,12 @@
 // 프로그램 세션 DB 행 ↔ 화면용 데이터 변환과 관리자 입력 검증.
 // 클라이언트 컴포넌트도 import 하므로 서버 전용 코드를 두지 않는다.
 
-import type { ProgramDay, ProgramSession, SessionKind } from "@/content/program2026"
+import {
+  type ProgramDay,
+  type ProgramSession,
+  type SessionKind,
+  toMinutes,
+} from "@/content/program2026"
 
 export const PROGRAM_TABLE = "program_sessions"
 
@@ -10,6 +15,8 @@ export type ProgramSessionRow = {
   day: "sat" | "sun"
   hall: number
   start_time: string
+  actual_start: string | null
+  actual_end: string | null
   kind: SessionKind
   name_ko: string
   name_en: string
@@ -36,6 +43,8 @@ export function rowToSession(r: ProgramSessionRow): ProgramSession {
   return {
     hall: r.hall as ProgramSession["hall"],
     start: r.start_time,
+    actualStart: r.actual_start ?? undefined,
+    actualEnd: r.actual_end ?? undefined,
     kind: r.kind,
     nameKo: r.name_ko,
     nameEn: r.name_en,
@@ -77,6 +86,16 @@ export function parseSessionInput(raw: unknown): ParseResult {
   const start_time = text(r.start_time) ?? ""
   if (!/^[0-2]\d:[0-5]\d$/.test(start_time))
     return { ok: false, error: "시작 시간은 10:30 형식으로 입력해 주세요." }
+  const actual_start = text(r.actual_start)
+  const actual_end = text(r.actual_end)
+  if (!actual_start !== !actual_end)
+    return { ok: false, error: "실제 시간은 시작·종료를 모두 입력하거나 모두 비워 주세요." }
+  if (actual_start && actual_end) {
+    if (!/^[0-2]\d:[0-5]\d$/.test(actual_start) || !/^[0-2]\d:[0-5]\d$/.test(actual_end))
+      return { ok: false, error: "실제 시간은 17:00 형식으로 입력해 주세요." }
+    if (toMinutes(actual_start) >= toMinutes(actual_end))
+      return { ok: false, error: "실제 종료 시간이 시작 시간보다 늦어야 합니다." }
+  }
   const kind = r.kind as SessionKind
   if (!KINDS.includes(kind)) return { ok: false, error: "구분을 선택해 주세요." }
 
@@ -95,6 +114,8 @@ export function parseSessionInput(raw: unknown): ParseResult {
       day,
       hall,
       start_time,
+      actual_start,
+      actual_end,
       kind,
       name_ko,
       name_en: text(r.name_en) ?? "",

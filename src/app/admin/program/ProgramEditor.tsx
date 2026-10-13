@@ -40,6 +40,8 @@ export default function ProgramEditor({
     day: draft.day,
     hall: String(draft.hall),
     start_time: draft.start_time,
+    actual_start: row?.actual_start ?? "",
+    actual_end: row?.actual_end ?? "",
     kind: (row?.kind ?? "masterclass") as SessionKind,
     name_ko: row?.name_ko ?? "",
     name_en: row?.name_en ?? "",
@@ -193,6 +195,31 @@ export default function ProgramEditor({
               ))}
             </select>
           </label>
+
+          <div className="col-span-2 sm:col-span-4 grid grid-cols-2 sm:grid-cols-4 gap-3 items-end">
+            <label>
+              실제 시작 (예외)
+              <input
+                value={form.actual_start}
+                onChange={(e) => set("actual_start", e.target.value)}
+                placeholder="17:00"
+                className={inputCls}
+              />
+            </label>
+            <label>
+              실제 종료 (예외)
+              <input
+                value={form.actual_end}
+                onChange={(e) => set("actual_end", e.target.value)}
+                placeholder="18:00"
+                className={inputCls}
+              />
+            </label>
+            <p className="col-span-2 text-[12px] text-[#888] pb-2">
+              시간표 줄(시작 시간)과 실제 시간이 다를 때만 입력합니다. 칸 안에 실제 시간이
+              표시됩니다.
+            </p>
+          </div>
 
           <label className="col-span-2 sm:col-span-4">
             참가업체에서 불러오기
