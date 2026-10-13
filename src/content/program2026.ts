@@ -162,7 +162,7 @@ export const program2026: ProgramDay[] = [
     sessions: [
       {
         hall: 1,
-        start: "11:30",
+        start: "11:00",
         kind: "masterclass",
         nameKo: "위스키에이지",
         nameEn: "WhiskyAGE",
@@ -170,7 +170,7 @@ export const program2026: ProgramDay[] = [
       },
       {
         hall: 3,
-        start: "11:30",
+        start: "11:00",
         kind: "masterclass",
         nameKo: "칸파이카이",
         nameEn: "Kanpaikai",
@@ -179,7 +179,7 @@ export const program2026: ProgramDay[] = [
       },
       {
         hall: 5,
-        start: "11:30",
+        start: "11:00",
         kind: "masterclass",
         nameKo: "위스키내비",
         nameEn: "WhiskyNavi",
@@ -187,7 +187,7 @@ export const program2026: ProgramDay[] = [
       },
       {
         hall: 2,
-        start: "13:00",
+        start: "12:30",
         kind: "masterclass",
         nameKo: "고마가타케",
         nameEn: "Komagatake",
@@ -195,7 +195,7 @@ export const program2026: ProgramDay[] = [
       },
       {
         hall: 4,
-        start: "13:00",
+        start: "12:30",
         kind: "tasting",
         nameKo: "화심주조",
         nameEn: "HWASIMJUJO",
@@ -203,7 +203,7 @@ export const program2026: ProgramDay[] = [
       },
       {
         hall: 6,
-        start: "13:00",
+        start: "12:30",
         kind: "lecture",
         nameKo: "",
         nameEn: "",
@@ -212,7 +212,7 @@ export const program2026: ProgramDay[] = [
       },
       {
         hall: 1,
-        start: "14:30",
+        start: "14:00",
         kind: "masterclass",
         nameKo: "카메다 증류소",
         nameEn: "Kameda Distillery",
@@ -220,7 +220,7 @@ export const program2026: ProgramDay[] = [
       },
       {
         hall: 3,
-        start: "14:30",
+        start: "14:00",
         kind: "masterclass",
         nameKo: "한국 브랜디 협회",
         nameEn: "Korea Brandy Society",
@@ -228,7 +228,7 @@ export const program2026: ProgramDay[] = [
       },
       {
         hall: 5,
-        start: "14:30",
+        start: "14:00",
         kind: "masterclass",
         nameKo: "티앤티 토야마",
         nameEn: "T&T Toyama",
@@ -236,7 +236,7 @@ export const program2026: ProgramDay[] = [
       },
       {
         hall: 2,
-        start: "16:00",
+        start: "15:30",
         kind: "masterclass",
         nameKo: "스카웃드링크",
         nameEn: "Scout Drinks",
@@ -244,7 +244,7 @@ export const program2026: ProgramDay[] = [
       },
       {
         hall: 4,
-        start: "16:00",
+        start: "15:30",
         kind: "masterclass",
         nameKo: "러더",
         nameEn: "Rudder",
@@ -253,7 +253,7 @@ export const program2026: ProgramDay[] = [
       },
       {
         hall: 6,
-        start: "16:00",
+        start: "15:30",
         kind: "tasting",
         nameKo: "바 캠벨타운 로흐",
         nameEn: "Bar Campbelltoun Loch",
