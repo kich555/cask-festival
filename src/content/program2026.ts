@@ -27,6 +27,8 @@ export interface ProgramDay {
 
 export const SESSION_MINUTES = 90
 export const HALLS = [1, 2, 3, 4, 5, 6] as const
+/** 관 번호 → 표시 이름 (1 → ROOM A) */
+export const hallName = (n: number) => `ROOM ${"ABCDEF"[n - 1]}`
 
 // 강연자·제목이 정해지면 해당 세션에 아래처럼 필드를 추가하면 된다.
 //   speakerKo: "홍길동", speakerEn: "Gildong Hong",

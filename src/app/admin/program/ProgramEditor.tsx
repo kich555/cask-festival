@@ -1,7 +1,7 @@
 "use client"
 
 import { useRef, useState } from "react"
-import { HALLS, type SessionKind } from "@/content/program2026"
+import { HALLS, hallName, type SessionKind } from "@/content/program2026"
 import { KINDS, type ProgramSessionRow } from "@/lib/programRecord"
 import { type BrandOption, KIND_LABEL } from "./ProgramAdmin"
 
@@ -158,7 +158,7 @@ export default function ProgramEditor({
             </select>
           </label>
           <label>
-            관 *
+            ROOM *
             <select
               value={form.hall}
               onChange={(e) => set("hall", e.target.value)}
@@ -166,7 +166,7 @@ export default function ProgramEditor({
             >
               {HALLS.map((h) => (
                 <option key={h} value={h}>
-                  {h}관
+                  {hallName(h)}
                 </option>
               ))}
             </select>

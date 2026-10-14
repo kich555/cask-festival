@@ -6,6 +6,7 @@ import {
   actualRange,
   endTime,
   HALLS,
+  hallName,
   type ProgramDay,
   type ProgramSession,
   program2026,
@@ -37,7 +38,7 @@ export default function ProgramTimetable({ days = program2026 }: { days?: Progra
   const day = days.find((d) => d.id === dayId) ?? days[0]
 
   const ko = lang === "ko"
-  const hallLabel = (n: number) => p.hall.replace("{n}", String(n))
+  const hallLabel = hallName
   // 세션은 기본 90분이고 관끼리 90분씩 엇갈리므로 시작 시각 = 표의 한 행.
   // 행 높이를 고정해 두 요일 표의 칸 크기를 모두 같게 한다.
   // 예외 시간 세션은 해당 행에 두고 칸 안에 실제 시간을 표시한다.

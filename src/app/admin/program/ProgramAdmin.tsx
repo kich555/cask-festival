@@ -1,7 +1,7 @@
 "use client"
 
 import { useMemo, useState } from "react"
-import { endTime, HALLS, type SessionKind, toMinutes } from "@/content/program2026"
+import { endTime, HALLS, hallName, type SessionKind, toMinutes } from "@/content/program2026"
 import type { ProgramSessionRow } from "@/lib/programRecord"
 import ProgramEditor, { type Draft } from "./ProgramEditor"
 
@@ -102,7 +102,7 @@ export default function ProgramAdmin({
                 <th className="w-[100px] py-2.5 border-b border-r border-black/10">시간</th>
                 {HALLS.map((h) => (
                   <th key={h} className="py-2.5 border-b border-r last:border-r-0 border-black/10">
-                    {h}관
+                    {hallName(h)}
                   </th>
                 ))}
               </tr>
