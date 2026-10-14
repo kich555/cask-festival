@@ -2,7 +2,7 @@
 // 파일을 바꾸면 ZIP도 다시 만들 것: python3 scripts/build-exhibitor-assets.py
 
 export const ASSET_BASE = "/exhibitor-assets"
-export const ASSET_ZIP = { file: "cask-carnival-2026-design-assets.zip", size: "29.1MB" }
+export const ASSET_ZIP = { file: "cask-carnival-2026-design-assets.zip", size: "46.8MB" }
 
 export type DesignAsset = {
   label: string
@@ -43,13 +43,13 @@ export const ASSET_GROUPS: {
     title: "포스터 · 포맷 아웃라인",
     en: "Poster & Format",
     kind: "poster",
-    zip: { file: "cask-carnival-2026-posters.zip", size: "9.7MB" },
+    zip: { file: "cask-carnival-2026-posters.zip", size: "27.5MB" },
     zipLabel: "포스터·포맷 전체 다운로드",
     items: [
       { label: "Official Poster", file: "official-poster.png", size: "1.8MB" },
       { label: "Format Outline Red", file: "format-outline-red.png", size: "5.2MB" },
       { label: "Format Outline White", file: "format-outline-white.png", size: "2.3MB" },
     ],
-    source: { label: "포스터 · 포맷 아웃라인 (AI)", file: "cc2026-assets.ai", size: "1.2MB" },
+    source: { label: "포스터 · 포맷 아웃라인 (AI)", file: "cc2026-assets.ai", size: "19.2MB" },
   },
 ]
