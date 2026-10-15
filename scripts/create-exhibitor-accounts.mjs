@@ -58,6 +58,10 @@ const cellText = (v) =>
 const wb = new ExcelJS.Workbook()
 await wb.xlsx.readFile(FILE)
 const ws = wb.worksheets[0]
+// 열 순서가 다르면 업체명·아이디·비밀번호를 엉뚱하게 읽으므로 바로 멈춘다.
+const header = [1, 2, 3, 4].map((c) => cellText(ws.getRow(1).getCell(c).value))
+if (header[1] !== "업체명" || header[2] !== "아이디" || header[3] !== "비밀번호")
+  throw new Error(`엑셀 첫 줄은 "접속 주소 | 업체명 | 아이디 | 비밀번호" 여야 합니다. 지금: ${header.join(" | ")}`)
 
 const { data: brands, error: bErr } = await supabase.from("brands").select("slug,name_ko")
 if (bErr) throw bErr
