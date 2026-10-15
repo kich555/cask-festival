@@ -395,7 +395,7 @@ export default function ExhibitorAdmin({ rows }: { rows: ExhibitorOverview[] }) 
           <div className="hidden md:flex items-center gap-4 px-5 py-2 text-[12px] text-[#999] bg-black/[0.02]">
             <span className="w-[72px] text-center">부스 표기</span>
             <span className="w-[84px] text-center">부대시설</span>
-            <span className="w-48">업체명</span>
+            <span className="w-64 shrink-0">업체명</span>
             <span className="flex-1">신청 내용</span>
             <span className="w-28 text-right">금액</span>
             <span className="w-[72px] text-center">입금</span>
@@ -425,10 +425,10 @@ export default function ExhibitorAdmin({ rows }: { rows: ExhibitorOverview[] }) 
                       <Tag tone="gray">미신청</Tag>
                     )}
                   </span>
-                  <span className="w-48 shrink-0 font-bold truncate">
-                    {r.defaults.name_ko}
+                  <span className="w-64 shrink-0 flex items-baseline min-w-0 font-bold">
+                    <span className="truncate">{r.defaults.name_ko}</span>
                     {r.products?.length ? (
-                      <span className="ml-1.5 text-[11px] font-bold text-[#7d0b1c]">
+                      <span className="ml-1.5 shrink-0 whitespace-nowrap text-[11px] font-bold text-[#7d0b1c]">
                         출품 {r.products.length}
                       </span>
                     ) : null}
