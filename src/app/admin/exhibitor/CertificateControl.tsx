@@ -12,6 +12,7 @@ export default function CertificateControl({ loginId }: { loginId: string }) {
   const [files, setFiles] = useState<Cert[] | null>(null)
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState("")
+  const [dragOver, setDragOver] = useState(false)
 
   const load = useCallback(async () => {
     const res = await fetch(
@@ -72,13 +73,27 @@ export default function CertificateControl({ loginId }: { loginId: string }) {
   }
 
   return (
-    <div className="mt-4 rounded bg-white border border-black/10 p-3">
+    // biome-ignore lint/a11y/noStaticElementInteractions: 파일 끌어다 놓기 영역 (버튼으로도 올릴 수 있음)
+    <div
+      className={`mt-4 rounded border-2 border-dashed p-3 ${
+        dragOver ? "border-[#7d0b1c] bg-[#7d0b1c]/5" : "border-black/15 bg-white"
+      }`}
+      onDragOver={(e) => {
+        e.preventDefault()
+        setDragOver(true)
+      }}
+      onDragLeave={() => setDragOver(false)}
+      onDrop={(e) => {
+        e.preventDefault()
+        setDragOver(false)
+        if (!busy) upload(e.dataTransfer.files)
+      }}
+    >
       <div className="flex items-center justify-between gap-2 mb-2">
         <p className="font-bold">참가확인서</p>
         <label
-          className={`text-[13px] font-bold rounded px-3 py-1.5 ${
-            busy ? "bg-black/10 text-[#999]" : "bg-[#1a1a1a] text-white cursor-pointer"
-          }`}
+          className={`text-[13px] font-bold rounded px-3 py-1.5 $
+            busy ? "bg-black/10 text-[#999]" : "bg-[#1a1a1a] text-white cursor-pointer"`}
         >
           {busy ? "처리 중…" : "파일 올리기"}
           <input
@@ -96,7 +111,9 @@ export default function CertificateControl({ loginId }: { loginId: string }) {
       {files === null ? (
         <p className="text-[13px] text-[#999]">불러오는 중…</p>
       ) : files.length === 0 ? (
-        <p className="text-[13px] text-[#999]">올린 파일 없음</p>
+        <p className="text-[13px] text-[#999]">
+          올린 파일 없음 · 파일을 여기로 끌어다 놓아도 됩니다
+        </p>
       ) : (
         <ul className="space-y-1">
           {files.map((f) => (
@@ -116,6 +133,9 @@ export default function CertificateControl({ loginId }: { loginId: string }) {
           ))}
         </ul>
       )}
+      {files?.length ? (
+        <p className="text-[12px] text-[#aaa] mt-2">파일을 여기로 끌어다 놓아도 올라갑니다</p>
+      ) : null}
       {error && <p className="text-[13px] text-[#7d0b1c] mt-2">{error}</p>}
     </div>
   )

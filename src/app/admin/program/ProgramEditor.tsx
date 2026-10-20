@@ -57,6 +57,7 @@ export default function ProgramEditor({
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const fileRef = useRef<HTMLInputElement>(null)
+  const [dragOver, setDragOver] = useState(false)
 
   const set = (k: keyof typeof form, v: string | boolean) => setForm((f) => ({ ...f, [k]: v }))
   const previewLogo = brandLogo ?? row?.logo ?? null
@@ -255,7 +256,25 @@ export default function ProgramEditor({
             />
           </label>
 
-          <div className="col-span-2 sm:col-span-4 border border-black/10 rounded p-3 flex items-center gap-4">
+          {/* biome-ignore lint/a11y/noStaticElementInteractions: 파일 끌어다 놓기 영역 (버튼으로도 올릴 수 있음) */}
+          <div
+            className={`col-span-2 sm:col-span-4 rounded p-3 flex items-center gap-4 ${
+              row ? "border-2 border-dashed" : "border border-black/10"
+            } ${dragOver ? "border-[#7d0b1c] bg-[#7d0b1c]/5" : "border-black/15"}`}
+            onDragOver={(e) => {
+              if (!row) return
+              e.preventDefault()
+              setDragOver(true)
+            }}
+            onDragLeave={() => setDragOver(false)}
+            onDrop={(e) => {
+              if (!row) return
+              e.preventDefault()
+              setDragOver(false)
+              const f = e.dataTransfer.files[0]
+              if (f && !busy) upload(f)
+            }}
+          >
             <div
               className="w-24 h-16 shrink-0 rounded flex items-center justify-center overflow-hidden border border-black/5"
               style={{ backgroundColor: form.logo_bg || "#ffffff" }}
@@ -278,6 +297,9 @@ export default function ProgramEditor({
                   >
                     로고 파일 올리기
                   </button>
+                  <span className="self-center text-[12px] text-[#999]">
+                    또는 여기로 끌어다 놓기
+                  </span>
                   {row.logo && (
                     <button
                       type="button"

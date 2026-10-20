@@ -121,11 +121,85 @@ const LOG_KIND: Record<ExhibitorLogKind, { label: string; cls: string }> = {
   extra_change: { label: "부대시설 변경요청", cls: "text-[#8a6100]" },
   extra_cancel: { label: "변경요청 취소", cls: "text-[#888]" },
   booth_ack: { label: "[관리자] 수정요청 확인", cls: "text-[#1f5fa8]" },
+  booth_edit: { label: "[관리자] 업체명 수정", cls: "text-[#1f5fa8]" },
   extra_approve: { label: "[관리자] 변경 승인", cls: "text-[#1f5fa8]" },
   extra_reject: { label: "[관리자] 변경 반려", cls: "text-[#1f5fa8]" },
   payment_confirm: { label: "[관리자] 입금 확인", cls: "text-[#1f5fa8]" },
   payment_cancel: { label: "[관리자] 입금 확인 취소", cls: "text-[#1f5fa8]" },
   products: { label: "출품 제품 저장", cls: "text-[#555]" },
+}
+
+/** 관리자가 업체명을 직접 고친다 → 브랜드 정보와 부스 표기에 함께 반영. 수정 요청이 있으면 요청 값으로 채워 둔다. */
+function BoothEdit({ r }: { r: ExhibitorOverview }) {
+  const revised = r.booth_status === "revised"
+  const [open, setOpen] = useState(false)
+  const [ko, setKo] = useState((revised ? r.booth_name_ko : r.defaults.name_ko) ?? "")
+  const [en, setEn] = useState((revised ? r.booth_name_en : r.defaults.name_en) ?? "")
+  const [saving, setSaving] = useState(false)
+
+  async function save() {
+    setSaving(true)
+    try {
+      const res = await fetch(`/api/admin/exhibitor/${r.brand_slug}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "booth_edit", name_ko: ko, name_en: en }),
+      })
+      const data = await res.json()
+      if (!data.ok) throw new Error(data.error)
+      window.location.reload()
+    } catch (e) {
+      window.alert(e instanceof Error ? e.message : "저장하지 못했습니다.")
+      setSaving(false)
+    }
+  }
+
+  if (!open)
+    return (
+      <button
+        type="button"
+        onClick={() => setOpen(true)}
+        className={`${actionBtn} mt-3 border border-[#1f5fa8] text-[#1f5fa8] bg-white hover:bg-[#1f5fa8] hover:text-white`}
+      >
+        ✎ 부스 표기 직접 수정
+      </button>
+    )
+  const input =
+    "w-full bg-white border border-black/15 rounded px-3 py-2 text-[14px] outline-none focus:border-[#7d0b1c]"
+  return (
+    <div className="mt-3 rounded bg-white border border-black/10 p-3 space-y-2">
+      <label className="block text-[12px] text-[#777]">
+        한글명
+        <input value={ko} onChange={(e) => setKo(e.target.value)} className={input} />
+      </label>
+      <label className="block text-[12px] text-[#777]">
+        영문명
+        <input value={en} onChange={(e) => setEn(e.target.value)} className={input} />
+      </label>
+      <p className="text-[12px] text-[#999]">
+        저장하면 사이트 브랜드 정보(업체명)와 부스 표기에 바로 반영됩니다.
+        {revised && " 수정 요청도 확인 처리됩니다."}
+      </p>
+      <div className="flex gap-2">
+        <button
+          type="button"
+          disabled={saving || !ko.trim()}
+          onClick={save}
+          className={`${actionBtn} bg-[#1f5fa8] text-white`}
+        >
+          {saving ? "저장 중…" : "저장"}
+        </button>
+        <button
+          type="button"
+          disabled={saving}
+          onClick={() => setOpen(false)}
+          className={`${actionBtn} bg-black/5 text-[#555]`}
+        >
+          취소
+        </button>
+      </div>
+    </div>
+  )
 }
 
 /** 내역 한 줄: 무엇을 했는지 + 그때 보낸 내용 */
@@ -141,7 +215,7 @@ function LogEntry({ log }: { log: ExhibitorLogRow }) {
         <p>
           <span className={`font-bold ${k.cls}`}>{k.label}</span>
         </p>
-        {log.kind === "booth_revise" && (
+        {(log.kind === "booth_revise" || log.kind === "booth_edit") && (
           <p className="mt-1 text-[#555]">
             한글명 <b>{d.name_ko}</b> · 영문명 <b>{d.name_en || "(없음)"}</b>
             {d.note && <span className="block mt-1 whitespace-pre-wrap">메모: {d.note}</span>}
@@ -502,6 +576,7 @@ export default function ExhibitorAdmin({ rows }: { rows: ExhibitorOverview[] }) 
                           <Diff label="영문명" before={null} after={r.defaults.name_en} />
                         </>
                       )}
+                      <BoothEdit r={r} />
                       <p className="mt-2 text-[12px] text-[#999]">
                         부스 {r.defaults.booths}개 · 아이디 {r.login_id}
                       </p>

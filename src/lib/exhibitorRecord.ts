@@ -28,6 +28,7 @@ export type ExhibitorLogKind =
   | "extra_change" // 변경 요청 (승인 대기)
   | "extra_cancel" // 업체가 변경 요청 취소
   | "booth_ack" // 관리자: 수정 요청 확인
+  | "booth_edit" // 관리자: 부스 표기 직접 수정
   | "extra_approve" // 관리자: 변경 승인
   | "extra_reject" // 관리자: 변경 반려
   | "payment_confirm" // 관리자: 입금 확인
