@@ -11,6 +11,8 @@ import {
   hasExtra,
   itemsText,
   paymentStatus,
+  vatOf,
+  withVat,
   won,
 } from "@/lib/exhibitorRecord"
 import CertificateControl from "./CertificateControl"
@@ -101,9 +103,12 @@ function ExtraDetail({ req }: { req: ExtraRequest }) {
       ))}
       {rows.length === 0 && <p className="text-[#999]">미신청 (모든 항목 0개)</p>}
       <div className="flex justify-between border-t border-black/10 mt-1.5 pt-1.5 font-bold">
-        <span>합계</span>
-        <span className="tabular-nums">{won(req.total)}</span>
+        <span>합계 (VAT 포함)</span>
+        <span className="tabular-nums">{won(withVat(req.total))}</span>
       </div>
+      <p className="text-right text-[12px] text-[#999] tabular-nums">
+        공급가 {won(req.total)} + VAT {won(vatOf(req.total))}
+      </p>
       {req.water_location && (
         <p className="mt-2">
           <b>급배수 위치</b> {req.water_location}
@@ -223,12 +228,12 @@ function LogEntry({ log }: { log: ExhibitorLogRow }) {
         )}
         {log.kind === "products" && <p className="mt-1 text-[#555]">{d.count ?? 0}개</p>}
         {log.kind === "payment_confirm" && d.total ? (
-          <p className="mt-1 text-[#555]">{won(d.total)}</p>
+          <p className="mt-1 text-[#555]">{won(withVat(d.total))} (VAT 포함)</p>
         ) : null}
         {(log.kind === "extra" || log.kind === "extra_change") && (
           <p className="mt-1 text-[#555]">
             {itemsText(d.items ?? {}) || "모든 항목 0개"}
-            {d.total ? <b className="ml-2 text-[#1a1a1a]">{won(d.total)}</b> : null}
+            {d.total ? <b className="ml-2 text-[#1a1a1a]">{won(withVat(d.total))}</b> : null}
             {d.water_location && (
               <span className="block mt-1">급배수 위치: {d.water_location}</span>
             )}
@@ -257,12 +262,13 @@ function PaymentControl({
       <p className="font-bold mb-2">입금</p>
       {r.paid_at && (
         <p className="text-[13px] text-[#2e7d32] font-bold">
-          {formatDate(r.paid_at)} {won(pay.paid)} 입금 확인
+          {formatDate(r.paid_at)} {won(withVat(pay.paid))} 입금 확인
         </p>
       )}
       {pay.kind === "partial" && (
         <p className="text-[13px] text-[#8a6100] font-bold mt-1">
-          변경 승인으로 {won(pay.due)} 추가 입금 필요 (현재 합계 {won(pay.total)})
+          변경 승인으로 {won(withVat(pay.due))} 추가 입금 필요 (현재 합계 {won(withVat(pay.total))},
+          VAT 포함)
         </p>
       )}
       <div className="mt-2 flex flex-wrap gap-2">
@@ -274,14 +280,14 @@ function PaymentControl({
               act(
                 r.brand_slug,
                 "payment_confirm",
-                `${name}의 입금을 확인 처리할까요?\n금액: ${won(pay.total)}\n업체 화면에 '입금이 확인되었습니다'가 표시됩니다.`,
+                `${name}의 입금을 확인 처리할까요?\n금액: ${won(withVat(pay.total))} (VAT 포함)\n업체 화면에 '입금이 확인되었습니다'가 표시됩니다.`,
               )
             }
             className={`${actionBtn} bg-[#2e7d32] text-white`}
           >
             {pay.kind === "partial"
-              ? `추가 입금 확인 (합계 ${won(pay.total)})`
-              : `입금 확인 (${won(pay.total)})`}
+              ? `추가 입금 확인 (합계 ${won(withVat(pay.total))})`
+              : `입금 확인 (${won(withVat(pay.total))})`}
           </button>
         )}
         {r.paid_at && (
@@ -401,7 +407,7 @@ export default function ExhibitorAdmin({ rows }: { rows: ExhibitorOverview[] }) 
             <h1 className="text-[22px] font-extrabold">부대시설 신청</h1>
             <p className="text-[13px] text-[#777] mt-1">
               계정 {rows.length}개 · 부스 확인 {rows.filter((r) => r.booth_status).length}곳 ·
-              부대시설 신청 {extraRows.length}곳 ({won(grand)}) · 업체용 주소{" "}
+              부대시설 신청 {extraRows.length}곳 ({won(withVat(grand))}, VAT 포함) · 업체용 주소{" "}
               <a href="/exhibitor" target="_blank" className="underline" rel="noopener">
                 /exhibitor
               </a>
@@ -472,7 +478,7 @@ export default function ExhibitorAdmin({ rows }: { rows: ExhibitorOverview[] }) 
             <span className="w-[84px] text-center">부대시설</span>
             <span className="w-64 shrink-0">업체명</span>
             <span className="flex-1">신청 내용</span>
-            <span className="w-28 text-right">금액</span>
+            <span className="w-28 text-right">금액(VAT 포함)</span>
             <span className="w-[72px] text-center">입금</span>
             <span className="w-24 text-right">최근 활동</span>
           </div>
@@ -512,7 +518,7 @@ export default function ExhibitorAdmin({ rows }: { rows: ExhibitorOverview[] }) 
                     {hasExtra(r) ? itemsText(cur.items) : ""}
                   </span>
                   <span className="shrink-0 w-28 text-right text-[14px] font-bold tabular-nums">
-                    {cur.total ? won(cur.total) : ""}
+                    {cur.total ? won(withVat(cur.total)) : ""}
                   </span>
                   <span className="w-[72px] shrink-0 flex justify-center">{payTag(r)}</span>
                   <span className="hidden md:block shrink-0 w-24 text-right text-[12px] text-[#999] tabular-nums">

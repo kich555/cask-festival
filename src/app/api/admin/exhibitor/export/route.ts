@@ -2,7 +2,7 @@ import ExcelJS from "exceljs"
 import { NextResponse } from "next/server"
 import { isAdminRequest } from "@/lib/adminAuth"
 import { loadExhibitorOverview } from "@/lib/exhibitorAdmin"
-import { EXTRA_ITEMS, extraTotal, paymentStatus } from "@/lib/exhibitorRecord"
+import { EXTRA_ITEMS, extraTotal, paymentStatus, vatOf, withVat } from "@/lib/exhibitorRecord"
 
 export const runtime = "nodejs"
 
@@ -25,13 +25,15 @@ export async function GET() {
     { header: "표기 요청메모", width: 30 },
     { header: "부스 확인일시", width: 20 },
     ...EXTRA_ITEMS.map((i) => ({ header: `${i.label}(${i.unit})`, width: 14 })),
-    { header: "합계(원)", width: 14 },
+    { header: "공급가(원)", width: 14 },
+    { header: "VAT(원)", width: 12 },
+    { header: "합계 VAT포함(원)", width: 16 },
     { header: "급배수 위치", width: 30 },
     { header: "기타 요청사항", width: 40 },
     { header: "추가신청 일시", width: 20 },
     { header: "변경 승인대기", width: 14 },
     { header: "입금 상태", width: 12 },
-    { header: "입금 확인액(원)", width: 14 },
+    { header: "입금 확인액 VAT포함(원)", width: 20 },
     { header: "입금 확인일시", width: 20 },
   ]
   sheet.getRow(1).font = { bold: true, color: { argb: "FFFFFFFF" } }
@@ -49,7 +51,13 @@ export async function GET() {
       r.booth_note ?? "",
       dt(r.booth_confirmed_at),
       ...EXTRA_ITEMS.map((i) => r.extra_items?.[i.key] ?? ""),
-      r.extra_submitted_at ? extraTotal(r.extra_items) : "",
+      ...(r.extra_submitted_at
+        ? [
+            extraTotal(r.extra_items),
+            vatOf(extraTotal(r.extra_items)),
+            withVat(extraTotal(r.extra_items)),
+          ]
+        : ["", "", ""]),
       r.water_location ?? "",
       r.extra_note ?? "",
       dt(r.extra_submitted_at),
@@ -57,7 +65,7 @@ export async function GET() {
       { none: "", unpaid: "입금대기", paid: "입금확인", partial: "추가입금 필요" }[
         paymentStatus(r).kind
       ],
-      r.paid_at ? (r.paid_amount ?? 0) : "",
+      r.paid_at ? withVat(r.paid_amount ?? 0) : "",
       dt(r.paid_at),
     ])
   }

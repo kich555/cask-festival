@@ -161,6 +161,9 @@ export function extraTotal(items: ExtraItems) {
 }
 
 export const won = (n: number) => `${n.toLocaleString("ko-KR")}원`
+/** 부대시설 금액은 VAT 별도. 관리자 화면·엑셀은 세금계산서 기준(VAT 10% 포함)으로 보여준다. */
+export const vatOf = (n: number) => Math.round(n / 10)
+export const withVat = (n: number) => n + vatOf(n)
 
 /** 현재 접수된(승인된) 부대시설 신청 내용 */
 export function currentExtra(s: ExhibitorState): ExtraRequest {
