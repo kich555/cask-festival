@@ -449,6 +449,7 @@ export default function ExhibitorForm({ state: initial, defaults }: Props) {
           className="mt-2"
           items={[
             "필요한 항목의 수량을 입력해 주십시오. 전기 1kW는 부스당 기본 제공됩니다.",
+            "모든 금액은 VAT 별도입니다.",
             "최초 신청은 제출 즉시 접수되며, 이후 변경 사항은 사무국 승인 후 반영됩니다.",
             "추가로 필요한 항목이 없으시면 입력하지 않으셔도 괜찮습니다.",
           ]}
@@ -542,7 +543,9 @@ export default function ExhibitorForm({ state: initial, defaults }: Props) {
         </ul>
 
         <div className="flex items-baseline justify-between mt-4">
-          <span className="text-[15px] font-bold">합계</span>
+          <span className="text-[15px] font-bold">
+            합계 <span className="text-[12px] font-normal text-[#888]">VAT 별도</span>
+          </span>
           <span className="text-[22px] font-extrabold text-[#7d0b1c] tabular-nums">
             {won(formTotal)}
           </span>

@@ -99,7 +99,9 @@ export function ExtraSummary({ req }: { req: ExtraRequest }) {
         {rows.length === 0 && <li className="py-2.5 text-[#888]">추가 신청 항목 없음</li>}
       </ul>
       <div className="flex justify-between py-2.5 font-extrabold">
-        <span>합계</span>
+        <span>
+          합계 <span className="text-[12px] font-normal text-[#888]">VAT 별도</span>
+        </span>
         <span className="tabular-nums text-[#7d0b1c]">{won(req.total)}</span>
       </div>
       {req.water_location && (
