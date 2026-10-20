@@ -99,10 +99,13 @@ export function ExtraSummary({ req }: { req: ExtraRequest }) {
         {rows.length === 0 && <li className="py-2.5 text-[#888]">추가 신청 항목 없음</li>}
       </ul>
       <div className="flex justify-between py-2.5 font-extrabold">
-        <span>
-          합계 <span className="text-[12px] font-normal text-[#888]">VAT 별도</span>
+        <span>합계</span>
+        <span className="tabular-nums text-[#7d0b1c]">
+          {won(req.total)}
+          <span className="ml-1.5 align-middle text-[13px] font-bold text-[#7d0b1c] border border-[#7d0b1c]/40 rounded px-1.5 py-0.5">
+            VAT 별도
+          </span>
         </span>
-        <span className="tabular-nums text-[#7d0b1c]">{won(req.total)}</span>
       </div>
       {req.water_location && (
         <p className="text-[14px] text-[#555]">급배수 설치 위치: {req.water_location}</p>
@@ -174,6 +177,9 @@ export function PaymentBox({ total, state }: { total: number; state: ExhibitorSt
             </dt>
             <dd className="text-[20px] font-extrabold tabular-nums">
               {won(pay.kind === "partial" ? Math.max(total - pay.paid, 0) : total)}
+              <span className="ml-1.5 align-middle text-[13px] font-bold text-[#7d0b1c] border border-[#7d0b1c]/40 rounded px-1.5 py-0.5">
+                VAT 별도
+              </span>
             </dd>
           </div>
         )}
