@@ -6,7 +6,7 @@ import { ASSET_BASE, ASSET_GROUPS, ASSET_ZIP, type DesignAsset } from "./designA
 
 const url = (file: string) => `${ASSET_BASE}/${file}`
 
-function DownloadIcon({ className = "w-4 h-4" }: { className?: string }) {
+export function DownloadIcon({ className = "w-4 h-4" }: { className?: string }) {
   return (
     <svg
       viewBox="0 0 20 20"
@@ -24,7 +24,7 @@ function DownloadIcon({ className = "w-4 h-4" }: { className?: string }) {
 }
 
 /** 항목별 다운로드 버튼 모양. 칸 전체가 링크라 실제 요소는 span. */
-function ItemBtn({ dark = false }: { dark?: boolean }) {
+export function ItemBtn({ dark = false }: { dark?: boolean }) {
   return (
     <span
       className={`shrink-0 inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-[12px] font-bold transition-colors ${
@@ -119,24 +119,20 @@ export default function DesignAssets() {
   return (
     <div className="bg-white border border-black/10 rounded-lg overflow-hidden">
       {/* A4 가이드와 같은 빨간 헤더 밴드 */}
-      <div className="relative bg-[#7D0B1C] text-white overflow-hidden px-6 md:px-10 pt-7 pb-8">
-        <div className="relative flex justify-between gap-4 text-[13px] md:text-[14px]">
-          <p>Brand Assets</p>
-          <p>CASK CARNIVAL 2026</p>
-        </div>
+      <div className="relative bg-[#7D0B1C] text-white overflow-hidden px-6 md:px-10 pt-5 pb-5">
         <TintedLogo
           color="#FFFFFF"
           variant="text"
-          className="relative w-[220px] md:w-[260px] mx-auto mt-2"
+          className="relative w-[160px] md:w-[190px] mx-auto"
         />
-        <div className="relative mt-4 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
-          <p className="text-[13px] text-white/75 leading-relaxed">
+        <div className="relative mt-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+          <p className="text-[13px] md:text-[14px] text-white/75 leading-relaxed">
             부스 제작·홍보물에 사용하실 수 있는 로고·포스터와 색상·서체 가이드입니다.
           </p>
           <a
             href={url(ASSET_ZIP.file)}
             download
-            className="shrink-0 flex items-center justify-center gap-2 bg-white text-[#7D0B1C] rounded px-5 py-3 text-[14px] font-bold hover:bg-[#F2F2F2]"
+            className="shrink-0 flex items-center justify-center gap-2 bg-white text-[#7D0B1C] rounded px-4 py-2 text-[14px] font-bold hover:bg-[#F2F2F2]"
           >
             <DownloadIcon />
             전체 다운로드

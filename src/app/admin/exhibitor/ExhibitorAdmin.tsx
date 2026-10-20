@@ -13,6 +13,7 @@ import {
   paymentStatus,
   won,
 } from "@/lib/exhibitorRecord"
+import CertificateControl from "./CertificateControl"
 
 function formatDate(v: string) {
   return new Date(v).toLocaleString("ko-KR", {
@@ -520,6 +521,7 @@ export default function ExhibitorAdmin({ rows }: { rows: ExhibitorOverview[] }) 
                         <p className="text-[#999]">미신청</p>
                       )}
                       <PaymentControl r={r} busy={busy} act={act} />
+                      <CertificateControl loginId={r.login_id} />
                       {pending && (
                         <div className="mt-4 rounded border-2 border-[#f0ad4e]/60 bg-white p-3">
                           <p className="font-bold text-[#8a6100] mb-1">

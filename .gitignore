@@ -39,3 +39,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# 업체 참가확인서 원본 (Supabase 비공개 버킷에 보관, git 에 넣지 않음)
+/exhibitor-certificates/
