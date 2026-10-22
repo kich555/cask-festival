@@ -5,6 +5,7 @@ export interface Content2026 {
   nav: {
     about: string
     theme: string
+    floorplan: string
     program: string
     register: string
     brands: string
@@ -66,6 +67,23 @@ export interface Content2026 {
     archiveEyebrow: string
     archiveTitle: string
     notesTitle: string
+  }
+  floorP: {
+    title: string
+    subtitle: string
+    searchPh: string
+    noResult: string
+    booth: string
+    booths: string
+    facility: string
+    facilities: string
+    alsoAt: string
+    mapHint: string
+    close: string
+    program: string
+    noProgram: string
+    soon: string
+    ok: string
   }
   programP: {
     title: string
@@ -155,6 +173,7 @@ export const content2026: Record<"ko" | "en", Content2026> = {
     nav: {
       about: "행사 소개",
       theme: "테마 소개",
+      floorplan: "부스 배치도",
       program: "프로그램",
       register: "참가 업체 모집",
       brands: "참가 업체",
@@ -295,6 +314,23 @@ export const content2026: Record<"ko" | "en", Content2026> = {
       archiveTitle: "목록",
       notesTitle: "TASTING NOTES",
     },
+    floorP: {
+      title: "부스 배치도",
+      subtitle: "참가 업체 부스 위치를 확인하세요.",
+      searchPh: "업체명 또는 부스 번호 검색",
+      noResult: "검색 결과가 없습니다.",
+      booth: "부스",
+      booths: "부스",
+      facility: "시설",
+      facilities: "시설",
+      alsoAt: "다른 부스",
+      mapHint: "두 손가락 또는 두 번 탭으로 확대",
+      close: "닫기",
+      program: "프로그램",
+      noProgram: "예정된 프로그램이 없습니다.",
+      soon: "추후 공개 예정입니다.",
+      ok: "확인",
+    },
     programP: {
       title: "프로그램",
       subtitle: "캐스크 카니발 2026 프로그램 상세 일정 및 세부 정보",
@@ -383,6 +419,7 @@ export const content2026: Record<"ko" | "en", Content2026> = {
     nav: {
       about: "About",
       theme: "Themes",
+      floorplan: "Floor Plan",
       program: "Program",
       register: "Register",
       brands: "Exhibitors",
@@ -521,6 +558,23 @@ export const content2026: Record<"ko" | "en", Content2026> = {
       archiveEyebrow: "Theme Archive",
       archiveTitle: "Archive",
       notesTitle: "TASTING NOTES",
+    },
+    floorP: {
+      title: "Floor Plan",
+      subtitle: "Find where each exhibitor is.",
+      searchPh: "Search brand or booth no.",
+      noResult: "No results.",
+      booth: "Booth",
+      booths: "Booths",
+      facility: "Facility",
+      facilities: "Facilities",
+      alsoAt: "Also at",
+      mapHint: "Pinch or double-tap to zoom.",
+      close: "Close",
+      program: "Program",
+      noProgram: "No sessions scheduled.",
+      soon: "Coming soon.",
+      ok: "OK",
     },
     programP: {
       title: "Program",

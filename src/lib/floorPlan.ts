@@ -1,0 +1,1181 @@
+// 부스 배치도 데이터와 순수 로직. 서버·클라이언트가 함께 쓴다.
+// 도면은 정사각형 격자이고, 부스 하나가 기본 BOOTH×BOOTH 칸(3×3)이다. 룸·구역은 칸 단위로
+// 더 세밀하게 크기를 맞출 수 있다. 관리자가 격자 위에 배치하고, 공개 페이지는 그대로 그린다.
+// 좌표·크기는 모두 칸 단위 정수.
+
+/** 한 칸을 그릴 때의 SVG 단위 크기 */
+export const CELL = 10
+/** 부스 한 변의 칸 수 */
+export const BOOTH = 3
+/** 저장 형식의 격자 배율. 예전(부스 = 1칸) 파일은 grid 가 없어 읽을 때 BOOTH 배로 늘린다 */
+const GRID = BOOTH
+
+export type ItemType = "booth" | "room" | "zone" | "toilet" | "info" | "entrance" | "exit"
+
+export type FloorItem = {
+  id: string
+  type: ItemType
+  /** 부스 번호 (부스만) */
+  no: string
+  x: number
+  y: number
+  w: number
+  h: number
+  /** 참가업체 slug (부스만). 있으면 브랜드 정보의 이름·로고를 쓴다 */
+  brand: string | null
+  ko: string
+  en: string
+}
+
+export type Layout = { grid: number; cols: number; rows: number; items: FloorItem[] }
+
+export type Rect = { x: number; y: number; w: number; h: number }
+
+export const ITEM_TYPES: Record<
+  ItemType,
+  { label: string; ko: string; en: string; walkable: boolean }
+> = {
+  booth: { label: "부스", ko: "", en: "", walkable: false },
+  room: { label: "룸", ko: "ROOM", en: "ROOM", walkable: false },
+  zone: { label: "구역(라운지 등)", ko: "구역", en: "ZONE", walkable: true },
+  toilet: { label: "화장실", ko: "화장실", en: "RESTROOM", walkable: false },
+  info: { label: "인포메이션", ko: "인포", en: "INFO", walkable: false },
+  entrance: { label: "입구", ko: "입구", en: "ENTRANCE", walkable: true },
+  exit: { label: "출구", ko: "출구", en: "EXIT", walkable: true },
+}
+
+export const LIMITS = { minCols: 18, maxCols: 180, minRows: 18, maxRows: 180 }
+
+/** 처음 도면(CC2026_floor_plan)을 격자에 옮긴 배치 */
+export const DEFAULT_LAYOUT: Layout = {
+  grid: GRID,
+  cols: 66,
+  rows: 51,
+  items: [
+    {
+      id: "room-a",
+      type: "room",
+      no: "",
+      x: 6,
+      y: 0,
+      w: 6,
+      h: 9,
+      brand: null,
+      ko: "ROOM A",
+      en: "ROOM A",
+    },
+    {
+      id: "room-b",
+      type: "room",
+      no: "",
+      x: 12,
+      y: 0,
+      w: 9,
+      h: 9,
+      brand: null,
+      ko: "ROOM B",
+      en: "ROOM B",
+    },
+    {
+      id: "room-c",
+      type: "room",
+      no: "",
+      x: 24,
+      y: 0,
+      w: 6,
+      h: 9,
+      brand: null,
+      ko: "ROOM C",
+      en: "ROOM C",
+    },
+    {
+      id: "room-d",
+      type: "room",
+      no: "",
+      x: 30,
+      y: 0,
+      w: 6,
+      h: 9,
+      brand: null,
+      ko: "ROOM D",
+      en: "ROOM D",
+    },
+    {
+      id: "room-e",
+      type: "room",
+      no: "",
+      x: 36,
+      y: 0,
+      w: 9,
+      h: 9,
+      brand: null,
+      ko: "ROOM E",
+      en: "ROOM E",
+    },
+    {
+      id: "room-f",
+      type: "room",
+      no: "",
+      x: 45,
+      y: 0,
+      w: 6,
+      h: 9,
+      brand: null,
+      ko: "ROOM F",
+      en: "ROOM F",
+    },
+    {
+      id: "b101",
+      type: "booth",
+      no: "B01",
+      x: 6,
+      y: 12,
+      w: 3,
+      h: 3,
+      brand: null,
+      ko: "CRAFT BROS",
+      en: "CRAFT BROS",
+    },
+    {
+      id: "b102",
+      type: "booth",
+      no: "B02",
+      x: 9,
+      y: 12,
+      w: 3,
+      h: 3,
+      brand: "chusa",
+      ko: "",
+      en: "",
+    },
+    {
+      id: "b103",
+      type: "booth",
+      no: "B03",
+      x: 12,
+      y: 12,
+      w: 3,
+      h: 3,
+      brand: "wonseok-whisky-distillery",
+      ko: "",
+      en: "",
+    },
+    {
+      id: "b104",
+      type: "booth",
+      no: "B04",
+      x: 15,
+      y: 12,
+      w: 3,
+      h: 3,
+      brand: "jinmac-distillery",
+      ko: "",
+      en: "",
+    },
+    {
+      id: "b105",
+      type: "booth",
+      no: "B05",
+      x: 18,
+      y: 12,
+      w: 3,
+      h: 3,
+      brand: "kimchangsoo-whisky-distillery",
+      ko: "",
+      en: "",
+    },
+    {
+      id: "b106",
+      type: "booth",
+      no: "B06",
+      x: 24,
+      y: 12,
+      w: 3,
+      h: 3,
+      brand: "waoak-distillery",
+      ko: "",
+      en: "",
+    },
+    {
+      id: "b107",
+      type: "booth",
+      no: "B07",
+      x: 27,
+      y: 12,
+      w: 3,
+      h: 3,
+      brand: "hwasimjujo",
+      ko: "",
+      en: "",
+    },
+    {
+      id: "b108",
+      type: "booth",
+      no: "B08",
+      x: 30,
+      y: 12,
+      w: 3,
+      h: 3,
+      brand: "corevest",
+      ko: "",
+      en: "",
+    },
+    {
+      id: "b109",
+      type: "booth",
+      no: "B09",
+      x: 33,
+      y: 12,
+      w: 3,
+      h: 3,
+      brand: "taepyung-brewing",
+      ko: "",
+      en: "",
+    },
+    {
+      id: "b110",
+      type: "booth",
+      no: "B10",
+      x: 36,
+      y: 12,
+      w: 3,
+      h: 3,
+      brand: "seoul-fermentary",
+      ko: "",
+      en: "",
+    },
+    {
+      id: "b111",
+      type: "booth",
+      no: "B11",
+      x: 39,
+      y: 12,
+      w: 3,
+      h: 3,
+      brand: "danong-bio",
+      ko: "",
+      en: "",
+    },
+    {
+      id: "b112",
+      type: "booth",
+      no: "B12",
+      x: 42,
+      y: 12,
+      w: 3,
+      h: 3,
+      brand: "willowwood",
+      ko: "",
+      en: "",
+    },
+    {
+      id: "b113",
+      type: "booth",
+      no: "B13",
+      x: 54,
+      y: 12,
+      w: 3,
+      h: 3,
+      brand: "bomnae-fermentation-technology",
+      ko: "",
+      en: "",
+    },
+    {
+      id: "b114",
+      type: "booth",
+      no: "B14",
+      x: 57,
+      y: 12,
+      w: 3,
+      h: 3,
+      brand: "brewkorea",
+      ko: "",
+      en: "",
+    },
+    {
+      id: "b201",
+      type: "booth",
+      no: "C01",
+      x: 9,
+      y: 21,
+      w: 3,
+      h: 3,
+      brand: "t-t-toyama",
+      ko: "",
+      en: "",
+    },
+    {
+      id: "b202",
+      type: "booth",
+      no: "C02",
+      x: 12,
+      y: 21,
+      w: 3,
+      h: 3,
+      brand: "saburomaru-distillery",
+      ko: "",
+      en: "",
+    },
+    {
+      id: "b203",
+      type: "booth",
+      no: "C03",
+      x: 15,
+      y: 21,
+      w: 3,
+      h: 3,
+      brand: "dram-mars-whisky",
+      ko: "",
+      en: "",
+    },
+    {
+      id: "b204",
+      type: "booth",
+      no: "C04",
+      x: 18,
+      y: 21,
+      w: 3,
+      h: 3,
+      brand: "kameda-distillery",
+      ko: "",
+      en: "",
+    },
+    {
+      id: "b205",
+      type: "booth",
+      no: "C05",
+      x: 9,
+      y: 24,
+      w: 3,
+      h: 3,
+      brand: "the-whiskyfind",
+      ko: "",
+      en: "",
+    },
+    {
+      id: "b206",
+      type: "booth",
+      no: "C06",
+      x: 12,
+      y: 24,
+      w: 3,
+      h: 3,
+      brand: "whiskyage",
+      ko: "",
+      en: "",
+    },
+    {
+      id: "b207",
+      type: "booth",
+      no: "C07",
+      x: 15,
+      y: 24,
+      w: 3,
+      h: 3,
+      brand: "a-p-a-asiapalate",
+      ko: "",
+      en: "",
+    },
+    {
+      id: "b208",
+      type: "booth",
+      no: "C08",
+      x: 18,
+      y: 24,
+      w: 3,
+      h: 3,
+      brand: "omywhisky",
+      ko: "",
+      en: "",
+    },
+    {
+      id: "b301",
+      type: "booth",
+      no: "D01",
+      x: 27,
+      y: 21,
+      w: 3,
+      h: 3,
+      brand: "gakkogawa-distillery",
+      ko: "",
+      en: "",
+    },
+    {
+      id: "b302",
+      type: "booth",
+      no: "D02",
+      x: 30,
+      y: 21,
+      w: 3,
+      h: 3,
+      brand: "sakurao-distillery",
+      ko: "",
+      en: "",
+    },
+    {
+      id: "b303",
+      type: "booth",
+      no: "D03",
+      x: 33,
+      y: 21,
+      w: 3,
+      h: 3,
+      brand: "kuju-distillery",
+      ko: "",
+      en: "",
+    },
+    {
+      id: "b304",
+      type: "booth",
+      no: "D04",
+      x: 36,
+      y: 21,
+      w: 3,
+      h: 3,
+      brand: "kameda-distillery",
+      ko: "",
+      en: "",
+    },
+    {
+      id: "b305",
+      type: "booth",
+      no: "D05",
+      x: 27,
+      y: 24,
+      w: 3,
+      h: 3,
+      brand: "bar-parkmore-bar-caol-ila",
+      ko: "",
+      en: "",
+    },
+    {
+      id: "b306",
+      type: "booth",
+      no: "D06",
+      x: 30,
+      y: 24,
+      w: 3,
+      h: 3,
+      brand: "chief-whisky",
+      ko: "",
+      en: "",
+    },
+    {
+      id: "b307",
+      type: "booth",
+      no: "D07",
+      x: 33,
+      y: 24,
+      w: 3,
+      h: 3,
+      brand: "korea-brandy-society",
+      ko: "",
+      en: "",
+    },
+    {
+      id: "b308",
+      type: "booth",
+      no: "D08",
+      x: 36,
+      y: 24,
+      w: 3,
+      h: 3,
+      brand: "whiskylabel-kr",
+      ko: "",
+      en: "",
+    },
+    {
+      id: "b401",
+      type: "booth",
+      no: "E01",
+      x: 45,
+      y: 21,
+      w: 3,
+      h: 3,
+      brand: "jizake-cy-korea-jck",
+      ko: "",
+      en: "",
+    },
+    {
+      id: "b402",
+      type: "booth",
+      no: "E02",
+      x: 48,
+      y: 21,
+      w: 3,
+      h: 3,
+      brand: "masiju",
+      ko: "",
+      en: "",
+    },
+    {
+      id: "b403",
+      type: "booth",
+      no: "E03",
+      x: 51,
+      y: 21,
+      w: 3,
+      h: 3,
+      brand: "bwi-korea",
+      ko: "",
+      en: "",
+    },
+    {
+      id: "b404",
+      type: "booth",
+      no: "E04",
+      x: 54,
+      y: 21,
+      w: 3,
+      h: 3,
+      brand: "isle-of-harris",
+      ko: "",
+      en: "",
+    },
+    {
+      id: "b405",
+      type: "booth",
+      no: "E05",
+      x: 45,
+      y: 24,
+      w: 3,
+      h: 3,
+      brand: "rudder-ltd",
+      ko: "",
+      en: "",
+    },
+    {
+      id: "b406",
+      type: "booth",
+      no: "E06",
+      x: 48,
+      y: 24,
+      w: 3,
+      h: 3,
+      brand: "scout-drinks",
+      ko: "",
+      en: "",
+    },
+    { id: "b407", type: "booth", no: "E07", x: 51, y: 24, w: 3, h: 3, brand: null, ko: "", en: "" },
+    {
+      id: "b408",
+      type: "booth",
+      no: "E08",
+      x: 54,
+      y: 24,
+      w: 3,
+      h: 3,
+      brand: "kanpaikai",
+      ko: "",
+      en: "",
+    },
+    {
+      id: "b501",
+      type: "booth",
+      no: "F01",
+      x: 27,
+      y: 33,
+      w: 3,
+      h: 3,
+      brand: "komaspi-bar-campbelltoun-loch",
+      ko: "",
+      en: "",
+    },
+    {
+      id: "b502",
+      type: "booth",
+      no: "F02",
+      x: 30,
+      y: 33,
+      w: 3,
+      h: 3,
+      brand: "the-single-cask",
+      ko: "",
+      en: "",
+    },
+    {
+      id: "b503",
+      type: "booth",
+      no: "F03",
+      x: 33,
+      y: 33,
+      w: 3,
+      h: 3,
+      brand: "cask-trade",
+      ko: "",
+      en: "",
+    },
+    {
+      id: "b504",
+      type: "booth",
+      no: "F04",
+      x: 36,
+      y: 33,
+      w: 3,
+      h: 3,
+      brand: "whiskybase",
+      ko: "",
+      en: "",
+    },
+    {
+      id: "b505",
+      type: "booth",
+      no: "F05",
+      x: 27,
+      y: 36,
+      w: 3,
+      h: 3,
+      brand: "natterjack",
+      ko: "",
+      en: "",
+    },
+    {
+      id: "b506",
+      type: "booth",
+      no: "F06",
+      x: 30,
+      y: 36,
+      w: 3,
+      h: 3,
+      brand: "innobev",
+      ko: "",
+      en: "",
+    },
+    {
+      id: "b507",
+      type: "booth",
+      no: "F07",
+      x: 33,
+      y: 36,
+      w: 3,
+      h: 3,
+      brand: "distillers-select",
+      ko: "",
+      en: "",
+    },
+    {
+      id: "b508",
+      type: "booth",
+      no: "F08",
+      x: 36,
+      y: 36,
+      w: 3,
+      h: 3,
+      brand: "ant-international",
+      ko: "",
+      en: "",
+    },
+    {
+      id: "b601",
+      type: "booth",
+      no: "G01",
+      x: 45,
+      y: 33,
+      w: 3,
+      h: 3,
+      brand: "ayoung-fbc",
+      ko: "",
+      en: "",
+    },
+    {
+      id: "b602",
+      type: "booth",
+      no: "G02",
+      x: 48,
+      y: 33,
+      w: 3,
+      h: 3,
+      brand: "we-oak",
+      ko: "",
+      en: "",
+    },
+    {
+      id: "b603",
+      type: "booth",
+      no: "G03",
+      x: 51,
+      y: 33,
+      w: 3,
+      h: 3,
+      brand: "brown-bottle",
+      ko: "",
+      en: "",
+    },
+    {
+      id: "b604",
+      type: "booth",
+      no: "G04",
+      x: 54,
+      y: 33,
+      w: 3,
+      h: 3,
+      brand: null,
+      ko: "공식 MD",
+      en: "OFFICIAL MD",
+    },
+    {
+      id: "b605",
+      type: "booth",
+      no: "G05",
+      x: 45,
+      y: 36,
+      w: 3,
+      h: 3,
+      brand: "natterjack",
+      ko: "",
+      en: "",
+    },
+    {
+      id: "b606",
+      type: "booth",
+      no: "G06",
+      x: 48,
+      y: 36,
+      w: 3,
+      h: 3,
+      brand: "innobev",
+      ko: "",
+      en: "",
+    },
+    {
+      id: "b607",
+      type: "booth",
+      no: "G07",
+      x: 51,
+      y: 36,
+      w: 3,
+      h: 3,
+      brand: "agavespirits",
+      ko: "",
+      en: "",
+    },
+    {
+      id: "b608",
+      type: "booth",
+      no: "G08",
+      x: 54,
+      y: 36,
+      w: 3,
+      h: 3,
+      brand: "whiskylabel-kr",
+      ko: "",
+      en: "",
+    },
+    {
+      id: "b701",
+      type: "booth",
+      no: "H01",
+      x: 6,
+      y: 45,
+      w: 6,
+      h: 3,
+      brand: "brand-2",
+      ko: "",
+      en: "",
+    },
+    {
+      id: "b702",
+      type: "booth",
+      no: "H02",
+      x: 12,
+      y: 45,
+      w: 3,
+      h: 3,
+      brand: null,
+      ko: "THE DUTCH CHEESE",
+      en: "THE DUTCH CHEESE",
+    },
+    {
+      id: "b703",
+      type: "booth",
+      no: "H03",
+      x: 15,
+      y: 45,
+      w: 3,
+      h: 3,
+      brand: null,
+      ko: "VLEES",
+      en: "VLEES",
+    },
+    {
+      id: "b704",
+      type: "booth",
+      no: "H04",
+      x: 18,
+      y: 45,
+      w: 3,
+      h: 3,
+      brand: null,
+      ko: "DOYAKGWA",
+      en: "DOYAKGWA",
+    },
+    {
+      id: "b705",
+      type: "booth",
+      no: "H05",
+      x: 24,
+      y: 45,
+      w: 3,
+      h: 3,
+      brand: "whiskylabel-kr",
+      ko: "",
+      en: "",
+    },
+    {
+      id: "b706",
+      type: "booth",
+      no: "H06",
+      x: 27,
+      y: 45,
+      w: 3,
+      h: 3,
+      brand: "plus-bottle",
+      ko: "",
+      en: "",
+    },
+    {
+      id: "b707",
+      type: "booth",
+      no: "H07",
+      x: 30,
+      y: 45,
+      w: 3,
+      h: 3,
+      brand: "korea-bourbon-whisk-e-y-club",
+      ko: "",
+      en: "",
+    },
+    {
+      id: "b708",
+      type: "booth",
+      no: "H08",
+      x: 33,
+      y: 45,
+      w: 3,
+      h: 3,
+      brand: "gst",
+      ko: "",
+      en: "",
+    },
+    {
+      id: "b709",
+      type: "booth",
+      no: "H09",
+      x: 36,
+      y: 45,
+      w: 3,
+      h: 3,
+      brand: "gin-dive",
+      ko: "",
+      en: "",
+    },
+    {
+      id: "b710",
+      type: "booth",
+      no: "H10",
+      x: 39,
+      y: 45,
+      w: 3,
+      h: 3,
+      brand: "pnswine",
+      ko: "",
+      en: "",
+    },
+    {
+      id: "b711",
+      type: "booth",
+      no: "H11",
+      x: 42,
+      y: 45,
+      w: 3,
+      h: 3,
+      brand: "monstercave",
+      ko: "",
+      en: "",
+    },
+    {
+      id: "b801",
+      type: "booth",
+      no: "A02",
+      x: 60,
+      y: 15,
+      w: 3,
+      h: 3,
+      brand: "brand",
+      ko: "",
+      en: "",
+    },
+    {
+      id: "b802",
+      type: "booth",
+      no: "A03",
+      x: 60,
+      y: 18,
+      w: 3,
+      h: 3,
+      brand: "the-whiskytales",
+      ko: "",
+      en: "",
+    },
+    {
+      id: "b803",
+      type: "booth",
+      no: "A04",
+      x: 60,
+      y: 21,
+      w: 3,
+      h: 6,
+      brand: "whiskynavi",
+      ko: "",
+      en: "",
+    },
+    {
+      id: "b804",
+      type: "booth",
+      no: "A05",
+      x: 60,
+      y: 33,
+      w: 3,
+      h: 3,
+      brand: null,
+      ko: "익스클루시브 판매",
+      en: "EXCLUSIVE SALES",
+    },
+    {
+      id: "b805",
+      type: "booth",
+      no: "A06",
+      x: 60,
+      y: 36,
+      w: 3,
+      h: 6,
+      brand: null,
+      ko: "캐스크 카니발",
+      en: "CASK CARNIVAL",
+    },
+    {
+      id: "toilet",
+      type: "toilet",
+      no: "",
+      x: 0,
+      y: 21,
+      w: 3,
+      h: 6,
+      brand: null,
+      ko: "화장실",
+      en: "RESTROOM",
+    },
+    {
+      id: "chill",
+      type: "zone",
+      no: "",
+      x: 6,
+      y: 30,
+      w: 15,
+      h: 15,
+      brand: null,
+      ko: "칠링 존",
+      en: "CHILLING ZONE",
+    },
+    {
+      id: "info",
+      type: "booth",
+      no: "A01",
+      x: 48,
+      y: 45,
+      w: 3,
+      h: 3,
+      brand: null,
+      ko: "인포메이션",
+      en: "INFORMATION",
+    },
+    {
+      id: "exit",
+      type: "exit",
+      no: "",
+      x: 51,
+      y: 48,
+      w: 6,
+      h: 3,
+      brand: null,
+      ko: "출구",
+      en: "EXIT",
+    },
+    {
+      id: "entrance",
+      type: "entrance",
+      no: "",
+      x: 57,
+      y: 48,
+      w: 6,
+      h: 3,
+      brand: null,
+      ko: "입구",
+      en: "ENTRANCE",
+    },
+  ],
+}
+
+const SLUG = /^[a-z0-9-]+$/
+const TYPES = new Set(Object.keys(ITEM_TYPES))
+const clip = (v: unknown, n = 60) => (typeof v === "string" ? v.trim().slice(0, n) : "")
+const int = (v: unknown, min: number, max: number) =>
+  Math.min(max, Math.max(min, Math.round(Number(v) || 0)))
+
+/** 저장·전송된 배치를 검증한다. 격자를 벗어나거나 겹치는 항목은 버린다. */
+export function parseLayout(raw: unknown): Layout | null {
+  if (!raw || typeof raw !== "object") return null
+  const src = raw as Record<string, unknown>
+  if (!Array.isArray(src.items)) return null
+  // 예전 형식(부스 = 1칸)은 칸 수를 BOOTH 배로 늘려 읽는다
+  const k = Number(src.grid) === GRID ? 1 : BOOTH
+  const cols = int(Number(src.cols) * k, LIMITS.minCols, LIMITS.maxCols)
+  const rows = int(Number(src.rows) * k, LIMITS.minRows, LIMITS.maxRows)
+  const taken = new Set<string>()
+  const ids = new Set<string>()
+  const items: FloorItem[] = []
+  for (const r of src.items as Record<string, unknown>[]) {
+    if (!r || typeof r !== "object" || !TYPES.has(String(r.type))) continue
+    const type = r.type as ItemType
+    const x = int(Number(r.x) * k, 0, cols - 1)
+    const y = int(Number(r.y) * k, 0, rows - 1)
+    const w = int(Number(r.w) * k, 1, cols - x)
+    const h = int(Number(r.h) * k, 1, rows - y)
+    const cells: string[] = []
+    for (let i = x; i < x + w; i++) for (let j = y; j < y + h; j++) cells.push(`${i},${j}`)
+    if (cells.some((c) => taken.has(c))) continue
+    let id = clip(r.id, 40) || `i${items.length}`
+    while (ids.has(id)) id = `${id}_`
+    ids.add(id)
+    for (const c of cells) taken.add(c)
+    const brand =
+      type === "booth" && typeof r.brand === "string" && SLUG.test(r.brand) ? r.brand : null
+    items.push({
+      id,
+      type,
+      no: type === "booth" ? clip(r.no, 10) : "",
+      x,
+      y,
+      w,
+      h,
+      brand,
+      ko: clip(r.ko),
+      en: clip(r.en),
+    })
+  }
+  return { grid: GRID, cols, rows, items }
+}
+
+/** 배치도에 필요한 브랜드 정보만 */
+export type FloorBrand = {
+  slug: string
+  nameKo: string
+  nameEn: string
+  logo: string | null
+  logoBg: string | null
+  visible: boolean
+}
+
+export type ResolvedItem = FloorItem & {
+  brandInfo: FloorBrand | null
+  /** 화면에 쓸 이름 */
+  nameKo: string
+  nameEn: string
+}
+
+export function resolveItems(layout: Layout, brands: FloorBrand[]): ResolvedItem[] {
+  const bySlug = new Map(brands.map((b) => [b.slug, b]))
+  return layout.items.map((it) => {
+    const brandInfo = it.brand ? (bySlug.get(it.brand) ?? null) : null
+    const meta = ITEM_TYPES[it.type]
+    const nameEn = brandInfo ? brandInfo.nameEn || brandInfo.nameKo : it.en || it.ko || meta.en
+    const nameKo = brandInfo ? brandInfo.nameKo || brandInfo.nameEn : it.ko || it.en || meta.ko
+    return { ...it, brandInfo, nameKo, nameEn }
+  })
+}
+
+/** 칸 단위 → SVG 단위 */
+export const toPx = (it: Rect): Rect => ({
+  x: it.x * CELL,
+  y: it.y * CELL,
+  w: it.w * CELL,
+  h: it.h * CELL,
+})
+
+/** 끌어서 칠한 범위를 BOOTH×BOOTH 부스 자리로 나눈다 (한 칸만 눌러도 부스 하나) */
+export function boothSlots(x: number, y: number, w: number, h: number): Rect[] {
+  const nx = Math.max(1, Math.floor(w / BOOTH))
+  const ny = Math.max(1, Math.floor(h / BOOTH))
+  const out: Rect[] = []
+  for (let j = 0; j < ny; j++)
+    for (let i = 0; i < nx; i++)
+      out.push({ x: x + i * BOOTH, y: y + j * BOOTH, w: BOOTH, h: BOOTH })
+  return out
+}
+
+/** 부스 번호 섹션 (A01, B03 …) */
+export const SECTIONS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("")
+
+/** 섹션의 다음 부스 번호 (그 섹션에서 가장 큰 번호 + 1, 두 자리) */
+export function nextBoothNo(items: FloorItem[], section = "A"): string {
+  const re = new RegExp(`^${section}(\\d+)$`, "i")
+  const nums = items
+    .filter((i) => i.type === "booth")
+    .map((i) => re.exec(i.no))
+    .filter((m): m is RegExpExecArray => !!m)
+    .map((m) => Number(m[1]))
+  return `${section}${String(Math.max(0, ...nums) + 1).padStart(2, "0")}`
+}
+
+// ── 부스 칸 안에 이름 맞춰 넣기 ──
+const isWide = (ch: string) => /[\u1100-\u11ff\u3130-\u318f\uac00-\ud7af\u4e00-\u9fff]/.test(ch)
+const charW = (ch: string) => (isWide(ch) ? 1 : /[A-Z0-9&@#%]/.test(ch) ? 0.7 : 0.55)
+const textW = (s: string, fs: number) => [...s].reduce((n, ch) => n + charW(ch), 0) * fs
+
+function wrap(text: string, fs: number, maxW: number): string[] {
+  const lines: string[] = []
+  let cur = ""
+  const push = (word: string) => {
+    const next = cur ? `${cur} ${word}` : word
+    if (textW(next, fs) <= maxW) cur = next
+    else {
+      if (cur) lines.push(cur)
+      cur = word
+    }
+  }
+  for (const word of text.split(/\s+/).filter(Boolean)) {
+    if (textW(word, fs) <= maxW) {
+      push(word)
+      continue
+    }
+    // 칸보다 긴 단어(띄어쓰기 없는 한글 등)는 글자 단위로 자른다
+    for (const ch of word) {
+      if (textW(cur + ch, fs) > maxW && cur) {
+        lines.push(cur)
+        cur = ch
+      } else cur += ch
+    }
+  }
+  if (cur) lines.push(cur)
+  return lines
+}
+
+/** 칸 크기에 맞는 글자 크기와 줄바꿈 */
+export function fitLabel(
+  text: string,
+  w: number,
+  h: number,
+  max = 4.4,
+  /** 위쪽에 비워 둘 높이 (부스 번호 자리) */
+  reserve = 9,
+): { lines: string[]; size: number } {
+  const maxW = w - 3
+  const maxH = h - reserve
+  for (let fs = max; fs >= 2; fs -= 0.2) {
+    const lines = wrap(text, fs, maxW)
+    if (lines.length * fs * 1.18 <= maxH && lines.every((l) => textW(l, fs) <= maxW)) {
+      return { lines, size: fs }
+    }
+  }
+  return { lines: wrap(text, 2, maxW), size: 2 }
+}

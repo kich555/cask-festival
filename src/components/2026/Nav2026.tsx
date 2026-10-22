@@ -4,6 +4,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import { Suspense, useCallback, useEffect, useState } from "react"
+import { createPortal } from "react-dom"
 import { useContent2026 } from "@/i18n/useContent2026"
 
 const LANG_COOKIE_NAME = "preferred-lang"
@@ -17,6 +18,7 @@ function setLangCookie(value: string, days = 365) {
 const NAV_LINKS = [
   { href: "/about", key: "about" },
   { href: "/theme", key: "theme" },
+  { href: "/floorplan", key: "floorplan" },
   { href: "/program", key: "program" },
   { href: "/brands", key: "brands" },
   { href: "/buyer", key: "buyer" },
@@ -29,6 +31,27 @@ function Nav2026Content() {
   const searchParams = useSearchParams()
   const [open, setOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
+  // 부스 배치도는 관리자가 공개하기 전까지 탭을 눌러도 안내창만 띄운다
+  const [floorPublic, setFloorPublic] = useState(false)
+  const [soon, setSoon] = useState(false)
+  useEffect(() => {
+    fetch("/api/floorplan/visibility")
+      .then((r) => r.json())
+      .then((d) => setFloorPublic(d?.public === true))
+      .catch(() => null)
+  }, [])
+  useEffect(() => {
+    if (!soon) return
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setSoon(false)
+    window.addEventListener("keydown", onKey)
+    return () => window.removeEventListener("keydown", onKey)
+  }, [soon])
+  const guard = (key: string) => (e: React.MouseEvent) => {
+    if (key !== "floorplan" || floorPublic) return
+    e.preventDefault()
+    setOpen(false)
+    setSoon(true)
+  }
 
   // 메인(/)과 2025 아카이브(/2025)는 상단이 어두워서 최상단에선 투명/흰 텍스트
   const transparentEligible = pathname === "/" || pathname === "/2025"
@@ -87,6 +110,7 @@ function Nav2026Content() {
               <Link
                 key={item.key}
                 href={withLang(item.href)}
+                onClick={guard(item.key)}
                 className={
                   active
                     ? "text-[#7d0b1c] font-semibold"
@@ -178,6 +202,7 @@ function Nav2026Content() {
             <Link
               key={item.key}
               href={withLang(item.href)}
+              onClick={guard(item.key)}
               className={`block px-6 py-4 text-[16px] ${
                 isActive(item.href) ? "text-[#7d0b1c] font-semibold" : "text-[#1a1a1a]"
               }`}
@@ -187,6 +212,35 @@ function Nav2026Content() {
           ))}
         </nav>
       )}
+
+      {/* 헤더의 backdrop-blur 가 fixed 기준이 되므로 body 에 띄운다 */}
+      {soon &&
+        createPortal(
+          <div className="fixed inset-0 z-[60] flex items-center justify-center px-6">
+            {/* 바깥(어두운 배경)을 눌러도 닫힌다 */}
+            <button
+              type="button"
+              aria-label={c.floorP.ok}
+              className="absolute inset-0 bg-black/45 cursor-default"
+              onClick={() => setSoon(false)}
+            />
+            <div
+              role="dialog"
+              aria-modal="true"
+              className="relative w-full max-w-[320px] bg-white text-[#1a1a1a] px-6 pt-7 pb-5 text-center shadow-xl"
+            >
+              <p className="text-[16px] font-bold">{c.floorP.soon}</p>
+              <button
+                type="button"
+                onClick={() => setSoon(false)}
+                className="mt-5 w-full h-11 bg-[#7d0b1c] text-white text-[14px] font-bold"
+              >
+                {c.floorP.ok}
+              </button>
+            </div>
+          </div>,
+          document.body,
+        )}
     </header>
   )
 }

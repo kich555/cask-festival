@@ -151,3 +151,59 @@ body {
     animation: none;
   }
 }
+
+/* 부스 배치도: 사용자 기기의 라이트/다크 모드를 그대로 따른다 */
+.fp-theme {
+  --fp-page: #ffffff;
+  --fp-surface: #ffffff;
+  --fp-soft: #f4f4f5;
+  --fp-text: #1a1a1a;
+  --fp-muted: #8a8a8a;
+  --fp-line: rgba(0, 0, 0, 0.1);
+  --fp-accent: #6b6b70;
+  --fp-accent-soft: rgba(125, 11, 28, 0.06);
+  --fp-map: #f4f4f5;
+  --fp-grid: rgba(0, 0, 0, 0.08);
+  --fp-booth: #ffffff;
+  --fp-booth-line: #cfcfd3;
+  --fp-booth-no: #9a9aa0;
+  --fp-room: #e8e8eb;
+  --fp-zone: rgba(0, 0, 0, 0.025);
+  --fp-fac-line: #bdbdc2;
+  --fp-fac-text: #55555a;
+  --fp-sel: #8a1a2b;
+  --fp-sel-text: #ffffff;
+  --fp-mini-line: #8e8e94;
+  background: var(--fp-page);
+  color: var(--fp-text);
+}
+@media (prefers-color-scheme: dark) {
+  .fp-theme {
+    --fp-page: #121212;
+    --fp-surface: #1c1c1e;
+    --fp-soft: #232325;
+    --fp-text: #ededed;
+    --fp-muted: #9a9a9e;
+    --fp-line: rgba(255, 255, 255, 0.12);
+    --fp-accent: #a3a3a8;
+    --fp-accent-soft: rgba(255, 255, 255, 0.06);
+    --fp-map: #18181a;
+    --fp-grid: rgba(255, 255, 255, 0.08);
+    --fp-booth: #262629;
+    --fp-booth-line: #444448;
+    --fp-booth-no: #85858b;
+    --fp-room: #2b2b2e;
+    --fp-zone: rgba(255, 255, 255, 0.03);
+    --fp-fac-line: #55555a;
+    --fp-fac-text: #c8c8cc;
+    --fp-sel: #d4d4d8;
+    --fp-sel-text: #18181a;
+    --fp-mini-line: #6a6a70;
+  }
+}
+.no-scrollbar {
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}

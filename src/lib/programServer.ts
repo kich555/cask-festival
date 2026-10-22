@@ -25,4 +25,5 @@ export async function getProgram(): Promise<ProgramDay[]> {
 export function revalidateProgram() {
   revalidatePath("/program")
   revalidatePath("/")
+  revalidatePath("/floorplan")
 }

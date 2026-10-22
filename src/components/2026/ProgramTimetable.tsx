@@ -16,7 +16,7 @@ import {
 import { useContent2026 } from "@/i18n/useContent2026"
 
 // 색각이상이 있어도 구분되도록 Okabe-Ito 팔레트(주황빨강·청록·파랑)를 쓴다.
-const KIND_DOT: Record<SessionKind, string> = {
+export const KIND_DOT: Record<SessionKind, string> = {
   masterclass: "bg-[#d55e00]",
   tasting: "bg-[#009e73]",
   lecture: "bg-[#0072b2]",
