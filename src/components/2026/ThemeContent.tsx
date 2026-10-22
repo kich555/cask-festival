@@ -6,6 +6,7 @@ import { Suspense } from "react"
 import { getThemeByYear, getThemesDesc } from "@/content/themes2026"
 import { useContent2026 } from "@/i18n/useContent2026"
 import PageHeader2026 from "./PageHeader2026"
+import Reveal from "./Reveal"
 
 function Inner() {
   const { c, lang } = useContent2026()
@@ -18,74 +19,82 @@ function Inner() {
   const qs = searchParams.get("lang") ? `&lang=${searchParams.get("lang")}` : ""
 
   return (
-    <div className="bg-white text-[#1a1a1a]">
+    <div className="bg-[var(--c-bg)] text-[var(--c-text)]">
       <PageHeader2026 title={t.title} subtitle={t.subtitle} watermark="THEMES" />
 
       {/* CURRENT LABEL */}
       <section className="max-w-[1440px] mx-auto px-5 md:px-10 py-7 md:py-10">
-        <div className="flex items-center gap-3 md:gap-6">
-          <span className="bg-[#7d0b1c] text-white font-semibold px-3 py-1.5 rounded text-[14px] md:text-[16px]">
-            {cur.year}
-          </span>
-          <span className="text-[clamp(17px,5vw,32px)] font-extrabold">{cur.name}</span>
-        </div>
+        <Reveal>
+          <div className="flex items-center gap-3 md:gap-6">
+            <span className="bg-[#7d0b1c] text-white font-semibold px-3 py-1.5 rounded text-[14px] md:text-[16px]">
+              {cur.year}
+            </span>
+            <span className="text-[clamp(17px,5vw,32px)] font-extrabold">{cur.name}</span>
+          </div>
+        </Reveal>
       </section>
 
       {/* THEME BAND — 편지지 느낌(흰 배경 + 사각 테두리) */}
-      <section className="bg-white">
+      <section className="bg-[var(--c-bg)]">
         <div className="max-w-[1000px] mx-auto px-5 md:px-10 pb-16 md:pb-24">
-          <div className="border border-[#7d0b1c]/35 rounded-md px-6 md:px-14 py-12 md:py-16 text-center text-[#1a1a1a]">
-            <p className="tracking-[3px] text-[13px] text-[#7d0b1c] mb-3">{cur.year} THEME</p>
-            <h2 className="text-[clamp(28px,6vw,52px)] font-extrabold">{cur.name}</h2>
-            <div className="w-[clamp(160px,40vw,720px)] h-px bg-[#7d0b1c]/30 mx-auto my-7" />
-            {desc.map((d) => (
-              <p
-                key={d}
-                className="text-[#444] max-w-[760px] mx-auto leading-[1.9] text-[16px] mt-4 first:mt-0 break-keep text-balance"
-              >
-                {d}
+          <Reveal delay={0.1}>
+            <div className="border border-[var(--c-accent)]/35 rounded-md px-6 md:px-14 py-12 md:py-16 text-center text-[var(--c-text)]">
+              <p className="tracking-[3px] text-[13px] text-[var(--c-accent)] mb-3">
+                {cur.year} THEME
               </p>
-            ))}
-            <p className="tracking-[6px] text-[#7d0b1c] font-semibold mt-12 mb-8 text-[15px]">
-              {t.notesTitle}
-            </p>
-            <div className="grid grid-cols-5 gap-2 md:gap-5 max-w-[860px] mx-auto">
-              {cur.notes.map((n) => (
-                <div key={n.en} className="flex flex-col items-center gap-1 md:gap-1.5">
-                  <div className="text-[22px] md:text-[30px]">{n.icon}</div>
-                  <div className="text-[10px] md:text-[15px] font-semibold leading-tight break-keep">
-                    {lang === "ko" ? n.ko : n.en}
-                  </div>
-                </div>
+              <h2 className="text-[clamp(28px,6vw,52px)] font-extrabold">{cur.name}</h2>
+              <div className="w-[clamp(160px,40vw,720px)] h-px bg-[var(--c-accent)]/30 mx-auto my-7" />
+              {desc.map((d) => (
+                <p
+                  key={d}
+                  className="text-[var(--c-text2)] max-w-[760px] mx-auto leading-[1.9] text-[16px] mt-4 first:mt-0 break-keep text-balance"
+                >
+                  {d}
+                </p>
               ))}
+              <p className="tracking-[6px] text-[var(--c-accent)] font-semibold mt-12 mb-8 text-[15px]">
+                {t.notesTitle}
+              </p>
+              <div className="grid grid-cols-5 gap-2 md:gap-5 max-w-[860px] mx-auto">
+                {cur.notes.map((n) => (
+                  <div key={n.en} className="flex flex-col items-center gap-1 md:gap-1.5">
+                    <div className="text-[22px] md:text-[30px]">{n.icon}</div>
+                    <div className="text-[10px] md:text-[15px] font-semibold leading-tight break-keep">
+                      {lang === "ko" ? n.ko : n.en}
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
+          </Reveal>
         </div>
       </section>
 
       {/* ARCHIVE */}
       <section className="max-w-[1440px] mx-auto px-5 md:px-10 py-12 md:py-16">
         <h2 className="text-[24px] md:text-[28px] font-extrabold">{t.archiveTitle}</h2>
-        <div className="h-px bg-black/15 my-6" />
-        <div className="flex flex-wrap gap-4 md:gap-6">
-          {all.map((th) => {
-            const active = th.year === cur.year
-            return (
-              <Link
-                key={th.year}
-                href={`/theme?year=${th.year}${qs}`}
-                className={`w-full sm:w-[405px] max-w-full h-auto min-h-[180px] md:h-[280px] rounded p-6 md:p-8 flex flex-col bg-[#7d0b1c] text-white transition-transform hover:-translate-y-1 ${
-                  active ? "outline outline-2 outline-white/70 outline-offset-[3px]" : ""
-                }`}
-              >
-                <span className="text-white/80 font-semibold tracking-[4px] text-[22px]">
-                  {th.year}
-                </span>
-                <strong className="text-[30px] mt-3 leading-tight">{th.name}</strong>
-              </Link>
-            )
-          })}
-        </div>
+        <div className="h-px bg-[var(--c-line-strong)] my-6" />
+        <Reveal>
+          <div className="flex flex-wrap gap-4 md:gap-6">
+            {all.map((th) => {
+              const active = th.year === cur.year
+              return (
+                <Link
+                  key={th.year}
+                  href={`/theme?year=${th.year}${qs}`}
+                  className={`w-full sm:w-[405px] max-w-full h-auto min-h-[180px] md:h-[280px] rounded p-6 md:p-8 flex flex-col bg-[#7d0b1c] text-white transition-transform hover:-translate-y-1 ${
+                    active ? "outline outline-2 outline-white/70 outline-offset-[3px]" : ""
+                  }`}
+                >
+                  <span className="text-white/80 font-semibold tracking-[4px] text-[22px]">
+                    {th.year}
+                  </span>
+                  <strong className="text-[30px] mt-3 leading-tight">{th.name}</strong>
+                </Link>
+              )
+            })}
+          </div>
+        </Reveal>
       </section>
     </div>
   )

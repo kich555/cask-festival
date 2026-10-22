@@ -108,6 +108,9 @@ export interface Content2026 {
     andMore: string
     empty: string
     emptyDesc: string
+    searchPh: string
+    search: string
+    noResult: string
   }
   registerP: {
     title: string
@@ -362,6 +365,9 @@ export const content2026: Record<"ko" | "en", Content2026> = {
       andMore: "and more",
       empty: "참가 업체는 곧 공개됩니다.",
       emptyDesc: "확정되는 대로 순차적으로 업데이트됩니다.",
+      searchPh: "업체명 검색",
+      search: "검색",
+      noResult: "검색 결과가 없습니다.",
     },
     registerP: {
       title: "참가 업체 모집",
@@ -607,6 +613,9 @@ export const content2026: Record<"ko" | "en", Content2026> = {
       andMore: "and more",
       empty: "Exhibitors will be announced soon.",
       emptyDesc: "This page is updated as brands are confirmed.",
+      searchPh: "Search brand",
+      search: "Search",
+      noResult: "No results.",
     },
     registerP: {
       title: "Register",

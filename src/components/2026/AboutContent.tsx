@@ -1,11 +1,11 @@
 "use client"
 
-import { motion } from "framer-motion"
 import Image from "next/image"
 import Link from "next/link"
 import { Suspense } from "react"
 import { useContent2026 } from "@/i18n/useContent2026"
 import PageHeader2026 from "./PageHeader2026"
+import Reveal from "./Reveal"
 
 // 마커 규칙:
 //   ||      → 데스크톱에서만 줄바꿈(모바일은 공백으로 이어짐). 지정한 지점에서만 끊음.
@@ -36,28 +36,6 @@ function renderText(text: string) {
   ))
 }
 
-function Reveal({
-  children,
-  delay = 0,
-  className,
-}: {
-  children: React.ReactNode
-  delay?: number
-  className?: string
-}) {
-  return (
-    <motion.div
-      className={className}
-      initial={{ opacity: 0, y: 28 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.2 }}
-      transition={{ duration: 0.6, ease: "easeOut", delay }}
-    >
-      {children}
-    </motion.div>
-  )
-}
-
 function Inner() {
   const { c, lang } = useContent2026()
   const a = c.aboutP
@@ -73,7 +51,7 @@ function Inner() {
   ]
 
   return (
-    <div className="bg-white text-[#1a1a1a]">
+    <div className="bg-[var(--c-bg)] text-[var(--c-text)]">
       <PageHeader2026 title={a.title} subtitle={a.subtitle} watermark="ABOUT" />
 
       {/* INTRO — 캐스크가 빚어내는 풍미의 세계 */}
@@ -89,8 +67,10 @@ function Inner() {
             {a.introItems.map((it, i) => (
               <Reveal key={it.heading} delay={i * 0.08}>
                 <div>
-                  <h3 className="text-[20px] md:text-[24px] font-bold mb-3 break-keep">{it.heading}</h3>
-                  <p className="text-[#555] text-[15px] md:text-[17px] leading-[1.9] break-keep text-pretty">
+                  <h3 className="text-[20px] md:text-[24px] font-bold mb-3 break-keep">
+                    {it.heading}
+                  </h3>
+                  <p className="text-[var(--c-text2)] text-[15px] md:text-[17px] leading-[1.9] break-keep text-pretty">
                     {renderText(it.body)}
                   </p>
                 </div>
@@ -101,7 +81,7 @@ function Inner() {
       </section>
 
       {/* VALUE — 캐스크 카니발만의 고유한 가치 */}
-      <section className="bg-[#faf8f6]">
+      <section className="bg-[var(--c-soft)]">
         <div className="max-w-[1100px] mx-auto px-5 md:px-10 py-16 md:py-24">
           <Reveal>
             <h2 className="text-[clamp(24px,3.4vw,38px)] font-extrabold leading-[1.35] break-keep mb-12 md:mb-16">
@@ -116,7 +96,7 @@ function Inner() {
                     <span className="mt-[10px] w-2 h-2 rounded-full bg-[#7d0b1c] shrink-0" />
                     <span>{it.heading}</span>
                   </h3>
-                  <p className="text-[#555] text-[15px] md:text-[17px] leading-[1.9] break-keep text-pretty pl-[18px]">
+                  <p className="text-[var(--c-text2)] text-[15px] md:text-[17px] leading-[1.9] break-keep text-pretty pl-[18px]">
                     {renderText(it.body)}
                   </p>
                 </div>
@@ -133,8 +113,12 @@ function Inner() {
             <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 md:gap-10">
               <div className="md:flex-1">
                 <h2 className="text-[clamp(26px,3vw,36px)] font-extrabold mb-4">{a.recapTitle}</h2>
-                <p className="text-white/90 text-[16px] md:text-[17px] break-keep">{a.recapBody1}</p>
-                <p className="text-white/90 text-[16px] md:text-[17px] break-keep">{a.recapBody2}</p>
+                <p className="text-white/90 text-[16px] md:text-[17px] break-keep">
+                  {a.recapBody1}
+                </p>
+                <p className="text-white/90 text-[16px] md:text-[17px] break-keep">
+                  {a.recapBody2}
+                </p>
               </div>
               <Link
                 href={`/2025${qs}`}
@@ -148,8 +132,12 @@ function Inner() {
             {a.recapStats.map((s, i) => (
               <Reveal key={s.label} delay={i * 0.08}>
                 <div className="text-center">
-                  <div className="text-[clamp(34px,5vw,52px)] font-extrabold leading-none">{s.value}</div>
-                  <div className="text-white/85 text-[13px] md:text-[15px] mt-2.5 break-keep">{s.label}</div>
+                  <div className="text-[clamp(34px,5vw,52px)] font-extrabold leading-none">
+                    {s.value}
+                  </div>
+                  <div className="text-white/85 text-[13px] md:text-[15px] mt-2.5 break-keep">
+                    {s.label}
+                  </div>
                 </div>
               </Reveal>
             ))}
@@ -161,14 +149,20 @@ function Inner() {
       <section>
         <div className="max-w-[1000px] mx-auto px-5 md:px-10 py-16 md:py-24">
           <Reveal>
-            <h2 className="text-[clamp(24px,3.4vw,38px)] font-extrabold text-center mb-12 md:mb-16">{a.forecastTitle}</h2>
+            <h2 className="text-[clamp(24px,3.4vw,38px)] font-extrabold text-center mb-12 md:mb-16">
+              {a.forecastTitle}
+            </h2>
           </Reveal>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-12 max-w-[920px] mx-auto">
             {a.forecastStats.map((s, i) => (
               <Reveal key={s.label} delay={i * 0.08}>
                 <div className="text-center">
-                  <div className="text-[clamp(34px,5vw,54px)] font-extrabold text-[#7d0b1c] leading-none">{s.value}</div>
-                  <div className="text-[#666] text-[14px] md:text-[16px] mt-3 break-keep">{s.label}</div>
+                  <div className="text-[clamp(34px,5vw,54px)] font-extrabold text-[var(--c-accent)] leading-none">
+                    {s.value}
+                  </div>
+                  <div className="text-[var(--c-muted)] text-[14px] md:text-[16px] mt-3 break-keep">
+                    {s.label}
+                  </div>
                 </div>
               </Reveal>
             ))}
@@ -177,11 +171,11 @@ function Inner() {
       </section>
 
       {/* OVERVIEW — 개요(맨 아래) */}
-      <section className="bg-[#faf8f6]">
+      <section className="bg-[var(--c-soft)]">
         <div className="max-w-[1440px] mx-auto px-5 md:px-10 py-16 md:py-24">
           <Reveal>
             <h2 className="text-[clamp(24px,3vw,32px)] font-extrabold">{a.overviewTitle}</h2>
-            <div className="h-px bg-black/15 my-7" />
+            <div className="h-px bg-[var(--c-line-strong)] my-7" />
             <div className="grid grid-cols-1 md:grid-cols-[380px_1fr] gap-8 md:gap-16 items-stretch">
               <Image
                 src="/2026/about-keyvisual.png"
@@ -194,10 +188,10 @@ function Inner() {
                 <tbody>
                   {rows.map(([k, v]) => (
                     <tr key={k}>
-                      <th className="text-left align-top py-4 md:py-[26px] border-b border-black/10 text-[#777] font-semibold w-[34%] md:w-[280px] text-[15px] md:text-[17px]">
+                      <th className="text-left align-top py-4 md:py-[26px] border-b border-[var(--c-line)] text-[var(--c-muted)] font-semibold w-[34%] md:w-[280px] text-[15px] md:text-[17px]">
                         {k}
                       </th>
-                      <td className="text-left align-top py-4 md:py-[26px] border-b border-black/10 font-semibold text-[15px] md:text-[17px] break-keep">
+                      <td className="text-left align-top py-4 md:py-[26px] border-b border-[var(--c-line)] font-semibold text-[15px] md:text-[17px] break-keep">
                         {v}
                       </td>
                     </tr>

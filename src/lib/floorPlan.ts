@@ -127,7 +127,7 @@ export const DEFAULT_LAYOUT: Layout = {
     {
       id: "b101",
       type: "booth",
-      no: "B01",
+      no: "C13",
       x: 6,
       y: 12,
       w: 3,
@@ -139,7 +139,7 @@ export const DEFAULT_LAYOUT: Layout = {
     {
       id: "b102",
       type: "booth",
-      no: "B02",
+      no: "C12",
       x: 9,
       y: 12,
       w: 3,
@@ -151,7 +151,7 @@ export const DEFAULT_LAYOUT: Layout = {
     {
       id: "b103",
       type: "booth",
-      no: "B03",
+      no: "C11",
       x: 12,
       y: 12,
       w: 3,
@@ -163,7 +163,7 @@ export const DEFAULT_LAYOUT: Layout = {
     {
       id: "b104",
       type: "booth",
-      no: "B04",
+      no: "C10",
       x: 15,
       y: 12,
       w: 3,
@@ -175,7 +175,7 @@ export const DEFAULT_LAYOUT: Layout = {
     {
       id: "b105",
       type: "booth",
-      no: "B05",
+      no: "C07",
       x: 18,
       y: 12,
       w: 3,
@@ -187,7 +187,7 @@ export const DEFAULT_LAYOUT: Layout = {
     {
       id: "b106",
       type: "booth",
-      no: "B06",
+      no: "B07",
       x: 24,
       y: 12,
       w: 3,
@@ -199,7 +199,7 @@ export const DEFAULT_LAYOUT: Layout = {
     {
       id: "b107",
       type: "booth",
-      no: "B07",
+      no: "B06",
       x: 27,
       y: 12,
       w: 3,
@@ -211,7 +211,7 @@ export const DEFAULT_LAYOUT: Layout = {
     {
       id: "b108",
       type: "booth",
-      no: "B08",
+      no: "B05",
       x: 30,
       y: 12,
       w: 3,
@@ -223,7 +223,7 @@ export const DEFAULT_LAYOUT: Layout = {
     {
       id: "b109",
       type: "booth",
-      no: "B09",
+      no: "B04",
       x: 33,
       y: 12,
       w: 3,
@@ -235,7 +235,7 @@ export const DEFAULT_LAYOUT: Layout = {
     {
       id: "b110",
       type: "booth",
-      no: "B10",
+      no: "B03",
       x: 36,
       y: 12,
       w: 3,
@@ -247,7 +247,7 @@ export const DEFAULT_LAYOUT: Layout = {
     {
       id: "b111",
       type: "booth",
-      no: "B11",
+      no: "B02",
       x: 39,
       y: 12,
       w: 3,
@@ -259,7 +259,7 @@ export const DEFAULT_LAYOUT: Layout = {
     {
       id: "b112",
       type: "booth",
-      no: "B12",
+      no: "B01",
       x: 42,
       y: 12,
       w: 3,
@@ -271,7 +271,7 @@ export const DEFAULT_LAYOUT: Layout = {
     {
       id: "b113",
       type: "booth",
-      no: "B13",
+      no: "A07",
       x: 54,
       y: 12,
       w: 3,
@@ -283,7 +283,7 @@ export const DEFAULT_LAYOUT: Layout = {
     {
       id: "b114",
       type: "booth",
-      no: "B14",
+      no: "A06",
       x: 57,
       y: 12,
       w: 3,
@@ -295,7 +295,7 @@ export const DEFAULT_LAYOUT: Layout = {
     {
       id: "b201",
       type: "booth",
-      no: "C01",
+      no: "C09",
       x: 9,
       y: 21,
       w: 3,
@@ -307,7 +307,7 @@ export const DEFAULT_LAYOUT: Layout = {
     {
       id: "b202",
       type: "booth",
-      no: "C02",
+      no: "C06",
       x: 12,
       y: 21,
       w: 3,
@@ -319,7 +319,7 @@ export const DEFAULT_LAYOUT: Layout = {
     {
       id: "b203",
       type: "booth",
-      no: "C03",
+      no: "C04",
       x: 15,
       y: 21,
       w: 3,
@@ -331,7 +331,7 @@ export const DEFAULT_LAYOUT: Layout = {
     {
       id: "b204",
       type: "booth",
-      no: "C04",
+      no: "C02",
       x: 18,
       y: 21,
       w: 3,
@@ -343,7 +343,7 @@ export const DEFAULT_LAYOUT: Layout = {
     {
       id: "b205",
       type: "booth",
-      no: "C05",
+      no: "C08",
       x: 9,
       y: 24,
       w: 3,
@@ -355,7 +355,7 @@ export const DEFAULT_LAYOUT: Layout = {
     {
       id: "b206",
       type: "booth",
-      no: "C06",
+      no: "C05",
       x: 12,
       y: 24,
       w: 3,
@@ -367,7 +367,7 @@ export const DEFAULT_LAYOUT: Layout = {
     {
       id: "b207",
       type: "booth",
-      no: "C07",
+      no: "C03",
       x: 15,
       y: 24,
       w: 3,
@@ -379,7 +379,7 @@ export const DEFAULT_LAYOUT: Layout = {
     {
       id: "b208",
       type: "booth",
-      no: "C08",
+      no: "C01",
       x: 18,
       y: 24,
       w: 3,
@@ -391,7 +391,7 @@ export const DEFAULT_LAYOUT: Layout = {
     {
       id: "b301",
       type: "booth",
-      no: "D01",
+      no: "D16",
       x: 27,
       y: 21,
       w: 3,
@@ -403,7 +403,7 @@ export const DEFAULT_LAYOUT: Layout = {
     {
       id: "b302",
       type: "booth",
-      no: "D02",
+      no: "D14",
       x: 30,
       y: 21,
       w: 3,
@@ -415,7 +415,7 @@ export const DEFAULT_LAYOUT: Layout = {
     {
       id: "b303",
       type: "booth",
-      no: "D03",
+      no: "D12",
       x: 33,
       y: 21,
       w: 3,
@@ -427,7 +427,7 @@ export const DEFAULT_LAYOUT: Layout = {
     {
       id: "b304",
       type: "booth",
-      no: "D04",
+      no: "D11",
       x: 36,
       y: 21,
       w: 3,
@@ -439,7 +439,7 @@ export const DEFAULT_LAYOUT: Layout = {
     {
       id: "b305",
       type: "booth",
-      no: "D05",
+      no: "D15",
       x: 27,
       y: 24,
       w: 3,
@@ -451,7 +451,7 @@ export const DEFAULT_LAYOUT: Layout = {
     {
       id: "b306",
       type: "booth",
-      no: "D06",
+      no: "D13",
       x: 30,
       y: 24,
       w: 3,
@@ -463,7 +463,7 @@ export const DEFAULT_LAYOUT: Layout = {
     {
       id: "b307",
       type: "booth",
-      no: "D07",
+      no: "D10",
       x: 33,
       y: 24,
       w: 3,
@@ -475,7 +475,7 @@ export const DEFAULT_LAYOUT: Layout = {
     {
       id: "b308",
       type: "booth",
-      no: "D08",
+      no: "D07",
       x: 36,
       y: 24,
       w: 3,
@@ -487,7 +487,7 @@ export const DEFAULT_LAYOUT: Layout = {
     {
       id: "b401",
       type: "booth",
-      no: "E01",
+      no: "E16",
       x: 45,
       y: 21,
       w: 3,
@@ -499,7 +499,7 @@ export const DEFAULT_LAYOUT: Layout = {
     {
       id: "b402",
       type: "booth",
-      no: "E02",
+      no: "E15",
       x: 48,
       y: 21,
       w: 3,
@@ -511,7 +511,7 @@ export const DEFAULT_LAYOUT: Layout = {
     {
       id: "b403",
       type: "booth",
-      no: "E03",
+      no: "E14",
       x: 51,
       y: 21,
       w: 3,
@@ -523,7 +523,7 @@ export const DEFAULT_LAYOUT: Layout = {
     {
       id: "b404",
       type: "booth",
-      no: "E04",
+      no: "E12",
       x: 54,
       y: 21,
       w: 3,
@@ -535,7 +535,7 @@ export const DEFAULT_LAYOUT: Layout = {
     {
       id: "b405",
       type: "booth",
-      no: "E05",
+      no: "E13",
       x: 45,
       y: 24,
       w: 3,
@@ -547,7 +547,7 @@ export const DEFAULT_LAYOUT: Layout = {
     {
       id: "b406",
       type: "booth",
-      no: "E06",
+      no: "E11",
       x: 48,
       y: 24,
       w: 3,
@@ -556,11 +556,11 @@ export const DEFAULT_LAYOUT: Layout = {
       ko: "",
       en: "",
     },
-    { id: "b407", type: "booth", no: "E07", x: 51, y: 24, w: 3, h: 3, brand: null, ko: "", en: "" },
+    { id: "b407", type: "booth", no: "E10", x: 51, y: 24, w: 3, h: 3, brand: null, ko: "", en: "" },
     {
       id: "b408",
       type: "booth",
-      no: "E08",
+      no: "E09",
       x: 54,
       y: 24,
       w: 3,
@@ -572,7 +572,7 @@ export const DEFAULT_LAYOUT: Layout = {
     {
       id: "b501",
       type: "booth",
-      no: "F01",
+      no: "D09",
       x: 27,
       y: 33,
       w: 3,
@@ -584,7 +584,7 @@ export const DEFAULT_LAYOUT: Layout = {
     {
       id: "b502",
       type: "booth",
-      no: "F02",
+      no: "D06",
       x: 30,
       y: 33,
       w: 3,
@@ -596,7 +596,7 @@ export const DEFAULT_LAYOUT: Layout = {
     {
       id: "b503",
       type: "booth",
-      no: "F03",
+      no: "D04",
       x: 33,
       y: 33,
       w: 3,
@@ -608,7 +608,7 @@ export const DEFAULT_LAYOUT: Layout = {
     {
       id: "b504",
       type: "booth",
-      no: "F04",
+      no: "D02",
       x: 36,
       y: 33,
       w: 3,
@@ -620,7 +620,7 @@ export const DEFAULT_LAYOUT: Layout = {
     {
       id: "b505",
       type: "booth",
-      no: "F05",
+      no: "D08",
       x: 27,
       y: 36,
       w: 3,
@@ -632,7 +632,7 @@ export const DEFAULT_LAYOUT: Layout = {
     {
       id: "b506",
       type: "booth",
-      no: "F06",
+      no: "D05",
       x: 30,
       y: 36,
       w: 3,
@@ -644,7 +644,7 @@ export const DEFAULT_LAYOUT: Layout = {
     {
       id: "b507",
       type: "booth",
-      no: "F07",
+      no: "D03",
       x: 33,
       y: 36,
       w: 3,
@@ -656,7 +656,7 @@ export const DEFAULT_LAYOUT: Layout = {
     {
       id: "b508",
       type: "booth",
-      no: "F08",
+      no: "D01",
       x: 36,
       y: 36,
       w: 3,
@@ -668,7 +668,7 @@ export const DEFAULT_LAYOUT: Layout = {
     {
       id: "b601",
       type: "booth",
-      no: "G01",
+      no: "E08",
       x: 45,
       y: 33,
       w: 3,
@@ -680,7 +680,7 @@ export const DEFAULT_LAYOUT: Layout = {
     {
       id: "b602",
       type: "booth",
-      no: "G02",
+      no: "E07",
       x: 48,
       y: 33,
       w: 3,
@@ -692,7 +692,7 @@ export const DEFAULT_LAYOUT: Layout = {
     {
       id: "b603",
       type: "booth",
-      no: "G03",
+      no: "E05",
       x: 51,
       y: 33,
       w: 3,
@@ -704,7 +704,7 @@ export const DEFAULT_LAYOUT: Layout = {
     {
       id: "b604",
       type: "booth",
-      no: "G04",
+      no: "E03",
       x: 54,
       y: 33,
       w: 3,
@@ -716,7 +716,7 @@ export const DEFAULT_LAYOUT: Layout = {
     {
       id: "b605",
       type: "booth",
-      no: "G05",
+      no: "E06",
       x: 45,
       y: 36,
       w: 3,
@@ -728,7 +728,7 @@ export const DEFAULT_LAYOUT: Layout = {
     {
       id: "b606",
       type: "booth",
-      no: "G06",
+      no: "E04",
       x: 48,
       y: 36,
       w: 3,
@@ -740,7 +740,7 @@ export const DEFAULT_LAYOUT: Layout = {
     {
       id: "b607",
       type: "booth",
-      no: "G07",
+      no: "E02",
       x: 51,
       y: 36,
       w: 3,
@@ -752,7 +752,7 @@ export const DEFAULT_LAYOUT: Layout = {
     {
       id: "b608",
       type: "booth",
-      no: "G08",
+      no: "E01",
       x: 54,
       y: 36,
       w: 3,
@@ -764,7 +764,7 @@ export const DEFAULT_LAYOUT: Layout = {
     {
       id: "b701",
       type: "booth",
-      no: "H01",
+      no: "F04",
       x: 6,
       y: 45,
       w: 6,
@@ -776,7 +776,7 @@ export const DEFAULT_LAYOUT: Layout = {
     {
       id: "b702",
       type: "booth",
-      no: "H02",
+      no: "F03",
       x: 12,
       y: 45,
       w: 3,
@@ -788,7 +788,7 @@ export const DEFAULT_LAYOUT: Layout = {
     {
       id: "b703",
       type: "booth",
-      no: "H03",
+      no: "F02",
       x: 15,
       y: 45,
       w: 3,
@@ -800,7 +800,7 @@ export const DEFAULT_LAYOUT: Layout = {
     {
       id: "b704",
       type: "booth",
-      no: "H04",
+      no: "F01",
       x: 18,
       y: 45,
       w: 3,
@@ -812,7 +812,7 @@ export const DEFAULT_LAYOUT: Layout = {
     {
       id: "b705",
       type: "booth",
-      no: "H05",
+      no: "G07",
       x: 24,
       y: 45,
       w: 3,
@@ -824,7 +824,7 @@ export const DEFAULT_LAYOUT: Layout = {
     {
       id: "b706",
       type: "booth",
-      no: "H06",
+      no: "G06",
       x: 27,
       y: 45,
       w: 3,
@@ -836,7 +836,7 @@ export const DEFAULT_LAYOUT: Layout = {
     {
       id: "b707",
       type: "booth",
-      no: "H07",
+      no: "G05",
       x: 30,
       y: 45,
       w: 3,
@@ -848,7 +848,7 @@ export const DEFAULT_LAYOUT: Layout = {
     {
       id: "b708",
       type: "booth",
-      no: "H08",
+      no: "G04",
       x: 33,
       y: 45,
       w: 3,
@@ -860,7 +860,7 @@ export const DEFAULT_LAYOUT: Layout = {
     {
       id: "b709",
       type: "booth",
-      no: "H09",
+      no: "G03",
       x: 36,
       y: 45,
       w: 3,
@@ -872,7 +872,7 @@ export const DEFAULT_LAYOUT: Layout = {
     {
       id: "b710",
       type: "booth",
-      no: "H10",
+      no: "G02",
       x: 39,
       y: 45,
       w: 3,
@@ -884,7 +884,7 @@ export const DEFAULT_LAYOUT: Layout = {
     {
       id: "b711",
       type: "booth",
-      no: "H11",
+      no: "G01",
       x: 42,
       y: 45,
       w: 3,
@@ -896,7 +896,7 @@ export const DEFAULT_LAYOUT: Layout = {
     {
       id: "b801",
       type: "booth",
-      no: "A02",
+      no: "A05",
       x: 60,
       y: 15,
       w: 3,
@@ -908,7 +908,7 @@ export const DEFAULT_LAYOUT: Layout = {
     {
       id: "b802",
       type: "booth",
-      no: "A03",
+      no: "A04",
       x: 60,
       y: 18,
       w: 3,
@@ -920,7 +920,7 @@ export const DEFAULT_LAYOUT: Layout = {
     {
       id: "b803",
       type: "booth",
-      no: "A04",
+      no: "A03",
       x: 60,
       y: 21,
       w: 3,
@@ -932,7 +932,7 @@ export const DEFAULT_LAYOUT: Layout = {
     {
       id: "b804",
       type: "booth",
-      no: "A05",
+      no: "A02",
       x: 60,
       y: 33,
       w: 3,
@@ -944,7 +944,7 @@ export const DEFAULT_LAYOUT: Layout = {
     {
       id: "b805",
       type: "booth",
-      no: "A06",
+      no: "A01",
       x: 60,
       y: 36,
       w: 3,
@@ -980,7 +980,7 @@ export const DEFAULT_LAYOUT: Layout = {
     {
       id: "info",
       type: "booth",
-      no: "A01",
+      no: "I",
       x: 48,
       y: 45,
       w: 3,
@@ -1132,35 +1132,91 @@ const isWide = (ch: string) => /[\u1100-\u11ff\u3130-\u318f\uac00-\ud7af\u4e00-\
 const charW = (ch: string) => (isWide(ch) ? 1 : /[A-Z0-9&@#%]/.test(ch) ? 0.7 : 0.55)
 const textW = (s: string, fs: number) => [...s].reduce((n, ch) => n + charW(ch), 0) * fs
 
+/** 줄을 바꿀 수 있는 조각. 띄어쓰기 자리와 여는 괄호 앞에서 나눈다 (sp: 앞에 띄어쓰기가 있었는지) */
+type Token = { t: string; sp: boolean }
+function tokens(text: string): Token[] {
+  const out: Token[] = []
+  for (const word of text.split(/\s+/).filter(Boolean)) {
+    word.split(/(?=\()/).forEach((t, i) => {
+      out.push({ t, sp: i === 0 && out.length > 0 })
+    })
+  }
+  return out
+}
+
+/** 한글·한자가 든 조각은 아무 글자 사이에서나 줄을 바꿔도 자연스럽다 */
+const breakable = (t: string) => [...t].some(isWide)
+
 function wrap(text: string, fs: number, maxW: number): string[] {
   const lines: string[] = []
   let cur = ""
-  const push = (word: string) => {
-    const next = cur ? `${cur} ${word}` : word
-    if (textW(next, fs) <= maxW) cur = next
-    else {
-      if (cur) lines.push(cur)
-      cur = word
-    }
-  }
-  for (const word of text.split(/\s+/).filter(Boolean)) {
-    if (textW(word, fs) <= maxW) {
-      push(word)
-      continue
-    }
-    // 칸보다 긴 단어(띄어쓰기 없는 한글 등)는 글자 단위로 자른다
-    for (const ch of word) {
-      if (textW(cur + ch, fs) > maxW && cur) {
+  const addChars = (t: string, sp: boolean) => {
+    let first = true
+    for (const ch of t) {
+      const piece = first && sp && cur ? ` ${ch}` : ch
+      first = false
+      if (cur && textW(cur + piece, fs) > maxW) {
         lines.push(cur)
         cur = ch
-      } else cur += ch
+      } else cur += piece
     }
+  }
+  for (const tok of tokens(text)) {
+    const next = cur ? `${cur}${tok.sp ? " " : ""}${tok.t}` : tok.t
+    if (textW(next, fs) <= maxW) {
+      cur = next
+      continue
+    }
+    if (breakable(tok.t)) {
+      // 한글은 지금 줄에 이어서 글자 단위로 채운다
+      addChars(tok.t, tok.sp)
+      continue
+    }
+    // 영문 단어는 통째로 다음 줄로. 칸보다 길 때만 글자 단위로 자른다
+    if (cur) lines.push(cur)
+    cur = ""
+    if (textW(tok.t, fs) <= maxW) cur = tok.t
+    else addChars(tok.t, false)
   }
   if (cur) lines.push(cur)
   return lines
 }
 
+/** 같은 줄 수를 유지하는 가장 좁은 폭으로 다시 나눠 줄 길이를 고르게 한다
+ *  (끝에 한두 글자만 넘어가는 줄을 막는다). 한 줄에 들어가던 조각은 쪼개지 않는다 */
+function balance(text: string, fs: number, maxW: number): string[] {
+  const base = wrap(text, fs, maxW)
+  if (base.length < 2) return base
+  // 통째로 두어야 하는 영문 단어보다 좁게는 줄이지 않는다
+  const fitting = tokens(text)
+    .filter((t) => !breakable(t.t))
+    .map((t) => textW(t.t, fs))
+    .filter((w) => w <= maxW)
+  const minW = Math.max(0, ...fitting)
+  let lo = minW
+  let hi = maxW
+  for (let i = 0; i < 14; i++) {
+    const mid = (lo + hi) / 2
+    if (wrap(text, fs, mid).length <= base.length) hi = mid
+    else lo = mid
+  }
+  return wrap(text, fs, Math.max(hi, minW))
+}
+
 /** 칸 크기에 맞는 글자 크기와 줄바꿈 */
+/** 보기 싫은 줄바꿈: 한두 글자만 남은 줄, 또는 영문 단어가 중간에서 끊긴 줄 */
+function awkward(text: string, lines: string[]): boolean {
+  if (lines.length < 2) return false
+  if (lines.some((l) => [...l.replace(/\s/g, "")].length <= 2)) return true
+  for (let i = 1; i < lines.length; i++) {
+    const tail = /[A-Za-z]+$/.exec(lines[i - 1])?.[0]
+    const head = /^[A-Za-z]+/.exec(lines[i])?.[0]
+    // 원문에서 붙어 있던 영문 글자가 두 줄로 갈렸으면 단어 중간에서 끊긴 것
+    if (tail && head && text.includes(tail + head)) return true
+  }
+  return false
+}
+
 export function fitLabel(
   text: string,
   w: number,
@@ -1171,11 +1227,16 @@ export function fitLabel(
 ): { lines: string[]; size: number } {
   const maxW = w - 3
   const maxH = h - reserve
+  const fits = (lines: string[], fs: number) =>
+    lines.length * fs * 1.18 <= maxH && lines.every((l) => textW(l, fs) <= maxW)
+  // 들어가는 가장 큰 크기를 찾되, 줄바꿈이 어색하면 조금(최대 40%) 더 줄여서 깔끔한 크기를 찾는다
+  let first: { lines: string[]; size: number } | null = null
   for (let fs = max; fs >= 2; fs -= 0.2) {
-    const lines = wrap(text, fs, maxW)
-    if (lines.length * fs * 1.18 <= maxH && lines.every((l) => textW(l, fs) <= maxW)) {
-      return { lines, size: fs }
-    }
+    const lines = balance(text, fs, maxW)
+    if (!fits(lines, fs)) continue
+    if (!awkward(text, lines)) return { lines, size: fs }
+    first ??= { lines, size: fs }
+    if (fs < max * 0.6) break
   }
-  return { lines: wrap(text, 2, maxW), size: 2 }
+  return first ?? { lines: balance(text, 2, maxW), size: 2 }
 }

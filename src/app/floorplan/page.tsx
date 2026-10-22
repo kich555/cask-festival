@@ -28,7 +28,7 @@ export default async function FloorPlanPage() {
   // 공개 전: 관리자만 실제 배치도를 미리 보고, 그 외에는 안내만 보여 준다
   if (!(await getFloorPlanPublic()) && !(await isAdminRequest())) {
     return (
-      <div className="min-h-screen bg-white pt-[88px] flex flex-col">
+      <div className="min-h-screen bg-[var(--c-bg)] pt-[88px] flex flex-col">
         <Nav2026 />
         <main className="flex-1 flex flex-col">
           <FloorPlanSoon />

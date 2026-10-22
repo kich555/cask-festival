@@ -82,10 +82,10 @@ function Nav2026Content() {
 
   const isActive = (href: string) => pathname === href
 
-  const textColor = transparent ? "text-white" : "text-[#1a1a1a]"
+  const textColor = transparent ? "text-white" : "text-[var(--c-text)]"
   const headerBg = transparent
     ? "bg-transparent"
-    : "bg-white/95 backdrop-blur-sm border-b border-black/5"
+    : "bg-[var(--c-bg)]/95 backdrop-blur-sm border-b border-[var(--c-line-soft)]"
 
   return (
     <header
@@ -93,17 +93,29 @@ function Nav2026Content() {
     >
       <div className="max-w-[1440px] mx-auto h-[88px] px-5 md:px-10 flex items-center justify-between">
         <Link href={withLang("/")} aria-label="Cask Carnival" className="flex items-center">
+          {/* 투명 헤더이거나 다크 모드면 흰 로고 */}
           <Image
-            src={transparent ? "/2026/logo-nav-white.svg" : "/2026/logo-nav-dark.svg"}
+            src="/2026/logo-nav-white.svg"
             alt="Cask Carnival"
             width={240}
             height={48}
-            className="h-[40px] md:h-[48px] w-auto"
+            className={`h-[40px] md:h-[48px] w-auto ${transparent ? "" : "hidden dark:block"}`}
             priority
           />
+          {!transparent && (
+            <Image
+              src="/2026/logo-nav-dark.svg"
+              alt=""
+              width={240}
+              height={48}
+              className="h-[40px] md:h-[48px] w-auto dark:hidden"
+              priority
+            />
+          )}
         </Link>
 
-        <nav className="hidden md:flex items-center gap-[52px] text-[19px] font-medium">
+        {/* 폭에 맞춰 글자·간격이 함께 줄어든다. 한 줄에 다 안 들어가는 폭(1024px 미만)은 ☰ 메뉴 */}
+        <nav className="hidden lg:flex items-center gap-[clamp(20px,3.4vw,52px)] text-[clamp(15px,1.28vw,19px)] font-medium whitespace-nowrap">
           {NAV_LINKS.map((item) => {
             const active = isActive(item.href)
             return (
@@ -113,10 +125,10 @@ function Nav2026Content() {
                 onClick={guard(item.key)}
                 className={
                   active
-                    ? "text-[#7d0b1c] font-semibold"
+                    ? "text-[var(--c-accent)] font-semibold"
                     : transparent
                       ? "text-white/90 hover:text-white transition-colors"
-                      : "text-[#1a1a1a] hover:text-[#7d0b1c] transition-colors"
+                      : "text-[var(--c-text)] hover:text-[var(--c-accent)] transition-colors"
                 }
               >
                 {c.nav[item.key]}
@@ -134,7 +146,7 @@ function Nav2026Content() {
             className={
               transparent
                 ? "hover:opacity-80"
-                : "text-[#555] hover:text-[#7d0b1c] transition-colors"
+                : "text-[var(--c-text2)] hover:text-[var(--c-accent)] transition-colors"
             }
           >
             <svg
@@ -155,21 +167,29 @@ function Nav2026Content() {
             className={`flex items-center gap-1 px-3 py-1.5 text-[15px] font-semibold rounded-md border transition-colors ${
               transparent
                 ? "border-white/40 hover:border-white"
-                : "border-black/15 hover:border-[#7d0b1c] hover:text-[#7d0b1c]"
+                : "border-[var(--c-line-strong)] hover:border-[var(--c-accent)] hover:text-[var(--c-accent)]"
             }`}
             aria-label={lang === "ko" ? "Switch to English" : "한국어로 전환"}
           >
             <span
               className={
-                lang === "ko" ? "text-[#7d0b1c]" : transparent ? "text-white/70" : "text-black/50"
+                lang === "ko"
+                  ? "text-[var(--c-accent)]"
+                  : transparent
+                    ? "text-white/70"
+                    : "text-[var(--c-muted)]"
               }
             >
               한
             </span>
-            <span className={transparent ? "text-white/40" : "text-black/30"}>/</span>
+            <span className={transparent ? "text-white/40" : "text-[var(--c-faint)]"}>/</span>
             <span
               className={
-                lang === "en" ? "text-[#7d0b1c]" : transparent ? "text-white/70" : "text-black/50"
+                lang === "en"
+                  ? "text-[var(--c-accent)]"
+                  : transparent
+                    ? "text-white/70"
+                    : "text-[var(--c-muted)]"
               }
             >
               EN
@@ -180,7 +200,7 @@ function Nav2026Content() {
             onClick={() => setOpen((v) => !v)}
             aria-label={open ? c.nav.closeMenu : c.nav.openMenu}
             aria-expanded={open}
-            className="md:hidden p-1"
+            className="lg:hidden p-1"
           >
             <svg
               viewBox="0 0 24 24"
@@ -197,14 +217,16 @@ function Nav2026Content() {
       </div>
 
       {open && (
-        <nav className="md:hidden bg-white border-t border-black/5 shadow-lg">
+        <nav className="lg:hidden bg-[var(--c-surface)] border-t border-[var(--c-line-soft)] shadow-lg">
           {NAV_LINKS.map((item) => (
             <Link
               key={item.key}
               href={withLang(item.href)}
               onClick={guard(item.key)}
               className={`block px-6 py-4 text-[16px] ${
-                isActive(item.href) ? "text-[#7d0b1c] font-semibold" : "text-[#1a1a1a]"
+                isActive(item.href)
+                  ? "text-[var(--c-accent)] font-semibold"
+                  : "text-[var(--c-text)]"
               }`}
             >
               {c.nav[item.key]}
@@ -227,7 +249,7 @@ function Nav2026Content() {
             <div
               role="dialog"
               aria-modal="true"
-              className="relative w-full max-w-[320px] bg-white text-[#1a1a1a] px-6 pt-7 pb-5 text-center shadow-xl"
+              className="relative w-full max-w-[320px] bg-[var(--c-surface)] text-[var(--c-text)] px-6 pt-7 pb-5 text-center shadow-xl"
             >
               <p className="text-[16px] font-bold">{c.floorP.soon}</p>
               <button

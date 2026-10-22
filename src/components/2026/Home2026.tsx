@@ -7,6 +7,7 @@ import { Suspense } from "react"
 import type { ProgramDay } from "@/content/program2026"
 import { useContent2026 } from "@/i18n/useContent2026"
 import ProgramTimetable from "./ProgramTimetable"
+import Reveal from "./Reveal"
 
 const TASTING_NOTES = [
   { icon: "🍇", en: "Dried Fruits", ko: "건과일" },
@@ -22,7 +23,7 @@ function HomeContent({ program }: { program: ProgramDay[] }) {
   const qs = searchParams.get("lang") ? `?lang=${searchParams.get("lang")}` : ""
 
   return (
-    <div className="bg-white text-[#1a1a1a]">
+    <div className="bg-[var(--c-bg)] text-[var(--c-text)]">
       {/* HERO */}
       <section className="relative h-screen min-h-[600px] overflow-hidden bg-[#07050a] flex items-end justify-center text-center text-white">
         <iframe
@@ -112,113 +113,132 @@ function HomeContent({ program }: { program: ProgramDay[] }) {
             className="w-full h-auto"
           />
         </div>
-        <div className="relative max-w-[1440px] mx-auto px-5 md:px-10 w-full">
-          <Image
-            src="/2026/logo-nav-dark.svg"
-            alt="Cask Carnival"
-            width={480}
-            height={96}
-            className="w-[clamp(260px,34vw,480px)] h-auto mb-[clamp(24px,2.8vw,44px)]"
-          />
-          <p className="uppercase text-[#7d0b1c] font-extrabold tracking-tight leading-[1.15] text-[clamp(20px,2.4vw,30px)] mb-[clamp(28px,4.5vw,60px)]">
-            {c.teaser.catch}
-          </p>
-          <h2 className="text-[clamp(17px,3vw,36px)] font-extrabold leading-[1.5] mb-[clamp(22px,3.6vw,44px)] break-keep">
-            {c.teaser.lead1}
-            <br />
-            {c.teaser.lead2}
-          </h2>
-          <p className="text-[#555] text-[clamp(16px,1.2vw,18px)] leading-[1.9] max-w-[760px] break-keep text-balance">
-            {c.teaser.body1}
-          </p>
-          <p className="text-[#555] text-[clamp(16px,1.2vw,18px)] leading-[1.9] max-w-[760px] mt-3 break-keep text-balance">
-            {c.teaser.body2}
-          </p>
-          <Link
-            href={`/about${qs}`}
-            className="inline-block mt-9 text-[#7d0b1c] font-bold border-b-2 border-[#7d0b1c] pb-1.5"
-          >
-            {c.teaser.more}
-          </Link>
-        </div>
+        <Reveal>
+          <div className="relative max-w-[1440px] mx-auto px-5 md:px-10 w-full">
+            <Image
+              src="/2026/logo-nav-dark.svg"
+              alt="Cask Carnival"
+              width={480}
+              height={96}
+              className="w-[clamp(260px,34vw,480px)] h-auto mb-[clamp(24px,2.8vw,44px)] dark:hidden"
+            />
+            <Image
+              src="/2026/logo-nav-white.svg"
+              alt=""
+              width={480}
+              height={96}
+              className="hidden dark:block w-[clamp(260px,34vw,480px)] h-auto mb-[clamp(24px,2.8vw,44px)]"
+            />
+            <p className="uppercase text-[var(--c-accent)] font-extrabold tracking-tight leading-[1.15] text-[clamp(20px,2.4vw,30px)] mb-[clamp(28px,4.5vw,60px)]">
+              {c.teaser.catch}
+            </p>
+            <h2 className="text-[clamp(17px,3vw,36px)] font-extrabold leading-[1.5] mb-[clamp(22px,3.6vw,44px)] break-keep">
+              {c.teaser.lead1}
+              <br />
+              {c.teaser.lead2}
+            </h2>
+            <p className="text-[var(--c-text2)] text-[clamp(16px,1.2vw,18px)] leading-[1.9] max-w-[760px] break-keep text-balance">
+              {c.teaser.body1}
+            </p>
+            <p className="text-[var(--c-text2)] text-[clamp(16px,1.2vw,18px)] leading-[1.9] max-w-[760px] mt-3 break-keep text-balance">
+              {c.teaser.body2}
+            </p>
+            <Link
+              href={`/about${qs}`}
+              className="inline-block mt-9 text-[var(--c-accent)] font-bold border-b-2 border-[var(--c-accent)] pb-1.5"
+            >
+              {c.teaser.more}
+            </Link>
+          </div>
+        </Reveal>
       </section>
 
       {/* OLOROSO THEME BAND — 편지지 느낌(흰 배경 + 사각 테두리) */}
-      <section className="bg-white">
+      <section className="bg-[var(--c-bg)]">
         <div className="max-w-[1180px] mx-auto px-5 md:px-10 py-20 md:py-32">
-          <div className="border border-[#7d0b1c]/35 rounded-lg px-6 md:px-20 py-16 md:py-24 text-center text-[#1a1a1a]">
-            <p className="tracking-[3px] text-[14px] text-[#7d0b1c] mb-4">{c.themeBand.eyebrow}</p>
-            <h2 className="text-[clamp(30px,5vw,46px)] font-extrabold leading-tight">
-              {c.themeBand.title}
-            </h2>
-            <div className="w-[clamp(180px,40vw,760px)] h-px bg-[#7d0b1c]/30 mx-auto my-9" />
-            <div className="max-w-[760px] mx-auto space-y-4">
-              <p className="text-[#444] leading-[1.9] text-[clamp(15px,1.3vw,17px)] break-keep text-balance">
-                {c.themeBand.desc1}
+          <Reveal>
+            <div className="border border-[var(--c-accent)]/35 rounded-lg px-6 md:px-20 py-16 md:py-24 text-center text-[var(--c-text)]">
+              <p className="tracking-[3px] text-[14px] text-[var(--c-accent)] mb-4">
+                {c.themeBand.eyebrow}
               </p>
-              <p className="text-[#444] leading-[1.9] text-[clamp(15px,1.3vw,17px)] break-keep text-balance">
-                {c.themeBand.desc2}
+              <h2 className="text-[clamp(30px,5vw,46px)] font-extrabold leading-tight">
+                {c.themeBand.title}
+              </h2>
+              <div className="w-[clamp(180px,40vw,760px)] h-px bg-[var(--c-accent)]/30 mx-auto my-9" />
+              <div className="max-w-[760px] mx-auto space-y-4">
+                <p className="text-[var(--c-text2)] leading-[1.9] text-[clamp(15px,1.3vw,17px)] break-keep text-balance">
+                  {c.themeBand.desc1}
+                </p>
+                <p className="text-[var(--c-text2)] leading-[1.9] text-[clamp(15px,1.3vw,17px)] break-keep text-balance">
+                  {c.themeBand.desc2}
+                </p>
+                <p className="text-[var(--c-text2)] leading-[1.9] text-[clamp(15px,1.3vw,17px)] break-keep text-balance">
+                  {c.themeBand.desc3}
+                </p>
+              </div>
+              <p className="tracking-[6px] text-[var(--c-accent)] font-semibold mt-14 mb-10 text-[16px]">
+                {c.themeBand.notesTitle}
               </p>
-              <p className="text-[#444] leading-[1.9] text-[clamp(15px,1.3vw,17px)] break-keep text-balance">
-                {c.themeBand.desc3}
-              </p>
-            </div>
-            <p className="tracking-[6px] text-[#7d0b1c] font-semibold mt-14 mb-10 text-[16px]">
-              {c.themeBand.notesTitle}
-            </p>
-            <div className="grid grid-cols-5 gap-2 md:gap-6 max-w-[920px] mx-auto">
-              {TASTING_NOTES.map((n) => (
-                <div key={n.en} className="flex flex-col items-center gap-1 md:gap-1.5">
-                  <div className="text-[22px] md:text-[34px]">{n.icon}</div>
-                  <div className="text-[10px] md:text-[15px] font-semibold leading-tight break-keep">
-                    {lang === "ko" ? n.ko : n.en}
+              <div className="grid grid-cols-5 gap-2 md:gap-6 max-w-[920px] mx-auto">
+                {TASTING_NOTES.map((n) => (
+                  <div key={n.en} className="flex flex-col items-center gap-1 md:gap-1.5">
+                    <div className="text-[22px] md:text-[34px]">{n.icon}</div>
+                    <div className="text-[10px] md:text-[15px] font-semibold leading-tight break-keep">
+                      {lang === "ko" ? n.ko : n.en}
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
-          </div>
+          </Reveal>
         </div>
       </section>
 
       {/* MASTER CLASS — 프로그램 페이지와 같은 시간표 */}
       <section className="py-20 md:py-24 text-center">
-        <div className="max-w-[1100px] mx-auto px-5 md:px-10">
-          <h2 className="text-[clamp(24px,4vw,32px)] font-extrabold mb-9">{c.masterclass.title}</h2>
-          <ProgramTimetable days={program} />
-        </div>
+        <Reveal>
+          <div className="max-w-[1100px] mx-auto px-5 md:px-10">
+            <h2 className="text-[clamp(24px,4vw,32px)] font-extrabold mb-9">
+              {c.masterclass.title}
+            </h2>
+            <ProgramTimetable days={program} />
+          </div>
+        </Reveal>
       </section>
 
       {/* EXHIBITOR TEASER */}
-      <section className="bg-white py-20 md:py-28">
-        <div className="max-w-[1440px] mx-auto px-5 md:px-10">
-          <h2 className="text-[clamp(26px,4vw,40px)] font-extrabold mb-8">{c.exhibitor.title}</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 border-t border-black/10">
-            {[
-              [c.exhibitor.infoEvent, c.exhibitor.infoEventV],
-              [c.exhibitor.infoDate, c.exhibitor.infoDateV],
-              [c.exhibitor.infoVenue, c.exhibitor.infoVenueV],
-              [c.exhibitor.infoHost, c.exhibitor.infoHostV],
-            ].map(([k, v]) => (
-              <div key={k} className="py-5 border-b border-black/10">
-                <dt className="text-[13px] text-[#999]">{k}</dt>
-                <dd className="text-[16px] font-semibold mt-1">{v}</dd>
-              </div>
-            ))}
-          </div>
+      <section className="bg-[var(--c-bg)] py-20 md:py-28">
+        <Reveal>
+          <div className="max-w-[1440px] mx-auto px-5 md:px-10">
+            <h2 className="text-[clamp(26px,4vw,40px)] font-extrabold mb-8">{c.exhibitor.title}</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 border-t border-[var(--c-line)]">
+              {[
+                [c.exhibitor.infoEvent, c.exhibitor.infoEventV],
+                [c.exhibitor.infoDate, c.exhibitor.infoDateV],
+                [c.exhibitor.infoVenue, c.exhibitor.infoVenueV],
+                [c.exhibitor.infoHost, c.exhibitor.infoHostV],
+              ].map(([k, v]) => (
+                <div key={k} className="py-5 border-b border-[var(--c-line)]">
+                  <dt className="text-[13px] text-[var(--c-muted2)]">{k}</dt>
+                  <dd className="text-[16px] font-semibold mt-1">{v}</dd>
+                </div>
+              ))}
+            </div>
 
-          <p className="text-center text-[16px] md:text-[18px] font-semibold mt-12 leading-relaxed">
-            {c.exhibitor.closed}
-          </p>
+            <p className="text-center text-[16px] md:text-[18px] font-semibold mt-12 leading-relaxed">
+              {c.exhibitor.closed}
+            </p>
 
-          <div className="flex justify-center mt-8">
-            <Link
-              href={`/brands${qs}`}
-              className="border border-[#7d0b1c] text-[#7d0b1c] rounded px-7 py-3.5 font-semibold text-center hover:bg-[#7d0b1c] hover:text-white transition-colors"
-            >
-              {c.exhibitor.moreBtn}
-            </Link>
+            <div className="flex justify-center mt-8">
+              <Link
+                href={`/brands${qs}`}
+                className="border border-[var(--c-accent)] text-[var(--c-accent)] rounded px-7 py-3.5 font-semibold text-center hover:bg-[#7d0b1c] hover:text-white transition-colors"
+              >
+                {c.exhibitor.moreBtn}
+              </Link>
+            </div>
           </div>
-        </div>
+        </Reveal>
       </section>
     </div>
   )

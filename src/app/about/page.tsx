@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 
 export default function AboutPage() {
   return (
-    <div className="min-h-screen bg-white pt-[88px] flex flex-col">
+    <div className="min-h-screen bg-[var(--c-bg)] pt-[88px] flex flex-col">
       <Nav2026 />
       <main className="flex-1">
         <AboutContent />

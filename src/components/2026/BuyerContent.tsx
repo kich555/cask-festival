@@ -7,10 +7,10 @@ import { MAX_UPLOAD_BYTES } from "@/lib/buyer"
 import PageHeader2026 from "./PageHeader2026"
 
 const inputClass =
-  "w-full border border-black/15 rounded px-3.5 py-2.5 text-[15px] outline-none transition-colors focus:border-[#7d0b1c] bg-white"
+  "w-full border border-[var(--c-line-strong)] rounded px-3.5 py-2.5 text-[15px] outline-none transition-colors focus:border-[var(--c-accent)] bg-[var(--c-surface)]"
 /** 미입력으로 표시된 입력칸 */
 const inputErrorClass =
-  "w-full border-2 border-[#7d0b1c] rounded px-3.5 py-2.5 text-[15px] outline-none bg-[#7d0b1c]/[0.03]"
+  "w-full border-2 border-[var(--c-accent)] rounded px-3.5 py-2.5 text-[15px] outline-none bg-[var(--c-accent)]/[0.03]"
 const labelClass = "block text-[13px] font-semibold mb-1.5"
 
 /**
@@ -28,13 +28,13 @@ function SectionTitle({
   required?: boolean
 }) {
   return (
-    <h2 className="text-[17px] md:text-[19px] font-extrabold pb-3 mb-6 border-b border-black/10 flex flex-wrap items-baseline gap-x-3 gap-y-1">
+    <h2 className="text-[17px] md:text-[19px] font-extrabold pb-3 mb-6 border-b border-[var(--c-line)] flex flex-wrap items-baseline gap-x-3 gap-y-1">
       <span>
         {children}
-        {required && <span className="text-[#7d0b1c] ml-1">*</span>}
+        {required && <span className="text-[var(--c-accent)] ml-1">*</span>}
       </span>
       {error && (
-        <span className="cc-alert-bounce text-[13px] md:text-[14px] font-bold text-[#7d0b1c]">
+        <span className="cc-alert-bounce text-[13px] md:text-[14px] font-bold text-[var(--c-accent)]">
           {error}
         </span>
       )}
@@ -44,7 +44,9 @@ function SectionTitle({
 
 function FieldError({ message }: { message?: string }) {
   if (!message) return null
-  return <p className="cc-alert-bounce text-[13px] font-bold text-[#7d0b1c] mt-1.5">{message}</p>
+  return (
+    <p className="cc-alert-bounce text-[13px] font-bold text-[var(--c-accent)] mt-1.5">{message}</p>
+  )
 }
 
 function Field({
@@ -60,7 +62,7 @@ function Field({
 }) {
   return (
     <div data-field={name} data-invalid={error ? "true" : undefined} className="scroll-mt-32">
-      <span className={`${labelClass} ${error ? "text-[#7d0b1c]" : ""}`}>{label}</span>
+      <span className={`${labelClass} ${error ? "text-[var(--c-accent)]" : ""}`}>{label}</span>
       {children}
       <FieldError message={error} />
     </div>
@@ -146,9 +148,9 @@ function FileField({
         <span className="shrink-0 bg-[#7d0b1c] text-white rounded px-4 py-2 text-[13px] font-semibold">
           {chooseLabel}
         </span>
-        <span className="text-[14px] text-[#666] truncate">{fileName ?? emptyLabel}</span>
+        <span className="text-[14px] text-[var(--c-muted)] truncate">{fileName ?? emptyLabel}</span>
       </label>
-      <p className="text-[12px] text-[#999] mt-1.5">{hint}</p>
+      <p className="text-[12px] text-[var(--c-muted2)] mt-1.5">{hint}</p>
     </>
   )
 }
@@ -305,35 +307,37 @@ function Inner() {
 
   if (done) {
     return (
-      <div className="bg-white text-[#1a1a1a]">
+      <div className="bg-[var(--c-bg)] text-[var(--c-text)]">
         <PageHeader2026 title={t.title} subtitle={t.subtitle} watermark="BUYER" />
         <div className="max-w-[700px] mx-auto px-5 md:px-10 py-24 md:py-32 text-center">
           <h2 className="text-[clamp(22px,3.5vw,28px)] font-extrabold">{t.successTitle}</h2>
-          <p className="text-[#666] text-[15px] mt-5 leading-relaxed whitespace-pre-line">{t.successBody}</p>
+          <p className="text-[var(--c-muted)] text-[15px] mt-5 leading-relaxed whitespace-pre-line">
+            {t.successBody}
+          </p>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="bg-white text-[#1a1a1a]">
+    <div className="bg-[var(--c-bg)] text-[var(--c-text)]">
       <PageHeader2026 title={t.title} subtitle={t.subtitle} watermark="BUYER" />
 
       <div className="max-w-[820px] mx-auto px-5 md:px-10 py-12 md:py-16">
         {t.intro.map((line) => (
-          <p key={line} className="text-[15px] text-[#555] leading-relaxed">
+          <p key={line} className="text-[15px] text-[var(--c-text2)] leading-relaxed">
             {line}
           </p>
         ))}
-        <p className="mt-5 text-[14px] md:text-[15px] text-[#7d0b1c] font-bold leading-relaxed">
+        <p className="mt-5 text-[14px] md:text-[15px] text-[var(--c-accent)] font-bold leading-relaxed">
           {t.pressNote}
         </p>
 
-        <div className="mt-8 border border-[#7d0b1c]/25 bg-[#7d0b1c]/[0.04] rounded p-5">
+        <div className="mt-8 border border-[var(--c-accent)]/25 bg-[var(--c-accent)]/[0.04] rounded p-5">
           <div className="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-8">
             <div className="sm:flex-1">
-              <h3 className="text-[15px] font-extrabold text-[#7d0b1c]">{t.ticketTitle}</h3>
-              <p className="text-[13px] md:text-[14px] text-[#555] mt-2 leading-relaxed">
+              <h3 className="text-[15px] font-extrabold text-[var(--c-accent)]">{t.ticketTitle}</h3>
+              <p className="text-[13px] md:text-[14px] text-[var(--c-text2)] mt-2 leading-relaxed">
                 {t.ticketNote}
               </p>
             </div>
@@ -342,15 +346,19 @@ function Inner() {
                 <div key={row.label} className="flex items-baseline gap-2.5">
                   <dt className="text-[14px] font-semibold">{row.label}</dt>
                   <dd className="flex items-baseline gap-2">
-                    <span className="text-[13px] text-[#999] line-through">{row.was}</span>
-                    <span className="text-[20px] font-extrabold text-[#7d0b1c]">{row.now}</span>
+                    <span className="text-[13px] text-[var(--c-muted2)] line-through">
+                      {row.was}
+                    </span>
+                    <span className="text-[20px] font-extrabold text-[var(--c-accent)]">
+                      {row.now}
+                    </span>
                   </dd>
                 </div>
               ))}
             </dl>
           </div>
 
-          <p className="mt-4 pt-4 border-t border-[#7d0b1c]/20 text-[14px] md:text-[15px] font-bold text-[#1a1a1a] leading-relaxed break-keep">
+          <p className="mt-4 pt-4 border-t border-[var(--c-accent)]/20 text-[14px] md:text-[15px] font-bold text-[var(--c-text)] leading-relaxed break-keep">
             {t.ticketWarning}
           </p>
         </div>
@@ -503,23 +511,25 @@ function Inner() {
                   name="age_confirmed"
                   className="accent-[#7d0b1c] w-4 h-4 mt-1"
                 />
-                <span className={errors.age_confirmed ? "text-[#7d0b1c]" : ""}>
-                  {t.ageConfirm} <span className="text-[#7d0b1c]">*</span>
+                <span className={errors.age_confirmed ? "text-[var(--c-accent)]" : ""}>
+                  {t.ageConfirm} <span className="text-[var(--c-accent)]">*</span>
                 </span>
               </label>
             </div>
 
-            <div className="border border-black/10 rounded p-5 bg-[#faf9f9] mt-6">
+            <div className="border border-[var(--c-line)] rounded p-5 bg-[var(--c-soft)] mt-6">
               <h3 className="text-[14px] font-bold">{t.privacyTitle}</h3>
-              <p className="text-[13px] text-[#666] mt-3 leading-relaxed whitespace-pre-line">
+              <p className="text-[13px] text-[var(--c-muted)] mt-3 leading-relaxed whitespace-pre-line">
                 {t.privacyBody}
               </p>
-              <p className="text-[13px] text-[#666] mt-3 leading-relaxed">{t.privacyProcessor}</p>
+              <p className="text-[13px] text-[var(--c-muted)] mt-3 leading-relaxed">
+                {t.privacyProcessor}
+              </p>
               <a
                 href="/privacy"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-block mt-3 text-[13px] font-semibold text-[#7d0b1c] underline underline-offset-2"
+                className="inline-block mt-3 text-[13px] font-semibold text-[var(--c-accent)] underline underline-offset-2"
               >
                 {t.privacyLink}
               </a>
@@ -536,13 +546,15 @@ function Inner() {
                   name="privacy_consent"
                   className="accent-[#7d0b1c] w-4 h-4 mt-0.5"
                 />
-                <span className={errors.privacy_consent ? "text-[#7d0b1c] font-semibold" : ""}>
-                  {t.privacyAgree} <span className="text-[#7d0b1c]">*</span>
+                <span
+                  className={errors.privacy_consent ? "text-[var(--c-accent)] font-semibold" : ""}
+                >
+                  {t.privacyAgree} <span className="text-[var(--c-accent)]">*</span>
                 </span>
               </label>
             </div>
 
-            <label className="flex items-start gap-2.5 mt-2.5 text-[14px] text-[#666]">
+            <label className="flex items-start gap-2.5 mt-2.5 text-[14px] text-[var(--c-muted)]">
               <input
                 type="checkbox"
                 name="marketing_opt_in"
@@ -555,13 +567,13 @@ function Inner() {
           </fieldset>
 
           {error && (
-            <p className="text-[14px] text-[#7d0b1c] font-semibold border border-[#7d0b1c]/30 bg-[#7d0b1c]/[0.04] rounded px-4 py-3">
+            <p className="text-[14px] text-[var(--c-accent)] font-semibold border border-[var(--c-accent)]/30 bg-[var(--c-accent)]/[0.04] rounded px-4 py-3">
               {error}
             </p>
           )}
 
           {missingLabels.length > 0 && (
-            <div className="text-[14px] text-[#7d0b1c] leading-relaxed">
+            <div className="text-[14px] text-[var(--c-accent)] leading-relaxed">
               <p className="font-bold">{t.missingSummary}</p>
               <ul className="mt-1.5 flex flex-col gap-0.5">
                 {missingLabels.map((label) => (

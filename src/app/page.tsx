@@ -10,7 +10,7 @@ export default async function CaskCarnival2026() {
   const program = await getProgram()
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-[var(--c-bg)]">
       <Nav2026 />
       <main>
         <Home2026 program={program} />
