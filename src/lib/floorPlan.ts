@@ -793,9 +793,9 @@ export const DEFAULT_LAYOUT: Layout = {
       y: 45,
       w: 3,
       h: 3,
-      brand: null,
-      ko: "VLEES",
-      en: "VLEES",
+      brand: "seolhapae",
+      ko: "설하패",
+      en: "SEOLHAPAE",
     },
     {
       id: "b704",
