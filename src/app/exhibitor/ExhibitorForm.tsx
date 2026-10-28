@@ -394,7 +394,6 @@ export default function ExhibitorForm({ state: initial, defaults }: Props) {
               <input
                 value={boothDraft.name_ko}
                 onChange={(e) => setBoothDraft({ ...boothDraft, name_ko: e.target.value })}
-                placeholder="예: PNS 와인컴퍼니"
                 className={inputCls}
               />
               <span className="block mt-1 font-normal text-[12px] text-[#888]">
