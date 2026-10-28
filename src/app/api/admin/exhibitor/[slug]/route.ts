@@ -11,7 +11,7 @@ export const runtime = "nodejs"
 type Ctx = { params: Promise<{ slug: string }> }
 
 /**
- * 관리자 처리: booth_ack(수정 요청 확인) | booth_edit(업체명 직접 수정 → 브랜드 정보·부스 표기에 반영)
+ * 관리자 처리: booth_ack(수정 요청 확인 → 신청한 표기명을 브랜드 정보에 반영) | booth_edit(업체명 직접 수정 → 브랜드 정보·부스 표기에 반영)
  *             | extra_approve(변경 승인) | extra_reject(변경 반려)
  *             | payment_confirm(입금 확인) | payment_cancel(입금 확인 취소)
  */
@@ -32,6 +32,19 @@ export async function POST(request: NextRequest, { params }: Ctx) {
   let r: Awaited<ReturnType<typeof applyExhibitorUpdate>>
   if (action === "booth_ack") {
     if (state.booth_status !== "revised") return fail("수정 요청이 없습니다.", 400)
+    // 확인하면 업체가 신청한 부스 표기명을 브랜드 정보(사이트 업체명·부스 배치도)에 그대로 반영한다
+    if (state.booth_name_ko) {
+      const brand = await getSupabaseAdmin()
+        .from(BRAND_TABLE)
+        .update({
+          name_ko: state.booth_name_ko,
+          ...(state.booth_name_en ? { name_en: state.booth_name_en } : {}),
+        })
+        .eq("slug", slug)
+      if (brand.error) return fail(brand.error.message, 500)
+      revalidateBrands()
+      revalidatePath("/")
+    }
     r = await applyExhibitorUpdate(slug, { booth_ack_at: now }, { kind: "booth_ack", data: {} })
   } else if (action === "booth_edit") {
     const name_ko = String(body.name_ko ?? "")

@@ -566,7 +566,7 @@ export default function ExhibitorAdmin({ rows }: { rows: ExhibitorOverview[] }) 
                                   act(
                                     r.brand_slug,
                                     "booth_ack",
-                                    `${r.defaults.name_ko}의 수정 요청을 확인 처리할까요?\n업체 화면에 '수정 요청 확인됨'이 표시됩니다.`,
+                                    `${r.defaults.name_ko}의 수정 요청을 확인 처리할까요?\n신청한 표기명(${r.booth_name_ko ?? ""})이 사이트 업체명·부스 배치도에 바로 반영되고, 업체 화면에 '수정 요청 확인됨'이 표시됩니다.`,
                                   )
                                 }
                                 className={`${actionBtn} bg-[#1f5fa8] text-white`}
