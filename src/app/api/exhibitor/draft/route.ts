@@ -33,7 +33,7 @@ export async function PUT(request: NextRequest) {
 
   if (body.section === "booth") {
     const name_ko = text(d.name_ko, 100)
-    if (!name_ko) return fail("업체명(한글)을 입력해 주십시오.", 400)
+    if (!name_ko) return fail("부스 표기명을 입력해 주십시오.", 400)
     draft.booth = { name_ko, name_en: text(d.name_en, 100), note: text(d.note, 1000) }
   } else if (body.section === "extra") {
     const items = sanitizeExtraItems(d.items)

@@ -345,8 +345,8 @@ export default function ExhibitorForm({ state: initial, defaults }: Props) {
           <>
             <dl className="mt-5 divide-y divide-black/10 border-y border-black/10 text-[15px]">
               {[
-                ["업체명 (한글)", booth.name_ko],
-                ["업체명 (영문)", booth.name_en],
+                ["부스 표기명", booth.name_ko],
+                ["부스 표기명 (영문)", booth.name_en],
                 ["부스 수", `${defaults.booths}개`],
                 ...(booth.note ? [["요청 메모", booth.note]] : []),
               ].map(([k, v]) => (
@@ -390,15 +390,19 @@ export default function ExhibitorForm({ state: initial, defaults }: Props) {
         ) : (
           <div className="mt-5 grid grid-cols-2 gap-x-3 gap-y-4">
             <label className="col-span-2 sm:col-span-1 text-[13px] font-bold">
-              업체명 (한글) *
+              부스 표기명 *
               <input
                 value={boothDraft.name_ko}
                 onChange={(e) => setBoothDraft({ ...boothDraft, name_ko: e.target.value })}
+                placeholder="예: PNS 와인컴퍼니"
                 className={inputCls}
               />
+              <span className="block mt-1 font-normal text-[12px] text-[#888]">
+                한글·영문 상관없이 부스에 표기하고 싶은 이름을 적어 주십시오.
+              </span>
             </label>
             <label className="col-span-2 sm:col-span-1 text-[13px] font-bold">
-              업체명 (영문)
+              부스 표기명 (영문)
               <input
                 value={boothDraft.name_en}
                 onChange={(e) => setBoothDraft({ ...boothDraft, name_en: e.target.value })}
