@@ -1083,10 +1083,27 @@ export type ResolvedItem = FloorItem & {
   nameEn: string
 }
 
+/** 업체 없이 사무국이 운영하는 부스 (캐스크 카니발·익스클루시브 판매·공식 MD): 행사 로고를 붙인다 */
+const ORGANIZER_BOOTH =
+  /캐스크\s*카니발|익스클루시브|공식\s*MD|CASK\s*CARNIVAL|EXCLUSIVE|OFFICIAL\s*MD/i
+const ORGANIZER_LOGO = "/brands/cask-carnival-cc.png"
+
 export function resolveItems(layout: Layout, brands: FloorBrand[]): ResolvedItem[] {
   const bySlug = new Map(brands.map((b) => [b.slug, b]))
   return layout.items.map((it) => {
-    const brandInfo = it.brand ? (bySlug.get(it.brand) ?? null) : null
+    const organizer = it.type === "booth" && !it.brand && ORGANIZER_BOOTH.test(`${it.ko} ${it.en}`)
+    const brandInfo = it.brand
+      ? (bySlug.get(it.brand) ?? null)
+      : organizer
+        ? {
+            slug: "",
+            nameKo: it.ko || it.en,
+            nameEn: it.en || it.ko,
+            logo: ORGANIZER_LOGO,
+            logoBg: null,
+            visible: false,
+          }
+        : null
     const meta = ITEM_TYPES[it.type]
     const nameEn = brandInfo ? brandInfo.nameEn || brandInfo.nameKo : it.en || it.ko || meta.en
     const nameKo = brandInfo ? brandInfo.nameKo || brandInfo.nameEn : it.ko || it.en || meta.ko
