@@ -68,15 +68,18 @@ function fits(layout: Layout, r: FloorItem | Omit<FloorItem, "id">, ignore?: str
   return cellsOf(r).every((c) => !taken.has(c))
 }
 
+type Target = "site" | "exhibitor"
+type Visibility = Record<Target, boolean>
+
 export default function FloorPlanAdmin({
   initial,
   brands,
-  initialPublic,
+  initialVisibility,
 }: {
   initial: Layout
   brands: FloorBrand[]
-  /** 홈페이지에 공개 중인지 */
-  initialPublic: boolean
+  /** 홈페이지·참가사 페이지에 각각 공개 중인지 */
+  initialVisibility: Visibility
 }) {
   const [layout, setLayoutRaw] = useState(initial)
   const [saved, setSaved] = useState(initial)
@@ -89,8 +92,8 @@ export default function FloorPlanAdmin({
   const [lang, setLang] = useState<"ko" | "en">("ko")
   const [notice, setNotice] = useState<{ kind: "ok" | "error"; text: string } | null>(null)
   const [saving, setSaving] = useState(false)
-  const [isPublic, setIsPublic] = useState(initialPublic)
-  const [toggling, setToggling] = useState(false)
+  const [visibility, setVisibility] = useState(initialVisibility)
+  const [toggling, setToggling] = useState<Target | null>(null)
   const svgRef = useRef<SVGSVGElement>(null)
 
   const dirty = JSON.stringify(layout) !== JSON.stringify(saved)
@@ -342,33 +345,38 @@ export default function FloorPlanAdmin({
     })
   }
 
-  async function togglePublic() {
-    const next = !isPublic
+  async function togglePublic(target: Target) {
+    const next = !visibility[target]
+    const where = target === "site" ? "홈페이지" : "참가사 페이지"
     const ok = window.confirm(
-      next
-        ? "부스 배치도를 홈페이지에 공개할까요?\n상단 메뉴의 부스 배치도 탭에서 바로 볼 수 있게 됩니다."
-        : "부스 배치도를 다시 숨길까요?\n탭을 누르면 '추후 공개 예정입니다.' 안내가 뜹니다.",
+      target === "site"
+        ? next
+          ? "부스 배치도를 홈페이지에 게시할까요?\n상단 메뉴의 부스 배치도 탭에서 바로 볼 수 있게 됩니다."
+          : "홈페이지에서 부스 배치도를 다시 숨길까요?\n탭을 누르면 '추후 공개 예정입니다.' 안내가 뜹니다."
+        : next
+          ? "부스 배치도를 참가사 페이지에 게시할까요?\n로그인한 참가사가 부스 배치도 탭에서 볼 수 있게 됩니다."
+          : "참가사 페이지에서 부스 배치도를 다시 숨길까요?\n'추후 업데이트 예정' 안내로 돌아갑니다.",
     )
     if (!ok) return
-    setToggling(true)
+    setToggling(target)
     setNotice(null)
     try {
       const res = await fetch("/api/admin/floorplan/visibility", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ public: next }),
+        body: JSON.stringify({ target, public: next }),
       })
       const data = await res.json()
       if (!res.ok || !data.ok) throw new Error(data.error ?? "변경 실패")
-      setIsPublic(next)
+      setVisibility((v) => ({ ...v, [target]: next }))
       setNotice({
         kind: "ok",
-        text: next ? "부스 배치도를 공개했습니다." : "부스 배치도를 숨겼습니다.",
+        text: next ? `${where}에 게시했습니다.` : `${where}에서 숨겼습니다.`,
       })
     } catch (e) {
       setNotice({ kind: "error", text: e instanceof Error ? e.message : "변경 실패" })
     } finally {
-      setToggling(false)
+      setToggling(null)
     }
   }
 
@@ -385,7 +393,12 @@ export default function FloorPlanAdmin({
       if (!res.ok || !data.ok) throw new Error(data.error ?? "저장 실패")
       setLayoutRaw(data.layout)
       setSaved(data.layout)
-      setNotice({ kind: "ok", text: "저장했습니다. 부스 배치도 페이지에 바로 반영됩니다." })
+      setNotice({
+        kind: "ok",
+        text: data.renumbered
+          ? `저장했습니다. 위치에 맞춰 부스 번호 ${data.renumbered}개를 다시 매겼습니다.`
+          : "저장했습니다. 부스 배치도 페이지에 바로 반영됩니다.",
+      })
     } catch (e) {
       setNotice({ kind: "error", text: e instanceof Error ? e.message : "저장 실패" })
     } finally {
@@ -419,17 +432,28 @@ export default function FloorPlanAdmin({
               {notice.text}
             </span>
           )}
-          {/* 공개 전환 (되돌리기는 Ctrl/⌘+Z) */}
-          <button
-            type="button"
-            onClick={togglePublic}
-            disabled={toggling}
-            className={`rounded px-3 py-2 text-[13px] font-bold disabled:opacity-40 ${
-              isPublic ? "border border-white/30" : "bg-white text-[#1a1a1a] border border-white"
-            }`}
-          >
-            {toggling ? "변경 중…" : isPublic ? "공개 중 · 숨기기" : "부스 배치도 표시하기"}
-          </button>
+          {/* 공개 전환: 홈페이지·참가사 페이지 따로 (되돌리기는 Ctrl/⌘+Z) */}
+          {(["site", "exhibitor"] as const).map((target) => {
+            const on = visibility[target]
+            const where = target === "site" ? "홈페이지" : "참가사 페이지"
+            return (
+              <button
+                key={target}
+                type="button"
+                onClick={() => togglePublic(target)}
+                disabled={toggling !== null}
+                className={`rounded px-3 py-2 text-[13px] font-bold disabled:opacity-40 ${
+                  on ? "border border-white/30" : "bg-white text-[#1a1a1a] border border-white"
+                }`}
+              >
+                {toggling === target
+                  ? "변경 중…"
+                  : on
+                    ? `${where} 게시 중 · 숨기기`
+                    : `${where} 게시`}
+              </button>
+            )
+          })}
           <button
             type="button"
             onClick={save}
@@ -718,6 +742,10 @@ export default function FloorPlanAdmin({
                           updateItem(selected.id, { no: e.target.value.slice(0, 10) })
                         }
                       />
+                      <span className="block mt-1 font-normal text-[#999]">
+                        저장하면 위치에 맞춰 섹션 글자와 번호(입구에서 가까운 순)가 자동으로
+                        바뀝니다.
+                      </span>
                     </label>
                     <div className="block text-[12px] font-bold text-[#666]">
                       참가업체

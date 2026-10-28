@@ -1127,6 +1127,118 @@ export function nextBoothNo(items: FloorItem[], section = "A"): string {
   return `${section}${String(Math.max(0, ...nums) + 1).padStart(2, "0")}`
 }
 
+/**
+ * 섹션 구역 (칸 단위). 부스 가운데가 들어 있는 구역의 글자가 그 부스의 섹션이 된다.
+ * A: 오른쪽 위 2개 + 오른쪽 세로줄 · B: 위쪽 가운데 줄 · C: 왼쪽 위 + 왼쪽 블록
+ * D: 가운데 위·아래 블록 · E: 오른쪽 위·아래 블록 · F: 왼쪽 아래 푸드 · G: 아래 가운데 줄
+ * 홀 구조가 바뀌면 여기 숫자를 고친다. 어느 구역에도 안 들어가는 부스는 원래 글자를 쓴다.
+ */
+export const SECTION_AREAS: { id: string; x: number; y: number; w: number; h: number }[] = [
+  { id: "A", x: 47, y: 9, w: 15, h: 6 },
+  { id: "A", x: 56, y: 15, w: 6, h: 29 },
+  { id: "B", x: 20, y: 9, w: 27, h: 9 },
+  { id: "C", x: 0, y: 9, w: 20, h: 21 },
+  { id: "D", x: 20, y: 18, w: 18, h: 24 },
+  { id: "E", x: 38, y: 18, w: 18, h: 24 },
+  { id: "F", x: 0, y: 42, w: 20, h: 8 },
+  { id: "G", x: 20, y: 42, w: 24, h: 8 },
+]
+
+/** 부스 위치로 정한 섹션 글자. 구역 밖이면 null */
+export function sectionAt(i: Rect): string | null {
+  const cx = i.x + i.w / 2
+  const cy = i.y + i.h / 2
+  const a = SECTION_AREAS.find((r) => cx >= r.x && cx < r.x + r.w && cy >= r.y && cy < r.y + r.h)
+  return a?.id ?? null
+}
+
+/** 변이 맞닿은 부스끼리 묶은 블록들 */
+function blocksOf(list: FloorItem[]): FloorItem[][] {
+  const touch = (a: FloorItem, b: FloorItem) =>
+    a.x <= b.x + b.w &&
+    b.x <= a.x + a.w &&
+    a.y <= b.y + b.h &&
+    b.y <= a.y + a.h &&
+    // 꼭짓점만 닿는 건 제외
+    (Math.min(a.x + a.w, b.x + b.w) > Math.max(a.x, b.x) ||
+      Math.min(a.y + a.h, b.y + b.h) > Math.max(a.y, b.y))
+  const seen = new Set<string>()
+  const out: FloorItem[][] = []
+  for (const start of list) {
+    if (seen.has(start.id)) continue
+    seen.add(start.id)
+    const block = [start]
+    for (let k = 0; k < block.length; k++) {
+      for (const o of list) {
+        if (!seen.has(o.id) && touch(block[k], o)) {
+          seen.add(o.id)
+          block.push(o)
+        }
+      }
+    }
+    out.push(block)
+  }
+  return out
+}
+
+function bounds(list: Rect[]): Rect {
+  const x = Math.min(...list.map((i) => i.x))
+  const y = Math.min(...list.map((i) => i.y))
+  return {
+    x,
+    y,
+    w: Math.max(...list.map((i) => i.x + i.w)) - x,
+    h: Math.max(...list.map((i) => i.y + i.h)) - y,
+  }
+}
+
+/**
+ * 부스 번호를 위치에 맞춰 다시 매긴다. 섹션은 부스 위치의 구역(SECTION_AREAS)으로 정한다.
+ * 섹션 안에서는 블록(서로 붙어 있는 부스 묶음) 단위로, 입구에서 가까운 블록부터 번호를 이어 간다.
+ * 블록 안에서는 입구에 가까운 줄부터, 줄 안에서는 입구에 가까운 칸부터 01, 02 …
+ * 인포처럼 숫자 없는 번호(I)와 입구가 없는 배치는 그대로 둔다. 바뀐 부스 수를 함께 돌려준다.
+ */
+export function renumberBooths(layout: Layout): { layout: Layout; changed: number } {
+  const ent = layout.items.find((i) => i.type === "entrance")
+  if (!ent) return { layout, changed: 0 }
+  const ex = ent.x + ent.w / 2
+  const ey = ent.y + ent.h / 2
+  const bySection = new Map<string, FloorItem[]>()
+  for (const i of layout.items) {
+    const m = i.type === "booth" ? /^([A-Za-z]*)\d*$/.exec(i.no) : null
+    // 숫자 없는 글자만의 번호(인포 I)는 손대지 않는다
+    if (!m || (m[1] && !/\d/.test(i.no))) continue
+    const sec = sectionAt(i) ?? (m[1].toUpperCase() || "A")
+    bySection.set(sec, [...(bySection.get(sec) ?? []), i])
+  }
+  const next = new Map<string, string>()
+  for (const [sec, list] of bySection) {
+    const ordered = blocksOf(list)
+      .map((block) => {
+        const b = bounds(block)
+        return { block, d: Math.hypot(b.x + b.w / 2 - ex, b.y + b.h / 2 - ey) }
+      })
+      .sort((a, b) => a.d - b.d)
+      .flatMap(({ block }) =>
+        [...block].sort((a, b) => {
+          const dy = Math.abs(a.y + a.h / 2 - ey) - Math.abs(b.y + b.h / 2 - ey)
+          return dy || Math.abs(a.x + a.w / 2 - ex) - Math.abs(b.x + b.w / 2 - ex)
+        }),
+      )
+    ordered.forEach((i, k) => {
+      next.set(i.id, `${sec}${String(k + 1).padStart(2, "0")}`)
+    })
+  }
+  let changed = 0
+  const items = layout.items.map((i) => {
+    const no = next.get(i.id)
+    if (!no || no === i.no) return i
+    changed++
+    return { ...i, no }
+  })
+  return { layout: { ...layout, items }, changed }
+}
+
 // ── 부스 칸 안에 이름 맞춰 넣기 ──
 const isWide = (ch: string) => /[\u1100-\u11ff\u3130-\u318f\uac00-\ud7af\u4e00-\u9fff]/.test(ch)
 const charW = (ch: string) => (isWide(ch) ? 1 : /[A-Z0-9&@#%]/.test(ch) ? 0.7 : 0.55)

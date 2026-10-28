@@ -7,23 +7,40 @@ import { BRAND_TABLE, getSupabaseAdmin } from "./supabaseAdmin"
 
 const BUCKET = "site-data"
 const FILE = "floor-plan.json"
-/** 공개 여부. 파일이 없거나 읽기 실패면 비공개로 본다 */
+/** 공개 여부 (홈페이지·참가사 페이지 따로). 파일이 없거나 읽기 실패면 둘 다 비공개로 본다 */
 const VISIBILITY_FILE = "floor-plan-visibility.json"
 
-export async function getFloorPlanPublic(): Promise<boolean> {
+export type FloorPlanTarget = "site" | "exhibitor"
+export type FloorPlanVisibility = Record<FloorPlanTarget, boolean>
+
+export async function getFloorPlanVisibility(): Promise<FloorPlanVisibility> {
   const { data, error } = await getSupabaseAdmin().storage.from(BUCKET).download(VISIBILITY_FILE)
-  if (error || !data) return false
+  if (error || !data) return { site: false, exhibitor: false }
   try {
-    return JSON.parse(await data.text())?.public === true
+    const v = JSON.parse(await data.text())
+    // 예전 형식 { public } 은 홈페이지 공개 여부
+    return { site: v?.public === true, exhibitor: v?.exhibitor === true }
   } catch {
-    return false
+    return { site: false, exhibitor: false }
   }
 }
 
-export async function setFloorPlanPublic(value: boolean): Promise<string | null> {
+/** 홈페이지 공개 여부 */
+export async function getFloorPlanPublic(): Promise<boolean> {
+  return (await getFloorPlanVisibility()).site
+}
+
+export async function setFloorPlanVisibility(
+  target: FloorPlanTarget,
+  value: boolean,
+): Promise<string | null> {
   const storage = getSupabaseAdmin().storage
   await storage.createBucket(BUCKET, { public: false }).catch(() => null)
-  const body = new Blob([JSON.stringify({ public: value })], { type: "application/json" })
+  const now = await getFloorPlanVisibility()
+  const next = { ...now, [target]: value }
+  const body = new Blob([JSON.stringify({ public: next.site, exhibitor: next.exhibitor })], {
+    type: "application/json",
+  })
   const { error } = await storage
     .from(BUCKET)
     .upload(VISIBILITY_FILE, body, { upsert: true, contentType: "application/json" })

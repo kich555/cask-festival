@@ -118,15 +118,7 @@ function RoomProgram({ hall, days, lang }: { hall: number; days: ProgramDay[]; l
   )
 }
 
-function Inner({
-  layout,
-  brands,
-  days,
-}: {
-  layout: Layout
-  brands: FloorBrand[]
-  days: ProgramDay[]
-}) {
+function Inner({ layout, brands, days, embedded = false, initialBrand }: ContentProps) {
   const { c, lang } = useContent2026()
   const t = c.floorP
   const items = useMemo(() => resolveItems(layout, brands), [layout, brands])
@@ -161,6 +153,18 @@ function Inner({
     setSelected(id)
     if (move) setFocus({ rect: p.item, key: Date.now() })
   }
+
+  // 참가사 페이지: 본인 부스를 처음부터 골라 둔다
+  const initialDone = useRef(false)
+  useEffect(() => {
+    if (initialDone.current || !initialBrand) return
+    initialDone.current = true
+    const mine = places.filter((p) => p.item.brand === initialBrand).sort(byNo)[0]
+    if (mine) {
+      setSelected(mine.id)
+      setFocus({ rect: mine.item, key: Date.now() })
+    }
+  }, [initialBrand, places])
 
   const sel = selected ? byId.get(selected) : null
   const brandSlug = sel?.item.brand
@@ -255,9 +259,13 @@ function Inner({
   )
 
   return (
-    <div className="fp-theme flex flex-col flex-1">
-      <PageHeader2026 title={t.title} subtitle={t.subtitle} watermark="FLOOR PLAN" />
-      <section className="w-full max-w-[1600px] mx-auto px-4 md:px-8 pb-3 lg:pb-8 lg:flex lg:justify-center lg:gap-6 lg:items-start lg:pt-6">
+    <div className={`fp-theme flex flex-col flex-1 ${embedded ? "fp-light" : ""}`}>
+      {!embedded && <PageHeader2026 title={t.title} subtitle={t.subtitle} watermark="FLOOR PLAN" />}
+      <section
+        className={`w-full max-w-[1600px] mx-auto lg:flex lg:justify-center lg:gap-6 lg:items-start ${
+          embedded ? "p-3 md:p-6" : "px-4 md:px-8 pb-3 lg:pb-8 lg:pt-6"
+        }`}
+      >
         {/* 모바일: 지도 위 검색창. 입력하면 결과가 아래로 펼쳐진다 */}
         <div className="lg:hidden relative z-30 pt-2.5">
           {searchInput}
@@ -270,7 +278,7 @@ function Inner({
 
         {/* 지도: PC 에선 스크롤해도 화면 위에 붙어 있다. 지도+목록 묶음을 가운데 두어 좌우 여백을 같게 */}
         <div
-          className="pt-2 lg:pt-0 lg:sticky lg:top-[108px] lg:flex-1 lg:min-w-0"
+          className={`pt-2 lg:pt-0 lg:flex-1 lg:min-w-0 ${embedded ? "lg:sticky lg:top-4" : "lg:sticky lg:top-[108px]"}`}
           style={{
             // PC: 화면 높이 안에 지도 전체가 들어오는 만큼만 넓게
             maxWidth: `max(300px, calc((100svh - 140px) * ${layout.cols} / ${layout.rows}))`,
@@ -343,11 +351,17 @@ export function FloorPlanSoon() {
   )
 }
 
-export default function FloorPlanContent(props: {
+type ContentProps = {
   layout: Layout
   brands: FloorBrand[]
   days: ProgramDay[]
-}) {
+  /** 다른 페이지(참가사 페이지) 안에 넣을 때: 머리말 없이, 항상 밝은 화면으로 */
+  embedded?: boolean
+  /** 처음에 선택해 둘 업체 slug (참가사 본인 부스) */
+  initialBrand?: string
+}
+
+export default function FloorPlanContent(props: ContentProps) {
   return (
     <Suspense fallback={null}>
       <Inner {...props} />

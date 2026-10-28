@@ -18,6 +18,7 @@ export default function ExhibitorShell({
   passwordChanged,
   active,
   wide = false,
+  layoutReady = false,
   children,
 }: {
   name: string
@@ -25,6 +26,8 @@ export default function ExhibitorShell({
   active: ExhibitorTabKey
   /** 본문만 넓게 (헤더·탭 폭은 그대로) */
   wide?: boolean
+  /** 부스 배치도가 참가사 페이지에 게시됐는지 (탭 이름의 '추후 업데이트 예정'을 뗀다) */
+  layoutReady?: boolean
   children: React.ReactNode
 }) {
   const [pwOpen, setPwOpen] = useState(false)
@@ -92,7 +95,7 @@ export default function ExhibitorShell({
                   : "border-transparent text-white/50 hover:text-white"
               }`}
             >
-              {t.label}
+              {t.key === "layout" && layoutReady ? "부스 배치도" : t.label}
             </Link>
           ))}
         </nav>

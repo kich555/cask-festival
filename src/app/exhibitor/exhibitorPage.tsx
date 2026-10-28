@@ -3,6 +3,7 @@
 import type { Metadata } from "next"
 import { getExhibitorSlug } from "@/lib/exhibitorAuth"
 import { loadExhibitor } from "@/lib/exhibitorServer"
+import { getFloorPlanVisibility } from "@/lib/floorPlanServer"
 import ExhibitorLogin from "./ExhibitorLogin"
 import ExhibitorShell, { type ExhibitorTabKey } from "./ExhibitorShell"
 
@@ -22,12 +23,14 @@ export async function renderExhibitorTab(
   const slug = await getExhibitorSlug()
   const data = slug ? await loadExhibitor(slug) : null
   if (!data) return <ExhibitorLogin />
+  const layoutReady = (await getFloorPlanVisibility()).exhibitor
   return (
     <ExhibitorShell
       name={data.defaults.name_ko}
       passwordChanged={Boolean(data.state.password_changed_at)}
       active={active}
       wide={opts.wide}
+      layoutReady={layoutReady}
     >
       {content(data)}
     </ExhibitorShell>

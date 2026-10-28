@@ -209,8 +209,9 @@ body {
   background: var(--fp-page);
   color: var(--fp-text);
 }
+/* .fp-light: 참가사 페이지처럼 밝은 화면 안에 넣을 때는 다크 모드를 따르지 않는다 */
 @media (prefers-color-scheme: dark) {
-  .fp-theme {
+  .fp-theme:not(.fp-light) {
     --fp-page: #121212;
     --fp-surface: #1c1c1e;
     --fp-soft: #232325;

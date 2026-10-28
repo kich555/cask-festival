@@ -1,6 +1,6 @@
 import type { Metadata } from "next"
 import { isAdminRequest } from "@/lib/adminAuth"
-import { getFloorBrands, getFloorPlanPublic, getLayout } from "@/lib/floorPlanServer"
+import { getFloorBrands, getFloorPlanVisibility, getLayout } from "@/lib/floorPlanServer"
 import AdminLogin from "../AdminLogin"
 import AdminTabs from "../AdminTabs"
 import FloorPlanAdmin from "./FloorPlanAdmin"
@@ -13,16 +13,16 @@ export const dynamic = "force-dynamic"
 
 export default async function AdminFloorPlanPage() {
   if (!(await isAdminRequest())) return <AdminLogin />
-  const [layout, brands, isPublic] = await Promise.all([
+  const [layout, brands, visibility] = await Promise.all([
     getLayout(),
     getFloorBrands(),
-    getFloorPlanPublic(),
+    getFloorPlanVisibility(),
   ])
 
   return (
     <>
       <AdminTabs active="floorplan" />
-      <FloorPlanAdmin initial={layout} brands={brands} initialPublic={isPublic} />
+      <FloorPlanAdmin initial={layout} brands={brands} initialVisibility={visibility} />
     </>
   )
 }
