@@ -17,7 +17,7 @@ import {
   type Layout,
   LIMITS,
   nextBoothNo,
-  PARTITION_M,
+  PARTITION,
   resolveItems,
   SECTIONS,
 } from "@/lib/floorPlan"
@@ -53,7 +53,7 @@ const TOOLS: { key: Tool; label: string; hint: string }[] = [
   {
     key: "partition",
     label: "파티션",
-    hint: "격자 선을 따라 끌면 교차점에서 교차점까지 한 칸 = 파티션 1장(1.2m)씩 벽이 그려집니다. 더 많이 끈 방향(가로·세로)으로 놓이고, 부스와 겹쳐도 됩니다.",
+    hint: "끌면 1.2칸(1.2m) 단위로 벽이 그려집니다. 시작점은 다른 파티션의 끝·선 위나 격자 교차점에 붙으니, 모서리를 맞출 땐 기존 파티션 끝에서 시작해 끌어 주세요. 부스와 겹쳐도 됩니다.",
   },
 ]
 
@@ -80,8 +80,8 @@ function fits(layout: Layout, r: FloorItem | Omit<FloorItem, "id">, ignore?: str
       r.y >= 0 &&
       Math.max(r.w, r.h) >= 1 &&
       Math.min(r.w, r.h) === 0 &&
-      e.x + e.w <= layout.cols + 1e-9 &&
-      e.y + e.h <= layout.rows + 1e-9
+      e.x + e.w <= layout.cols + 1e-6 &&
+      e.y + e.h <= layout.rows + 1e-6
     )
   }
   if (r.x < 0 || r.y < 0 || r.w < 1 || r.h < 1) return false
@@ -258,9 +258,37 @@ export default function FloorPlanAdmin({
       y: ((e.clientY - r.top) / r.height) * layout.rows,
     }
   }
-  /** 가장 가까운 격자 꼭짓점 (파티션용) */
+  /**
+   * 파티션을 놓을 점: 기존 파티션 끝점 → 기존 파티션 선 위 → 격자 교차점 순으로 붙는다.
+   * 가로·세로 파티션이 만나는 모서리를 맞추기 위함
+   */
   const vertexAt = (e: React.PointerEvent): Cell => {
     const p = posAt(e)
+    const walls = layout.items.filter(isPartition).map(extentOf)
+    let best: Cell | null = null
+    let bestD = 0.6
+    for (const r of walls)
+      for (const q of [
+        { x: r.x, y: r.y },
+        { x: r.x + r.w, y: r.y + r.h },
+      ]) {
+        const d = Math.hypot(q.x - p.x, q.y - p.y)
+        if (d < bestD) {
+          bestD = d
+          best = q
+        }
+      }
+    if (best) return best
+    for (const r of walls) {
+      // 선 위로 수직 투영
+      const q = r.w
+        ? { x: Math.min(r.x + r.w, Math.max(r.x, p.x)), y: r.y }
+        : { x: r.x, y: Math.min(r.y + r.h, Math.max(r.y, p.y)) }
+      if (Math.hypot(q.x - p.x, q.y - p.y) < 0.4) {
+        // 선 위에서는 다른 축을 격자에 맞춰 둔다
+        return r.w ? { x: Math.round(q.x), y: q.y } : { x: q.x, y: Math.round(q.y) }
+      }
+    }
     return {
       x: Math.min(layout.cols, Math.max(0, Math.round(p.x))),
       y: Math.min(layout.rows, Math.max(0, Math.round(p.y))),
@@ -308,9 +336,9 @@ export default function FloorPlanAdmin({
     else {
       const it = layout.items.find((i) => i.id === drag.id)
       if (it && isPartition(it)) {
-        // 파티션: 놓인 방향으로만 한 칸(1장)씩 늘이고 줄인다
+        // 파티션: 놓인 방향으로만 1.2칸(1장)씩 늘이고 줄인다
         const p = posAt(e)
-        const n = Math.max(1, Math.round(it.w ? p.x - it.x : p.y - it.y))
+        const n = Math.max(1, Math.round((it.w ? p.x - it.x : p.y - it.y) / PARTITION))
         setDrag({ ...drag, w: it.w ? n : 0, h: it.w ? 0 : n })
       } else if (it)
         setDrag({ ...drag, w: Math.max(1, c.x - it.x + 1), h: Math.max(1, c.y - it.y + 1) })
@@ -433,7 +461,7 @@ export default function FloorPlanAdmin({
   const resize = (cols: number, rows: number) => {
     const c = Math.min(LIMITS.maxCols, Math.max(LIMITS.minCols, cols || 0))
     const r = Math.min(LIMITS.maxRows, Math.max(LIMITS.minRows, rows || 0))
-    if (layout.items.map(extentOf).some((i) => i.x + i.w > c + 1e-9 || i.y + i.h > r + 1e-9)) {
+    if (layout.items.map(extentOf).some((i) => i.x + i.w > c + 1e-6 || i.y + i.h > r + 1e-6)) {
       setNotice({
         kind: "error",
         text: "격자 밖으로 나가는 항목이 있어 줄일 수 없습니다. 먼저 옮기거나 지워 주세요.",
@@ -903,8 +931,8 @@ export default function FloorPlanAdmin({
                         }}
                       />
                       <span className="block mt-1 font-normal text-[#999]">
-                        길이 {(Math.max(selected.w, selected.h) * PARTITION_M).toFixed(1)}m (1장 ={" "}
-                        {PARTITION_M}m)
+                        길이 {(Math.max(selected.w, selected.h) * PARTITION).toFixed(1)}m (1장 ={" "}
+                        {PARTITION}m)
                       </span>
                     </label>
                   </div>
@@ -1076,14 +1104,17 @@ export default function FloorPlanAdmin({
   )
 }
 
-/** 끈 두 꼭짓점으로 파티션을 만든다: 더 많이 끈 방향으로, 교차점 사이 칸 수 = 장 수 (최소 1장) */
+/**
+ * 끈 두 점으로 파티션을 만든다: 더 많이 끈 방향으로, 1.2칸 단위 반올림 (최소 1장).
+ * 시작점 a 는 늘 그대로 두어, 왼쪽·위로 끌어도 a 에서 끝나게 한다 (모서리 맞춤)
+ */
 function partitionOf(a: Cell, b: Cell): Omit<FloorItem, "id"> {
   const horiz = Math.abs(b.x - a.x) >= Math.abs(b.y - a.y)
   const d = horiz ? b.x - a.x : b.y - a.y
-  const n = Math.max(1, Math.abs(d))
-  // 왼쪽·위로 끌었으면 끝점(정수 꼭짓점)에서 시작
-  const x = horiz && d < 0 ? b.x : a.x
-  const y = !horiz && d < 0 ? b.y : a.y
+  const n = Math.max(1, Math.round(Math.abs(d) / PARTITION))
+  const r2 = (v: number) => Math.round(v * 100) / 100
+  const x = r2(horiz && d < 0 ? a.x - n * PARTITION : a.x)
+  const y = r2(!horiz && d < 0 ? a.y - n * PARTITION : a.y)
   return { ...EMPTY, type: "partition", x, y, w: horiz ? n : 0, h: horiz ? 0 : n }
 }
 
