@@ -61,10 +61,16 @@ export async function getLayout(): Promise<Layout> {
   }
 }
 
-/** 홈페이지·참가사 페이지용: admin 전용(숨김) 항목을 뺀 배치 */
-export async function getPublicLayout(): Promise<Layout> {
+/**
+ * 홈페이지·참가사 페이지용: admin 전용(숨김) 항목을 뺀 배치.
+ * walls 가 거짓이면 파티션(벽)도 뺀다 (홈페이지는 관람객용이라 벽을 보여 주지 않는다)
+ */
+export async function getPublicLayout({ walls = true } = {}): Promise<Layout> {
   const layout = await getLayout()
-  return { ...layout, items: layout.items.filter((i) => !i.hidden) }
+  return {
+    ...layout,
+    items: layout.items.filter((i) => !i.hidden && (walls || i.type !== "partition")),
+  }
 }
 
 export async function saveLayout(layout: Layout): Promise<string | null> {
