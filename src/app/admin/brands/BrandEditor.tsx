@@ -80,17 +80,9 @@ export default function BrandEditor({
   return (
     <div
       className="fixed inset-0 z-50 bg-black/40 flex items-start md:items-center justify-center p-4 overflow-y-auto"
-      onClick={onClose}
-      onKeyDown={(e) => e.key === "Escape" && onClose()}
-      role="presentation"
+      // 바깥을 눌러도 닫지 않는다 (수정 중인 내용이 날아가지 않게). 닫기 버튼으로만 닫힌다
     >
-      <div
-        className="bg-white rounded w-full max-w-[560px] p-6"
-        onClick={(e) => e.stopPropagation()}
-        onKeyDown={(e) => e.stopPropagation()}
-        role="dialog"
-        aria-modal="true"
-      >
+      <div className="bg-white rounded w-full max-w-[560px] p-6" role="dialog" aria-modal="true">
         <div className="flex items-center justify-between mb-5">
           <h2 className="text-[17px] font-extrabold">{row ? row.name_ko : "새 브랜드"}</h2>
           <button type="button" onClick={onClose} className="text-[#888] text-[13px]">
