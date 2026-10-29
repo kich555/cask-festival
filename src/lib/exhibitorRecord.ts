@@ -266,6 +266,54 @@ export function isBoothRevision(b: BoothDraft, d: BoothDefaults) {
   return b.name_ko !== d.name_ko || b.name_en !== (d.name_en ?? "") || b.note !== ""
 }
 
+/**
+ * 부스 표기 내용을 접수 상태로 바꿀 패치와 내역. 달라진 게 없으면 log 가 null.
+ * 기본값 그대로면 확인(approve), 다르면 수정 요청(revise)
+ */
+export function boothPatch(
+  state: ExhibitorState,
+  defaults: BoothDefaults,
+  b: BoothDraft,
+  now: string,
+): {
+  patch: Partial<ExhibitorState>
+  log: { kind: ExhibitorLogKind; data: Record<string, unknown> } | null
+} {
+  if (!isBoothRevision(b, defaults)) {
+    if (state.booth_status === "approved") return { patch: {}, log: null }
+    return {
+      patch: {
+        booth_status: "approved",
+        booth_name_ko: null,
+        booth_name_en: null,
+        booth_note: null,
+        booth_confirmed_at: now,
+        booth_ack_at: null,
+      },
+      log: { kind: "booth_approve", data: {} },
+    }
+  }
+  const name_en = b.name_en || null
+  const note = b.note || null
+  const changed =
+    state.booth_status !== "revised" ||
+    state.booth_name_ko !== b.name_ko ||
+    state.booth_name_en !== name_en ||
+    state.booth_note !== note
+  if (!changed) return { patch: {}, log: null }
+  return {
+    patch: {
+      booth_status: "revised",
+      booth_name_ko: b.name_ko,
+      booth_name_en: name_en,
+      booth_note: note,
+      booth_confirmed_at: now,
+      booth_ack_at: null,
+    },
+    log: { kind: "booth_revise", data: { name_ko: b.name_ko, name_en, note } },
+  }
+}
+
 /** 부대시설 현재 값 (임시 저장 > 대기 중인 변경 요청 > 접수된 신청) */
 export function extraValues(s: ExhibitorState): ExtraRequest {
   return s.draft?.extra ?? s.extra_pending ?? currentExtra(s)

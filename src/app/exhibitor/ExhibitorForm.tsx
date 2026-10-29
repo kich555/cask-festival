@@ -213,7 +213,7 @@ export default function ExhibitorForm({ state: initial, defaults }: Props) {
     setBoothBusy(false)
     setBoothMsg(
       r.ok
-        ? { ok: true, text: "저장되었습니다." }
+        ? { ok: true, text: "저장되어 사무국에 접수되었습니다." }
         : { ok: false, text: r.error ?? "저장하지 못했습니다." },
     )
   }
@@ -225,7 +225,7 @@ export default function ExhibitorForm({ state: initial, defaults }: Props) {
     setBoothBusy(false)
     if (r.ok) {
       setBoothEditing(false)
-      setBoothMsg({ ok: true, text: "수정 내용이 저장되었습니다." })
+      setBoothMsg({ ok: true, text: "수정 내용이 저장되어 사무국에 접수되었습니다." })
     } else setBoothMsg({ ok: false, text: r.error ?? "저장하지 못했습니다." })
   }
 

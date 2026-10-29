@@ -2,6 +2,7 @@ import { NextResponse } from "next/server"
 import { getExhibitorSlug } from "@/lib/exhibitorAuth"
 import {
   type BoothDefaults,
+  boothPatch,
   boothValues,
   currentExtra,
   EXHIBITOR_LOG_TABLE,
@@ -11,7 +12,6 @@ import {
   type ExhibitorState,
   type ExtraRequest,
   hasExtra,
-  isBoothRevision,
   PRODUCT_BUCKET,
   sanitizeExtraItems,
   sanitizeProducts,
@@ -48,8 +48,6 @@ export async function POST() {
     return fail("1. 부스 표기 정보: 내용을 확인하신 후 '확인'을 눌러 주십시오.", 400)
   }
   const boothDraft = draft.booth ?? boothValues(state, defaults)
-  const boothChoice = isBoothRevision(boothDraft, defaults) ? "revise" : "approve"
-  const boothName = boothDraft.name_ko
 
   const extra: ExtraRequest = draft.extra ?? state.extra_pending ?? currentExtra(state)
 
@@ -64,38 +62,9 @@ export async function POST() {
   const logs: Log[] = []
   const notes: string[] = []
 
-  if (boothChoice === "approve") {
-    if (state.booth_status !== "approved") {
-      Object.assign(patch, {
-        booth_status: "approved",
-        booth_name_ko: null,
-        booth_name_en: null,
-        booth_note: null,
-        booth_confirmed_at: now,
-        booth_ack_at: null,
-      })
-      logs.push({ kind: "booth_approve", data: {} })
-    }
-  } else {
-    const name_en = boothDraft.name_en || null
-    const note = boothDraft.note || null
-    const changed =
-      state.booth_status !== "revised" ||
-      state.booth_name_ko !== boothName ||
-      state.booth_name_en !== name_en ||
-      state.booth_note !== note
-    if (changed) {
-      Object.assign(patch, {
-        booth_status: "revised",
-        booth_name_ko: boothName,
-        booth_name_en: name_en,
-        booth_note: note,
-        booth_confirmed_at: now,
-        booth_ack_at: null,
-      })
-      logs.push({ kind: "booth_revise", data: { name_ko: boothName, name_en, note } })
-    }
-  }
+  const booth = boothPatch(state, defaults, boothDraft, now)
+  Object.assign(patch, booth.patch)
+  if (booth.log) logs.push(booth.log)
 
   const current = currentExtra(state)
   if (!hasExtra(state)) {
