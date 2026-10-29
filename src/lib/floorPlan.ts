@@ -38,6 +38,8 @@ export type FloorItem = {
   brand: string | null
   ko: string
   en: string
+  /** 참이면 admin 에만 보이고 홈페이지·참가사 페이지 배치도에는 그리지 않는다 (휴게실·세척실 등) */
+  hidden?: boolean
 }
 
 export type Layout = { grid: number; cols: number; rows: number; items: FloorItem[] }
@@ -1130,6 +1132,7 @@ export function parseLayout(raw: unknown): Layout | null {
       brand,
       ko: clip(r.ko),
       en: clip(r.en),
+      ...(r.hidden === true ? { hidden: true } : {}),
     })
   }
   return { grid: GRID, cols, rows, items }

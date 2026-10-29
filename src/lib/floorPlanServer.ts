@@ -61,6 +61,12 @@ export async function getLayout(): Promise<Layout> {
   }
 }
 
+/** 홈페이지·참가사 페이지용: admin 전용(숨김) 항목을 뺀 배치 */
+export async function getPublicLayout(): Promise<Layout> {
+  const layout = await getLayout()
+  return { ...layout, items: layout.items.filter((i) => !i.hidden) }
+}
+
 export async function saveLayout(layout: Layout): Promise<string | null> {
   const storage = getSupabaseAdmin().storage
   // 첫 저장 때 버킷을 만든다 (이미 있으면 에러를 무시)

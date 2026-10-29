@@ -1,6 +1,6 @@
 import FloorPlanContent from "@/components/2026/FloorPlanContent"
 import { OFFICE_CONTACT } from "@/lib/exhibitorRecord"
-import { getFloorBrands, getFloorPlanVisibility, getLayout } from "@/lib/floorPlanServer"
+import { getFloorBrands, getFloorPlanVisibility, getPublicLayout } from "@/lib/floorPlanServer"
 import { getProgram } from "@/lib/programServer"
 import { exhibitorMetadata, renderExhibitorTab } from "../exhibitorPage"
 import { cardCls } from "../exhibitorParts"
@@ -18,7 +18,11 @@ export default async function ExhibitorLayoutPage() {
       </section>
     ))
   }
-  const [layout, brands, days] = await Promise.all([getLayout(), getFloorBrands(), getProgram()])
+  const [layout, brands, days] = await Promise.all([
+    getPublicLayout(),
+    getFloorBrands(),
+    getProgram(),
+  ])
   return renderExhibitorTab(
     "layout",
     (data) => (

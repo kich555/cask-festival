@@ -3,7 +3,7 @@ import FloorPlanContent, { FloorPlanSoon } from "@/components/2026/FloorPlanCont
 import Footer2026 from "@/components/2026/Footer2026"
 import Nav2026 from "@/components/2026/Nav2026"
 import { isAdminRequest } from "@/lib/adminAuth"
-import { getFloorBrands, getFloorPlanPublic, getLayout } from "@/lib/floorPlanServer"
+import { getFloorBrands, getFloorPlanPublic, getPublicLayout } from "@/lib/floorPlanServer"
 import { getProgram } from "@/lib/programServer"
 
 const metadata: Metadata = {
@@ -37,7 +37,11 @@ export default async function FloorPlanPage() {
       </div>
     )
   }
-  const [layout, brands, days] = await Promise.all([getLayout(), getFloorBrands(), getProgram()])
+  const [layout, brands, days] = await Promise.all([
+    getPublicLayout(),
+    getFloorBrands(),
+    getProgram(),
+  ])
 
   return (
     <div className="min-h-screen fp-theme pt-[88px] flex flex-col">

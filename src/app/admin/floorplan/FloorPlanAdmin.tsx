@@ -813,7 +813,13 @@ export default function FloorPlanAdmin({
               {items.map((it) => (
                 <g
                   key={it.id}
-                  opacity={drag && "id" in drag && drag.id === it.id && preview ? 0.35 : 1}
+                  opacity={
+                    drag && "id" in drag && drag.id === it.id && preview
+                      ? 0.35
+                      : it.hidden
+                        ? 0.55
+                        : 1
+                  }
                 >
                   <FloorShape item={it} lang={lang} selected={it.id === selectedId} />
                   {it.type === "booth" && dupNos.has(it.no) && (
@@ -1155,6 +1161,22 @@ export default function FloorPlanAdmin({
                       </label>
                     </div>
                   </>
+                )}
+                {!isPartition(selected) && (
+                  <label className="flex items-start gap-2 text-[12px] text-[#666]">
+                    <input
+                      type="checkbox"
+                      className="mt-0.5"
+                      checked={Boolean(selected.hidden)}
+                      onChange={(e) =>
+                        updateItem(selected.id, { hidden: e.target.checked || undefined })
+                      }
+                    />
+                    <span>
+                      <b>admin 전용</b> — 홈페이지·참가사 페이지 배치도에는 표시하지 않음
+                      (휴게실·세척실 등). admin 에서는 흐리게 보입니다.
+                    </span>
+                  </label>
                 )}
                 {selected.brand && !brandBySlug.has(selected.brand) && (
                   <p className="text-[12px] text-[#b46a00]">
