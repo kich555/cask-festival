@@ -17,12 +17,17 @@ import {
   type Layout,
   LIMITS,
   nextBoothNo,
+  PANELS,
   PARTITION,
+  panelOf,
   resolveItems,
   SECTIONS,
 } from "@/lib/floorPlan"
 
-type Tool = "select" | ItemType
+/** partition1 = 1m 파티션 (저장할 땐 type partition, no "1") */
+type Tool = "select" | ItemType | "partition1"
+const isWallTool = (t: Tool): t is "partition" | "partition1" =>
+  t === "partition" || t === "partition1"
 type Cell = { x: number; y: number }
 type Drag =
   | { kind: "draw"; start: Cell; end: Cell }
@@ -52,8 +57,13 @@ const TOOLS: { key: Tool; label: string; hint: string }[] = [
   { key: "exit", label: "출구", hint: "끌어서 출구 위치를 그립니다." },
   {
     key: "partition",
-    label: "파티션",
+    label: "파티션 1.2m",
     hint: "끌면 1.2칸(1.2m) 단위로 벽이 그려집니다. 시작점은 다른 파티션의 끝·선 위나 격자 교차점에 붙으니, 모서리를 맞출 땐 기존 파티션 끝에서 시작해 끌어 주세요. Option(Alt)을 누른 채 끌면 시작점이 가운데가 됩니다(H자). 부스와 겹쳐도 됩니다.",
+  },
+  {
+    key: "partition1",
+    label: "파티션 1m",
+    hint: "끌면 1칸(1m) 단위로 벽이 그려집니다. 붙는 방식·Option(Alt) 가운데 그리기는 1.2m 파티션과 같습니다.",
   },
 ]
 
@@ -337,7 +347,7 @@ export default function FloorPlanAdmin({
           dy: 0,
         })
     } else {
-      const v = tool === "partition" ? vertexAt(e) : c
+      const v = isWallTool(tool) ? vertexAt(e) : c
       setDrag({ kind: "draw", start: v, end: v })
     }
   }
@@ -352,7 +362,7 @@ export default function FloorPlanAdmin({
     altRef.current = e.altKey
     if (!drag) return
     const c = cellAt(e)
-    if (drag.kind === "draw") setDrag({ ...drag, end: tool === "partition" ? vertexAt(e) : c })
+    if (drag.kind === "draw") setDrag({ ...drag, end: isWallTool(tool) ? vertexAt(e) : c })
     else if (drag.kind === "move") {
       const it = layout.items.find((i) => i.id === drag.id)
       if (it && isPartition(it)) {
@@ -364,7 +374,7 @@ export default function FloorPlanAdmin({
       if (it && isPartition(it)) {
         // 파티션: 놓인 방향으로만 1.2칸(1장)씩 늘이고 줄인다
         const p = posAt(e)
-        const n = Math.max(1, Math.round((it.w ? p.x - it.x : p.y - it.y) / PARTITION))
+        const n = Math.max(1, Math.round((it.w ? p.x - it.x : p.y - it.y) / panelOf(it)))
         setDrag({ ...drag, w: it.w ? n : 0, h: it.w ? 0 : n })
       } else if (it)
         setDrag({ ...drag, w: Math.max(1, c.x - it.x + 1), h: Math.max(1, c.y - it.y + 1) })
@@ -392,8 +402,13 @@ export default function FloorPlanAdmin({
     const w = Math.abs(d.start.x - d.end.x) + 1
     const h = Math.abs(d.start.y - d.end.y) + 1
     if (tool === "select") return
-    if (tool === "partition") {
-      const wall = partitionOf(d.start, d.end, altRef.current)
+    if (isWallTool(tool)) {
+      const wall = partitionOf(
+        d.start,
+        d.end,
+        altRef.current,
+        tool === "partition1" ? 1 : PARTITION,
+      )
       if (!fits(layout, wall)) {
         setNotice({ kind: "error", text: "격자 밖으로 나가서 파티션을 놓을 수 없습니다." })
         return
@@ -453,8 +468,13 @@ export default function FloorPlanAdmin({
   // 끌고 있는 동안 보여 줄 미리보기
   let preview: { x: number; y: number; w: number; h: number; ok: boolean; line?: boolean } | null =
     null
-  if (drag?.kind === "draw" && tool === "partition") {
-    const wall = partitionOf(drag.start, drag.end, altRef.current)
+  if (drag?.kind === "draw" && isWallTool(tool)) {
+    const wall = partitionOf(
+      drag.start,
+      drag.end,
+      altRef.current,
+      tool === "partition1" ? 1 : PARTITION,
+    )
     preview = { ...extentOf(wall), ok: fits(layout, wall), line: true }
   } else if (drag?.kind === "draw") {
     const x = Math.min(drag.start.x, drag.end.x)
@@ -945,6 +965,22 @@ export default function FloorPlanAdmin({
                         <option value="v">세로</option>
                       </select>
                     </label>
+                    <label className="col-span-2 block text-[12px] font-bold text-[#666]">
+                      파티션 한 장 길이
+                      <select
+                        className={`${input} mt-1`}
+                        value={panelOf(selected)}
+                        onChange={(e) =>
+                          updateItem(selected.id, { no: Number(e.target.value) === 1 ? "1" : "" })
+                        }
+                      >
+                        {PANELS.map((m) => (
+                          <option key={m} value={m}>
+                            {m}m
+                          </option>
+                        ))}
+                      </select>
+                    </label>
                     <label className="block text-[12px] font-bold text-[#666]">
                       파티션 장 수
                       <input
@@ -958,8 +994,7 @@ export default function FloorPlanAdmin({
                         }}
                       />
                       <span className="block mt-1 font-normal text-[#999]">
-                        길이 {(Math.max(selected.w, selected.h) * PARTITION).toFixed(1)}m (1장 ={" "}
-                        {PARTITION}m)
+                        길이 {(Math.max(selected.w, selected.h) * panelOf(selected)).toFixed(1)}m
                       </span>
                     </label>
                     {(["x", "y"] as const).map((k) => (
@@ -1170,15 +1205,23 @@ export default function FloorPlanAdmin({
  * 시작점 a 는 늘 그대로 두어, 왼쪽·위로 끌어도 a 에서 끝나게 한다 (모서리 맞춤).
  * centered 면 a 가 파티션의 가운데가 되도록 양쪽으로 뻗는다 (H자·十자)
  */
-function partitionOf(a: Cell, b: Cell, centered = false): Omit<FloorItem, "id"> {
+function partitionOf(a: Cell, b: Cell, centered = false, panel = PARTITION): Omit<FloorItem, "id"> {
   const horiz = Math.abs(b.x - a.x) >= Math.abs(b.y - a.y)
   const d = horiz ? b.x - a.x : b.y - a.y
-  const n = Math.max(1, Math.round(Math.abs(d) / (centered ? PARTITION / 2 : PARTITION)))
-  const L = n * PARTITION
+  const n = Math.max(1, Math.round(Math.abs(d) / (centered ? panel / 2 : panel)))
+  const L = n * panel
   const from = (v: number) => (centered ? v - L / 2 : d < 0 ? v - L : v)
   const x = r2(horiz ? from(a.x) : a.x)
   const y = r2(horiz ? a.y : from(a.y))
-  return { ...EMPTY, type: "partition", x, y, w: horiz ? n : 0, h: horiz ? 0 : n }
+  return {
+    ...EMPTY,
+    type: "partition",
+    no: panel === 1 ? "1" : "",
+    x,
+    y,
+    w: horiz ? n : 0,
+    h: horiz ? 0 : n,
+  }
 }
 
 /**

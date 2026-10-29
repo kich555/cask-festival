@@ -13,7 +13,7 @@ import {
   fitLabel,
   isPartition,
   type Layout,
-  PARTITION,
+  panelOf,
   type Rect,
   type ResolvedItem,
   toPx,
@@ -114,11 +114,11 @@ function Gate({ item, name }: { item: ResolvedItem; name: string }) {
 }
 
 /** 파티션(벽): 격자 선 위의 굵은 선. 장 사이 이음매를 옅게 표시 */
-function Partition({ item, selected }: { item: Rect; selected?: boolean }) {
-  const r = toPx(extentOf(item as FloorItem))
+function Partition({ item, selected }: { item: FloorItem; selected?: boolean }) {
+  const r = toPx(extentOf(item))
   const n = Math.max(item.w, item.h)
   const horiz = item.w > 0
-  const step = PARTITION * CELL
+  const step = panelOf(item) * CELL
   const color = v(selected ? "sel" : "wall")
   return (
     <g pointerEvents="none">

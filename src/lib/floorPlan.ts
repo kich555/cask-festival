@@ -20,8 +20,10 @@ export type ItemType =
   | "exit"
   | "partition"
 
-/** 파티션(벽) 한 장의 길이. 칸 = 1m 기준 1.2칸(1.2m) */
+/** 파티션(벽) 한 장의 기본 길이. 칸 = 1m 기준 1.2칸(1.2m) */
 export const PARTITION = 1.2
+/** 파티션 한 장 길이 종류(m). 항목의 no 에 "1" 이면 1m, 비어 있으면 1.2m */
+export const PANELS = [1.2, 1] as const
 
 export type FloorItem = {
   id: string
@@ -65,8 +67,12 @@ export const isPartition = (i: { type: ItemType }) => i.type === "partition"
 /** 파티션이 차지하는 범위(칸 단위, 소수 가능). 다른 항목은 그대로 */
 export function extentOf(i: FloorItem | Omit<FloorItem, "id">): Rect {
   if (!isPartition(i)) return i
-  return { x: i.x, y: i.y, w: i.w * PARTITION, h: i.h * PARTITION }
+  const k = panelOf(i)
+  return { x: i.x, y: i.y, w: i.w * k, h: i.h * k }
 }
+
+/** 파티션 한 장 길이 (1 또는 1.2) */
+export const panelOf = (i: { no: string }) => (i.no === "1" ? 1 : PARTITION)
 
 export const LIMITS = { minCols: 18, maxCols: 180, minRows: 18, maxRows: 180 }
 
@@ -1068,7 +1074,8 @@ export function parseLayout(raw: unknown): Layout | null {
       const x = dec(r.x, cols)
       const y = dec(r.y, rows)
       const horiz = Number(r.w) > 0
-      const max = Math.floor(((horiz ? cols - x : rows - y) + 1e-6) / PARTITION)
+      const no = r.no === "1" ? "1" : ""
+      const max = Math.floor(((horiz ? cols - x : rows - y) + 1e-6) / panelOf({ no }))
       const n = int(horiz ? r.w : r.h, 1, Math.max(1, max))
       if (max < 1) continue
       let id = clip(r.id, 40) || `i${items.length}`
@@ -1077,7 +1084,7 @@ export function parseLayout(raw: unknown): Layout | null {
       items.push({
         id,
         type,
-        no: "",
+        no,
         x,
         y,
         w: horiz ? n : 0,
