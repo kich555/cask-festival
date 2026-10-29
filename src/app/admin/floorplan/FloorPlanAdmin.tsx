@@ -53,9 +53,14 @@ const TOOLS: { key: Tool; label: string; hint: string }[] = [
   {
     key: "partition",
     label: "파티션",
-    hint: "끌면 1.2칸(1.2m) 단위로 벽이 그려집니다. 시작점은 다른 파티션의 끝·선 위나 격자 교차점에 붙으니, 모서리를 맞출 땐 기존 파티션 끝에서 시작해 끌어 주세요. 부스와 겹쳐도 됩니다.",
+    hint: "끌면 1.2칸(1.2m) 단위로 벽이 그려집니다. 시작점은 다른 파티션의 끝·선 위나 격자 교차점에 붙으니, 모서리를 맞출 땐 기존 파티션 끝에서 시작해 끌어 주세요. Option(Alt)을 누른 채 끌면 시작점이 가운데가 됩니다(H자). 부스와 겹쳐도 됩니다.",
   },
 ]
+
+/** 파티션을 옮기는 가장 작은 단위 (0.1칸 = 10cm) */
+const FINE = 0.1
+const r2 = (v: number) => Math.round(v * 100) / 100
+const snapFine = (v: number) => r2(Math.round(v / FINE) * FINE)
 
 /** 캔버스 최대 확대 배율 */
 const ZOOM_MAX = 5
@@ -157,6 +162,8 @@ export default function FloorPlanAdmin({
   const [visibility, setVisibility] = useState(initialVisibility)
   const [toggling, setToggling] = useState<Target | null>(null)
   const svgRef = useRef<SVGSVGElement>(null)
+  /** Option(Alt)을 누른 채 파티션을 그리면 시작점을 가운데로 */
+  const altRef = useRef(false)
 
   const dirty = JSON.stringify(layout) !== JSON.stringify(saved)
   // 파티션(벽)은 부스 위에 보이도록 마지막에 그린다
@@ -227,9 +234,14 @@ export default function FloorPlanAdmin({
       ]
       if (d) {
         e.preventDefault()
-        // Shift 를 누르면 부스 한 개(3칸)씩
-        const step = e.shiftKey ? BOOTH : 1
-        const next = { ...selected, x: selected.x + d[0] * step, y: selected.y + d[1] * step }
+        // Shift 를 누르면 부스 한 개(3칸)씩. 파티션은 10cm(0.1칸)씩, Shift 면 한 칸
+        const wall = isPartition(selected)
+        const step = wall ? (e.shiftKey ? 1 : FINE) : e.shiftKey ? BOOTH : 1
+        const next = {
+          ...selected,
+          x: r2(selected.x + d[0] * step),
+          y: r2(selected.y + d[1] * step),
+        }
         if (fits(layout, next, selected.id))
           commit({ ...layout, items: layout.items.map((i) => (i.id === selected.id ? next : i)) })
       }
@@ -307,6 +319,7 @@ export default function FloorPlanAdmin({
     layout.items.find((i) => c.x >= i.x && c.x < i.x + i.w && c.y >= i.y && c.y < i.y + i.h)
 
   const onDown = (e: React.PointerEvent) => {
+    altRef.current = e.altKey
     if (e.button !== 0) return
     svgRef.current?.setPointerCapture(e.pointerId)
     const c = cellAt(e)
@@ -314,7 +327,15 @@ export default function FloorPlanAdmin({
     if (tool === "select") {
       const hit = partitionAt(posAt(e)) ?? itemAt(c)
       setSelectedId(hit?.id ?? null)
-      if (hit) setDrag({ kind: "move", id: hit.id, grab: c, dx: 0, dy: 0 })
+      // 파티션은 소수 위치를 그대로 잡아 10cm 단위로 옮긴다
+      if (hit)
+        setDrag({
+          kind: "move",
+          id: hit.id,
+          grab: isPartition(hit) ? posAt(e) : c,
+          dx: 0,
+          dy: 0,
+        })
     } else {
       const v = tool === "partition" ? vertexAt(e) : c
       setDrag({ kind: "draw", start: v, end: v })
@@ -328,12 +349,17 @@ export default function FloorPlanAdmin({
   }
 
   const onMove = (e: React.PointerEvent) => {
+    altRef.current = e.altKey
     if (!drag) return
     const c = cellAt(e)
     if (drag.kind === "draw") setDrag({ ...drag, end: tool === "partition" ? vertexAt(e) : c })
-    else if (drag.kind === "move")
-      setDrag({ ...drag, dx: c.x - drag.grab.x, dy: c.y - drag.grab.y })
-    else {
+    else if (drag.kind === "move") {
+      const it = layout.items.find((i) => i.id === drag.id)
+      if (it && isPartition(it)) {
+        const p = posAt(e)
+        setDrag({ ...drag, dx: snapFine(p.x - drag.grab.x), dy: snapFine(p.y - drag.grab.y) })
+      } else setDrag({ ...drag, dx: c.x - drag.grab.x, dy: c.y - drag.grab.y })
+    } else {
       const it = layout.items.find((i) => i.id === drag.id)
       if (it && isPartition(it)) {
         // 파티션: 놓인 방향으로만 1.2칸(1장)씩 늘이고 줄인다
@@ -352,7 +378,7 @@ export default function FloorPlanAdmin({
     if (d.kind === "move") {
       if (d.dx || d.dy) {
         const it = layout.items.find((i) => i.id === d.id)
-        if (it) updateItem(it.id, { x: it.x + d.dx, y: it.y + d.dy })
+        if (it) updateItem(it.id, { x: r2(it.x + d.dx), y: r2(it.y + d.dy) })
       }
       return
     }
@@ -367,7 +393,7 @@ export default function FloorPlanAdmin({
     const h = Math.abs(d.start.y - d.end.y) + 1
     if (tool === "select") return
     if (tool === "partition") {
-      const wall = partitionOf(d.start, d.end)
+      const wall = partitionOf(d.start, d.end, altRef.current)
       if (!fits(layout, wall)) {
         setNotice({ kind: "error", text: "격자 밖으로 나가서 파티션을 놓을 수 없습니다." })
         return
@@ -428,7 +454,7 @@ export default function FloorPlanAdmin({
   let preview: { x: number; y: number; w: number; h: number; ok: boolean; line?: boolean } | null =
     null
   if (drag?.kind === "draw" && tool === "partition") {
-    const wall = partitionOf(drag.start, drag.end)
+    const wall = partitionOf(drag.start, drag.end, altRef.current)
     preview = { ...extentOf(wall), ok: fits(layout, wall), line: true }
   } else if (drag?.kind === "draw") {
     const x = Math.min(drag.start.x, drag.end.x)
@@ -877,7 +903,8 @@ export default function FloorPlanAdmin({
           </div>
           <p className="mt-2 text-[12px] text-[#888]">
             확대: 오른쪽 위 +/− 또는 Ctrl/⌘+휠(트랙패드 오므리기) · 단축키: Delete 삭제 · 방향키 한
-            칸 이동 (Shift+방향키 3칸) · Ctrl/⌘+Z 되돌리기 · 주황 점선 = 부스 번호 중복
+            칸 이동 (Shift+방향키 3칸, 파티션은 10cm·Shift 한 칸) · Ctrl/⌘+Z 되돌리기 · 주황 점선 =
+            부스 번호 중복
           </p>
         </div>
 
@@ -935,6 +962,40 @@ export default function FloorPlanAdmin({
                         {PARTITION}m)
                       </span>
                     </label>
+                    {(["x", "y"] as const).map((k) => (
+                      <label key={k} className="block text-[12px] font-bold text-[#666]">
+                        시작 위치 {k === "x" ? "가로" : "세로"} (칸)
+                        <input
+                          type="number"
+                          step={FINE}
+                          min={0}
+                          className={`${input} mt-1`}
+                          value={selected[k]}
+                          onChange={(e) =>
+                            updateItem(selected.id, { [k]: r2(Number(e.target.value) || 0) })
+                          }
+                        />
+                      </label>
+                    ))}
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const pos = centerOnCross(layout, selected)
+                        if (pos) updateItem(selected.id, pos)
+                        else
+                          setNotice({
+                            kind: "error",
+                            text: "이 파티션과 교차하거나 맞닿은 다른 방향 파티션이 없습니다.",
+                          })
+                      }}
+                      className="col-span-2 rounded border border-black/15 bg-white py-1.5 text-[12px] font-bold hover:border-[#7d0b1c]"
+                    >
+                      교차하는 파티션 기준 가운데 맞추기 (H자 반반)
+                    </button>
+                    <p className="col-span-2 font-normal text-[12px] text-[#999]">
+                      끌거나 방향키로 10cm(0.1칸)씩, Shift+방향키로 한 칸씩 옮깁니다. 위치는 왼쪽 위
+                      끝 기준이고 한 칸 = 1m입니다.
+                    </p>
                   </div>
                 ) : (
                   <>
@@ -1106,16 +1167,47 @@ export default function FloorPlanAdmin({
 
 /**
  * 끈 두 점으로 파티션을 만든다: 더 많이 끈 방향으로, 1.2칸 단위 반올림 (최소 1장).
- * 시작점 a 는 늘 그대로 두어, 왼쪽·위로 끌어도 a 에서 끝나게 한다 (모서리 맞춤)
+ * 시작점 a 는 늘 그대로 두어, 왼쪽·위로 끌어도 a 에서 끝나게 한다 (모서리 맞춤).
+ * centered 면 a 가 파티션의 가운데가 되도록 양쪽으로 뻗는다 (H자·十자)
  */
-function partitionOf(a: Cell, b: Cell): Omit<FloorItem, "id"> {
+function partitionOf(a: Cell, b: Cell, centered = false): Omit<FloorItem, "id"> {
   const horiz = Math.abs(b.x - a.x) >= Math.abs(b.y - a.y)
   const d = horiz ? b.x - a.x : b.y - a.y
-  const n = Math.max(1, Math.round(Math.abs(d) / PARTITION))
-  const r2 = (v: number) => Math.round(v * 100) / 100
-  const x = r2(horiz && d < 0 ? a.x - n * PARTITION : a.x)
-  const y = r2(!horiz && d < 0 ? a.y - n * PARTITION : a.y)
+  const n = Math.max(1, Math.round(Math.abs(d) / (centered ? PARTITION / 2 : PARTITION)))
+  const L = n * PARTITION
+  const from = (v: number) => (centered ? v - L / 2 : d < 0 ? v - L : v)
+  const x = r2(horiz ? from(a.x) : a.x)
+  const y = r2(horiz ? a.y : from(a.y))
   return { ...EMPTY, type: "partition", x, y, w: horiz ? n : 0, h: horiz ? 0 : n }
+}
+
+/**
+ * 파티션과 교차하거나 맞닿은 다른 방향 파티션을 찾아, 그 지점이 이 파티션의 한가운데가
+ * 되는 위치를 돌려준다 (여럿이면 지금 가운데에서 가장 가까운 것)
+ */
+function centerOnCross(layout: Layout, it: FloorItem): { x: number; y: number } | null {
+  const me = extentOf(it)
+  const horiz = it.w > 0
+  const L = horiz ? me.w : me.h
+  const mid = horiz ? me.x + L / 2 : me.y + L / 2
+  const tol = 0.05
+  let best: number | null = null
+  for (const o of layout.items) {
+    if (o.id === it.id || !isPartition(o) || o.w > 0 === horiz) continue
+    const r = extentOf(o)
+    // 이 파티션 선(가로면 y, 세로면 x)이 상대 범위 안에 있어야 만난다
+    const across = horiz ? me.y : me.x
+    const lo = horiz ? r.y : r.x
+    const hi = horiz ? r.y + r.h : r.x + r.w
+    if (across < lo - tol || across > hi + tol) continue
+    const at = horiz ? r.x : r.y // 상대가 지나는 내 축 위의 지점
+    const start = horiz ? me.x : me.y
+    if (at < start - tol || at > start + L + tol) continue
+    if (best === null || Math.abs(at - mid) < Math.abs(best - mid)) best = at
+  }
+  if (best === null) return null
+  const start = r2(best - L / 2)
+  return horiz ? { x: start, y: it.y } : { x: it.x, y: start }
 }
 
 const EMPTY: Omit<FloorItem, "id"> = {
