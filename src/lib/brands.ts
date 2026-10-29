@@ -11,7 +11,9 @@ const COUNTRY_EN: Record<string, string> = {
   TW: "Taiwan",
   GB: "United Kingdom",
   "GB-SCT": "Scotland",
+  IE: "Ireland",
   NL: "Netherlands",
+  DE: "Germany",
 }
 
 export function countryName(brand: Brand, lang: "ko" | "en"): string {

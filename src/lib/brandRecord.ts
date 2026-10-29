@@ -46,10 +46,8 @@ export const COUNTRY_CODES: Record<string, string> = {
   영국: "GB",
   스코틀랜드: "GB-SCT",
   아일랜드: "IE",
-  미국: "US",
-  프랑스: "FR",
   네덜란드: "NL",
-  인도: "IN",
+  독일: "DE",
 }
 
 export const BRAND_BUCKET_NAME = "brand-logos"
