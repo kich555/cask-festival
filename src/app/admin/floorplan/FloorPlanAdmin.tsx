@@ -16,7 +16,9 @@ import {
   isPartition,
   type Layout,
   LIMITS,
+  layerOf,
   nextBoothNo,
+  occupies,
   PANELS,
   PARTITION,
   panelOf,
@@ -101,9 +103,9 @@ function fits(layout: Layout, r: FloorItem | Omit<FloorItem, "id">, ignore?: str
   }
   if (r.x < 0 || r.y < 0 || r.w < 1 || r.h < 1) return false
   if (r.x + r.w > layout.cols || r.y + r.h > layout.rows) return false
-  const taken = new Set(
-    layout.items.filter((i) => i.id !== ignore && !isPartition(i)).flatMap(cellsOf),
-  )
+  // 구역은 바닥 공간이라 무엇과도 겹쳐도 된다
+  if (!occupies(r)) return true
+  const taken = new Set(layout.items.filter((i) => i.id !== ignore && occupies(i)).flatMap(cellsOf))
   return cellsOf(r).every((c) => !taken.has(c))
 }
 
@@ -178,8 +180,7 @@ export default function FloorPlanAdmin({
   const dirty = JSON.stringify(layout) !== JSON.stringify(saved)
   // 파티션(벽)은 부스 위에 보이도록 마지막에 그린다
   const items = useMemo(
-    () =>
-      resolveItems(layout, brands).sort((a, b) => Number(isPartition(a)) - Number(isPartition(b))),
+    () => resolveItems(layout, brands).sort((a, b) => layerOf(a) - layerOf(b)),
     [layout, brands],
   )
   const selected = layout.items.find((i) => i.id === selectedId) ?? null
@@ -325,8 +326,13 @@ export default function FloorPlanAdmin({
         p.x >= r.x - 0.4 && p.x <= r.x + r.w + 0.4 && p.y >= r.y - 0.4 && p.y <= r.y + r.h + 0.4
       )
     })
-  const itemAt = (c: Cell) =>
-    layout.items.find((i) => c.x >= i.x && c.x < i.x + i.w && c.y >= i.y && c.y < i.y + i.h)
+  /** 누른 칸의 항목. 구역 위에 부스가 있으면 부스를 고른다 */
+  const itemAt = (c: Cell) => {
+    const hits = layout.items.filter(
+      (i) => c.x >= i.x && c.x < i.x + i.w && c.y >= i.y && c.y < i.y + i.h,
+    )
+    return hits.find(occupies) ?? hits[0]
+  }
 
   const onDown = (e: React.PointerEvent) => {
     altRef.current = e.altKey
@@ -602,6 +608,11 @@ export default function FloorPlanAdmin({
     .sort((a, b) => a.no.localeCompare(b.no, undefined, { numeric: true }))
   const dupNos = new Set(booths.map((b) => b.no).filter((n, i, arr) => n && arr.indexOf(n) !== i))
   const activeHint = TOOLS.find((t) => t.key === tool)?.hint
+  /** 파티션 장 수 합계 (한 장 길이별) */
+  const panelCount = new Map<number, number>(PANELS.map((m) => [m, 0]))
+  for (const i of layout.items)
+    if (isPartition(i))
+      panelCount.set(panelOf(i), (panelCount.get(panelOf(i)) ?? 0) + Math.max(i.w, i.h))
 
   return (
     <div className="min-h-screen bg-[#f6f5f5] text-[#1a1a1a]">
@@ -1157,6 +1168,29 @@ export default function FloorPlanAdmin({
                 번호·업체·이름·크기를 바꿀 수 있습니다.
               </p>
             )}
+          </section>
+
+          <section className="bg-white border border-black/10 rounded-lg px-4 py-3">
+            <h2 className="text-[13px] font-extrabold mb-2">
+              파티션 합계{" "}
+              <span className="text-[#888] font-normal">
+                {[...panelCount.values()].reduce((a, b) => a + b, 0)}장
+              </span>
+            </h2>
+            <div className="grid grid-cols-2 gap-2 text-[13px]">
+              {PANELS.map((m) => {
+                const n = panelCount.get(m) ?? 0
+                return (
+                  <div key={m} className="rounded bg-[#f6f5f5] px-3 py-2">
+                    <div className="text-[12px] font-bold text-[#666]">{m}m 파티션</div>
+                    <div className="mt-0.5">
+                      <b className="text-[16px]">{n}</b>장{" "}
+                      <span className="text-[#888]">· 총 {(n * m).toFixed(1)}m</span>
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
           </section>
 
           <section className="bg-white border border-black/10 rounded-lg">

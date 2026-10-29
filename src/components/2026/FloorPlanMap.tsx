@@ -11,8 +11,8 @@ import {
   extentOf,
   type FloorItem,
   fitLabel,
-  isPartition,
   type Layout,
+  layerOf,
   panelOf,
   type Rect,
   type ResolvedItem,
@@ -484,11 +484,9 @@ export default function FloorPlanMap({
   const k = unit * view.s || 1
   const viewBox = `${-view.x / k} ${-view.y / k} ${width / k || VW} ${height / k || VH}`
   // 선택된 항목을 맨 위에 그려 테두리가 이웃 칸에 가리지 않게
-  // 파티션(벽)은 부스 테두리 위에 보이도록 가장 위에
+  // 구역(바닥)은 맨 아래, 파티션(벽)은 부스 테두리 위에 보이도록 가장 위에
   const ordered = [...items].sort(
-    (a, b) =>
-      Number(isPartition(a)) - Number(isPartition(b)) ||
-      Number(sel.has(a.id)) - Number(sel.has(b.id)),
+    (a, b) => layerOf(a) - layerOf(b) || Number(sel.has(a.id)) - Number(sel.has(b.id)),
   )
 
   return (
@@ -641,6 +639,7 @@ function MiniMap({
       >
         {items
           .filter((it) => !GATES.has(it.type))
+          .sort((a, b) => layerOf(a) - layerOf(b))
           .map((it) => {
             const r = toPx(it)
             return (

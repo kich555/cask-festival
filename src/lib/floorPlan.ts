@@ -64,6 +64,16 @@ export const ITEM_TYPES: Record<
  */
 export const isPartition = (i: { type: ItemType }) => i.type === "partition"
 
+/**
+ * 칸을 차지하는지. 구역(칠링 존 등)은 바닥 공간이라 그 위에 부스·시설을 겹쳐 놓을 수 있고,
+ * 파티션은 선이라 역시 칸을 차지하지 않는다
+ */
+export const occupies = (i: { type: ItemType }) => i.type !== "zone" && i.type !== "partition"
+
+/** 그리는 순서: 구역(바닥) → 부스·시설 → 파티션(벽) */
+export const layerOf = (i: { type: ItemType }) =>
+  i.type === "zone" ? 0 : i.type === "partition" ? 2 : 1
+
 /** 파티션이 차지하는 범위(칸 단위, 소수 가능). 다른 항목은 그대로 */
 export function extentOf(i: FloorItem | Omit<FloorItem, "id">): Rect {
   if (!isPartition(i)) return i
@@ -1101,11 +1111,12 @@ export function parseLayout(raw: unknown): Layout | null {
     const h = int(Number(r.h) * k, 1, rows - y)
     const cells: string[] = []
     for (let i = x; i < x + w; i++) for (let j = y; j < y + h; j++) cells.push(`${i},${j}`)
-    if (cells.some((c) => taken.has(c))) continue
+    const solid = occupies({ type })
+    if (solid && cells.some((c) => taken.has(c))) continue
     let id = clip(r.id, 40) || `i${items.length}`
     while (ids.has(id)) id = `${id}_`
     ids.add(id)
-    for (const c of cells) taken.add(c)
+    if (solid) for (const c of cells) taken.add(c)
     const brand =
       type === "booth" && typeof r.brand === "string" && SLUG.test(r.brand) ? r.brand : null
     items.push({
