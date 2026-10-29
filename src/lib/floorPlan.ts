@@ -10,7 +10,18 @@ export const BOOTH = 3
 /** 저장 형식의 격자 배율. 예전(부스 = 1칸) 파일은 grid 가 없어 읽을 때 BOOTH 배로 늘린다 */
 const GRID = BOOTH
 
-export type ItemType = "booth" | "room" | "zone" | "toilet" | "info" | "entrance" | "exit"
+export type ItemType =
+  | "booth"
+  | "room"
+  | "zone"
+  | "toilet"
+  | "info"
+  | "entrance"
+  | "exit"
+  | "partition"
+
+/** 파티션(벽) 한 장의 길이 (칸 = 1m 기준 1.2m) */
+export const PARTITION = 1.2
 
 export type FloorItem = {
   id: string
@@ -42,6 +53,19 @@ export const ITEM_TYPES: Record<
   info: { label: "인포메이션", ko: "인포", en: "INFO", walkable: false },
   entrance: { label: "입구", ko: "입구", en: "ENTRANCE", walkable: true },
   exit: { label: "출구", ko: "출구", en: "EXIT", walkable: true },
+  partition: { label: "파티션(벽)", ko: "", en: "", walkable: true },
+}
+
+/**
+ * 파티션은 칸이 아니라 격자 선 위에 놓는 선이다. (x, y) = 시작 꼭짓점,
+ * 가로면 w = 장 수·h = 0, 세로면 h = 장 수·w = 0. 다른 항목과 겹쳐도 된다.
+ */
+export const isPartition = (i: { type: ItemType }) => i.type === "partition"
+
+/** 파티션이 차지하는 범위(칸 단위, 소수 가능). 다른 항목은 그대로 */
+export function extentOf(i: FloorItem | Omit<FloorItem, "id">): Rect {
+  if (!isPartition(i)) return i
+  return { x: i.x, y: i.y, w: i.w * PARTITION, h: i.h * PARTITION }
 }
 
 export const LIMITS = { minCols: 18, maxCols: 180, minRows: 18, maxRows: 180 }
@@ -1037,6 +1061,31 @@ export function parseLayout(raw: unknown): Layout | null {
   for (const r of src.items as Record<string, unknown>[]) {
     if (!r || typeof r !== "object" || !TYPES.has(String(r.type))) continue
     const type = r.type as ItemType
+    if (type === "partition") {
+      // 꼭짓점 좌표, 한 방향으로만 장 수
+      const x = int(Number(r.x) * k, 0, cols)
+      const y = int(Number(r.y) * k, 0, rows)
+      const horiz = Number(r.w) > 0
+      const max = Math.floor(((horiz ? cols - x : rows - y) + 1e-9) / PARTITION)
+      const n = int(horiz ? r.w : r.h, 1, Math.max(1, max))
+      if (max < 1) continue
+      let id = clip(r.id, 40) || `i${items.length}`
+      while (ids.has(id)) id = `${id}_`
+      ids.add(id)
+      items.push({
+        id,
+        type,
+        no: "",
+        x,
+        y,
+        w: horiz ? n : 0,
+        h: horiz ? 0 : n,
+        brand: null,
+        ko: "",
+        en: "",
+      })
+      continue
+    }
     const x = int(Number(r.x) * k, 0, cols - 1)
     const y = int(Number(r.y) * k, 0, rows - 1)
     const w = int(Number(r.w) * k, 1, cols - x)

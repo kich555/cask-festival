@@ -8,8 +8,12 @@ import { useCallback, useEffect, useRef, useState } from "react"
 import {
   BOOTH,
   CELL,
+  extentOf,
+  type FloorItem,
   fitLabel,
+  isPartition,
   type Layout,
+  PARTITION,
   type Rect,
   type ResolvedItem,
   toPx,
@@ -66,7 +70,7 @@ function Lines({
 const v = (name: string) => `var(--fp-${name})`
 
 /** 누를 수 없는 표시용 항목 */
-const GATES = new Set(["entrance", "exit"])
+const GATES = new Set(["entrance", "exit", "partition"])
 
 function ToiletIcon({ x, y, k, fill }: { x: number; y: number; k: number; fill: string }) {
   return (
@@ -109,6 +113,44 @@ function Gate({ item, name }: { item: ResolvedItem; name: string }) {
   )
 }
 
+/** 파티션(벽): 격자 선 위의 굵은 선. 장 사이 이음매를 옅게 표시 */
+function Partition({ item, selected }: { item: Rect; selected?: boolean }) {
+  const r = toPx(extentOf(item as FloorItem))
+  const n = Math.max(item.w, item.h)
+  const horiz = item.w > 0
+  const step = PARTITION * CELL
+  const color = v(selected ? "sel" : "wall")
+  return (
+    <g pointerEvents="none">
+      <line
+        x1={r.x}
+        y1={r.y}
+        x2={r.x + r.w}
+        y2={r.y + r.h}
+        style={{ stroke: color }}
+        strokeWidth={1.6}
+        strokeLinecap="square"
+      />
+      {Array.from({ length: n - 1 }, (_, i) => {
+        const d = (i + 1) * step
+        const x = horiz ? r.x + d : r.x
+        const y = horiz ? r.y : r.y + d
+        return (
+          <line
+            key={d}
+            x1={horiz ? x : x - 0.8}
+            y1={horiz ? y - 0.8 : y}
+            x2={horiz ? x : x + 0.8}
+            y2={horiz ? y + 0.8 : y}
+            style={{ stroke: v("map") }}
+            strokeWidth={0.35}
+          />
+        )
+      })}
+    </g>
+  )
+}
+
 /** 항목 하나 (부스·룸·시설). detail 이 참이면 부스 번호도 함께 */
 export function FloorShape({
   item,
@@ -121,6 +163,7 @@ export function FloorShape({
   selected?: boolean
   detail?: boolean
 }) {
+  if (item.type === "partition") return <Partition item={item} selected={selected} />
   const r = toPx(item)
   const cx = r.x + r.w / 2
   const cy = r.y + r.h / 2
@@ -441,7 +484,12 @@ export default function FloorPlanMap({
   const k = unit * view.s || 1
   const viewBox = `${-view.x / k} ${-view.y / k} ${width / k || VW} ${height / k || VH}`
   // 선택된 항목을 맨 위에 그려 테두리가 이웃 칸에 가리지 않게
-  const ordered = [...items].sort((a, b) => Number(sel.has(a.id)) - Number(sel.has(b.id)))
+  // 파티션(벽)은 부스 테두리 위에 보이도록 가장 위에
+  const ordered = [...items].sort(
+    (a, b) =>
+      Number(isPartition(a)) - Number(isPartition(b)) ||
+      Number(sel.has(a.id)) - Number(sel.has(b.id)),
+  )
 
   return (
     <div>
