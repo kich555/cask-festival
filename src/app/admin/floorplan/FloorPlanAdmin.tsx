@@ -133,6 +133,8 @@ export default function FloorPlanAdmin({
   const [lang, setLang] = useState<"ko" | "en">("ko")
   /** 캔버스 확대 배율. 확대하면 캔버스 상자 안에서 스크롤한다 */
   const [zoom, setZoom] = useState(1)
+  /** 파티션 합계에서 누른 한 장 길이(1.2 / 1): 그 파티션만 캔버스에 강조 */
+  const [wallFocus, setWallFocus] = useState<number | null>(null)
   const scrollRef = useRef<HTMLDivElement>(null)
   const zoomRef = useRef(zoom)
   zoomRef.current = zoom
@@ -852,6 +854,34 @@ export default function FloorPlanAdmin({
                 />
               )}
 
+              {/* 파티션 합계에서 고른 종류를 강조 */}
+              {wallFocus !== null && (
+                <g pointerEvents="none">
+                  <rect
+                    width={VW}
+                    height={VH}
+                    style={{ fill: "var(--fp-map)" }}
+                    fillOpacity={0.6}
+                  />
+                  {layout.items
+                    .filter((i) => isPartition(i) && panelOf(i) === wallFocus)
+                    .map((i) => {
+                      const r = extentOf(i)
+                      return (
+                        <line
+                          key={i.id}
+                          x1={r.x * CELL}
+                          y1={r.y * CELL}
+                          x2={(r.x + r.w) * CELL}
+                          y2={(r.y + r.h) * CELL}
+                          stroke={wallFocus === 1 ? "#2f5fa8" : "#e0662a"}
+                          strokeWidth={2.6}
+                          strokeLinecap="square"
+                        />
+                      )
+                    })}
+                </g>
+              )}
               {preview?.line && (
                 <line
                   x1={preview.x * CELL}
@@ -1203,13 +1233,27 @@ export default function FloorPlanAdmin({
               {PANELS.map((m) => {
                 const n = panelCount.get(m) ?? 0
                 return (
-                  <div key={m} className="rounded bg-[#f6f5f5] px-3 py-2">
-                    <div className="text-[12px] font-bold text-[#666]">{m}m 파티션</div>
+                  <button
+                    key={m}
+                    type="button"
+                    onClick={() => setWallFocus(wallFocus === m ? null : m)}
+                    aria-pressed={wallFocus === m}
+                    className={`text-left rounded px-3 py-2 border-2 transition-colors ${
+                      wallFocus === m
+                        ? m === 1
+                          ? "border-[#2f5fa8] bg-[#2f5fa8]/10"
+                          : "border-[#e0662a] bg-[#e0662a]/10"
+                        : "border-transparent bg-[#f6f5f5] hover:border-black/15"
+                    }`}
+                  >
+                    <div className="text-[12px] font-bold text-[#666]">
+                      {m}m 파티션 {wallFocus === m ? "· 표시 중" : "· 눌러서 표시"}
+                    </div>
                     <div className="mt-0.5">
                       <b className="text-[16px]">{n}</b>장{" "}
                       <span className="text-[#888]">· 총 {(n * m).toFixed(1)}m</span>
                     </div>
-                  </div>
+                  </button>
                 )
               })}
             </div>
