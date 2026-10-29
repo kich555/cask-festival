@@ -20,8 +20,8 @@ export type ItemType =
   | "exit"
   | "partition"
 
-/** 파티션(벽) 한 장의 길이 (칸 = 1m 기준 1.2m) */
-export const PARTITION = 1.2
+/** 파티션(벽) 한 장의 실제 길이(m). 도면에선 한 장 = 격자 한 칸이라 끝이 늘 교차점에 맞는다 */
+export const PARTITION_M = 1.2
 
 export type FloorItem = {
   id: string
@@ -65,7 +65,7 @@ export const isPartition = (i: { type: ItemType }) => i.type === "partition"
 /** 파티션이 차지하는 범위(칸 단위, 소수 가능). 다른 항목은 그대로 */
 export function extentOf(i: FloorItem | Omit<FloorItem, "id">): Rect {
   if (!isPartition(i)) return i
-  return { x: i.x, y: i.y, w: i.w * PARTITION, h: i.h * PARTITION }
+  return { x: i.x, y: i.y, w: i.w, h: i.h }
 }
 
 export const LIMITS = { minCols: 18, maxCols: 180, minRows: 18, maxRows: 180 }
@@ -1066,7 +1066,7 @@ export function parseLayout(raw: unknown): Layout | null {
       const x = int(Number(r.x) * k, 0, cols)
       const y = int(Number(r.y) * k, 0, rows)
       const horiz = Number(r.w) > 0
-      const max = Math.floor(((horiz ? cols - x : rows - y) + 1e-9) / PARTITION)
+      const max = horiz ? cols - x : rows - y
       const n = int(horiz ? r.w : r.h, 1, Math.max(1, max))
       if (max < 1) continue
       let id = clip(r.id, 40) || `i${items.length}`

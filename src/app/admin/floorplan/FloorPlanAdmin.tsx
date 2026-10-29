@@ -17,7 +17,7 @@ import {
   type Layout,
   LIMITS,
   nextBoothNo,
-  PARTITION,
+  PARTITION_M,
   resolveItems,
   SECTIONS,
 } from "@/lib/floorPlan"
@@ -53,7 +53,7 @@ const TOOLS: { key: Tool; label: string; hint: string }[] = [
   {
     key: "partition",
     label: "파티션",
-    hint: "격자 선을 따라 끌면 1.2칸(1.2m) 단위로 벽이 그려집니다. 더 많이 끈 방향(가로·세로)으로 놓이고, 부스와 겹쳐도 됩니다.",
+    hint: "격자 선을 따라 끌면 교차점에서 교차점까지 한 칸 = 파티션 1장(1.2m)씩 벽이 그려집니다. 더 많이 끈 방향(가로·세로)으로 놓이고, 부스와 겹쳐도 됩니다.",
   },
 ]
 
@@ -308,9 +308,9 @@ export default function FloorPlanAdmin({
     else {
       const it = layout.items.find((i) => i.id === drag.id)
       if (it && isPartition(it)) {
-        // 파티션: 놓인 방향으로만 1.2칸 단위로 늘이고 줄인다
+        // 파티션: 놓인 방향으로만 한 칸(1장)씩 늘이고 줄인다
         const p = posAt(e)
-        const n = Math.max(1, Math.round((it.w ? p.x - it.x : p.y - it.y) / PARTITION))
+        const n = Math.max(1, Math.round(it.w ? p.x - it.x : p.y - it.y))
         setDrag({ ...drag, w: it.w ? n : 0, h: it.w ? 0 : n })
       } else if (it)
         setDrag({ ...drag, w: Math.max(1, c.x - it.x + 1), h: Math.max(1, c.y - it.y + 1) })
@@ -903,8 +903,8 @@ export default function FloorPlanAdmin({
                         }}
                       />
                       <span className="block mt-1 font-normal text-[#999]">
-                        길이 {(Math.max(selected.w, selected.h) * PARTITION).toFixed(1)}m (1장 ={" "}
-                        {PARTITION}m)
+                        길이 {(Math.max(selected.w, selected.h) * PARTITION_M).toFixed(1)}m (1장 ={" "}
+                        {PARTITION_M}m)
                       </span>
                     </label>
                   </div>
@@ -1076,11 +1076,11 @@ export default function FloorPlanAdmin({
   )
 }
 
-/** 끈 두 꼭짓점으로 파티션을 만든다: 더 많이 끈 방향으로, 1.2칸 단위 반올림 (최소 1장) */
+/** 끈 두 꼭짓점으로 파티션을 만든다: 더 많이 끈 방향으로, 교차점 사이 칸 수 = 장 수 (최소 1장) */
 function partitionOf(a: Cell, b: Cell): Omit<FloorItem, "id"> {
   const horiz = Math.abs(b.x - a.x) >= Math.abs(b.y - a.y)
   const d = horiz ? b.x - a.x : b.y - a.y
-  const n = Math.max(1, Math.round(Math.abs(d) / PARTITION))
+  const n = Math.max(1, Math.abs(d))
   // 왼쪽·위로 끌었으면 끝점(정수 꼭짓점)에서 시작
   const x = horiz && d < 0 ? b.x : a.x
   const y = !horiz && d < 0 ? b.y : a.y

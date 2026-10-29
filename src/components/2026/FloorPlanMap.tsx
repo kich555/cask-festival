@@ -13,7 +13,6 @@ import {
   fitLabel,
   isPartition,
   type Layout,
-  PARTITION,
   type Rect,
   type ResolvedItem,
   toPx,
@@ -118,7 +117,7 @@ function Partition({ item, selected }: { item: Rect; selected?: boolean }) {
   const r = toPx(extentOf(item as FloorItem))
   const n = Math.max(item.w, item.h)
   const horiz = item.w > 0
-  const step = PARTITION * CELL
+  const step = CELL
   const color = v(selected ? "sel" : "wall")
   return (
     <g pointerEvents="none">
