@@ -205,41 +205,6 @@ function HomeContent({ program }: { program: ProgramDay[] }) {
           </div>
         </Reveal>
       </section>
-
-      {/* EXHIBITOR TEASER */}
-      <section className="bg-[var(--c-bg)] py-20 md:py-28">
-        <Reveal>
-          <div className="max-w-[1440px] mx-auto px-5 md:px-10">
-            <h2 className="text-[clamp(26px,4vw,40px)] font-extrabold mb-8">{c.exhibitor.title}</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 border-t border-[var(--c-line)]">
-              {[
-                [c.exhibitor.infoEvent, c.exhibitor.infoEventV],
-                [c.exhibitor.infoDate, c.exhibitor.infoDateV],
-                [c.exhibitor.infoVenue, c.exhibitor.infoVenueV],
-                [c.exhibitor.infoHost, c.exhibitor.infoHostV],
-              ].map(([k, v]) => (
-                <div key={k} className="py-5 border-b border-[var(--c-line)]">
-                  <dt className="text-[13px] text-[var(--c-muted2)]">{k}</dt>
-                  <dd className="text-[16px] font-semibold mt-1">{v}</dd>
-                </div>
-              ))}
-            </div>
-
-            <p className="text-center text-[16px] md:text-[18px] font-semibold mt-12 leading-relaxed">
-              {c.exhibitor.closed}
-            </p>
-
-            <div className="flex justify-center mt-8">
-              <Link
-                href={`/brands${qs}`}
-                className="border border-[var(--c-accent)] text-[var(--c-accent)] rounded px-7 py-3.5 font-semibold text-center hover:bg-[#7d0b1c] hover:text-white transition-colors"
-              >
-                {c.exhibitor.moreBtn}
-              </Link>
-            </div>
-          </div>
-        </Reveal>
-      </section>
     </div>
   )
 }
