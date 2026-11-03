@@ -19,17 +19,12 @@ import {
   layerOf,
   nextBoothNo,
   occupies,
-  PANELS,
-  PARTITION,
   panelOf,
   resolveItems,
   SECTIONS,
 } from "@/lib/floorPlan"
 
-/** partition1 = 1m 파티션 (저장할 땐 type partition, no "1") */
-type Tool = "select" | ItemType | "partition1"
-const isWallTool = (t: Tool): t is "partition" | "partition1" =>
-  t === "partition" || t === "partition1"
+type Tool = "select" | ItemType
 type Cell = { x: number; y: number }
 type Drag =
   | { kind: "draw"; start: Cell; end: Cell }
@@ -59,13 +54,8 @@ const TOOLS: { key: Tool; label: string; hint: string }[] = [
   { key: "exit", label: "출구", hint: "끌어서 출구 위치를 그립니다." },
   {
     key: "partition",
-    label: "파티션 1.2m",
-    hint: "끌면 1.2칸(1.2m) 단위로 벽이 그려집니다. 시작점은 다른 파티션의 끝·선 위나 격자 교차점에 붙으니, 모서리를 맞출 땐 기존 파티션 끝에서 시작해 끌어 주세요. Option(Alt)을 누른 채 끌면 시작점이 가운데가 됩니다(H자). 부스와 겹쳐도 됩니다.",
-  },
-  {
-    key: "partition1",
-    label: "파티션 1m",
-    hint: "끌면 1칸(1m) 단위로 벽이 그려집니다. 붙는 방식·Option(Alt) 가운데 그리기는 1.2m 파티션과 같습니다.",
+    label: "파티션",
+    hint: "끌면 1칸(1m) 단위로 벽이 그려집니다. 시작점은 다른 파티션의 끝·선 위나 격자 교차점에 붙으니, 모서리를 맞출 땐 기존 파티션 끝에서 시작해 끌어 주세요. Option(Alt)을 누른 채 끌면 시작점이 가운데가 됩니다(H자). 부스와 겹쳐도 됩니다.",
   },
 ]
 
@@ -133,8 +123,8 @@ export default function FloorPlanAdmin({
   const [lang, setLang] = useState<"ko" | "en">("ko")
   /** 캔버스 확대 배율. 확대하면 캔버스 상자 안에서 스크롤한다 */
   const [zoom, setZoom] = useState(1)
-  /** 파티션 합계에서 누른 한 장 길이(1.2 / 1): 그 파티션만 캔버스에 강조 */
-  const [wallFocus, setWallFocus] = useState<number | null>(null)
+  /** 파티션 합계를 누르면 파티션만 캔버스에 강조 */
+  const [wallFocus, setWallFocus] = useState(false)
   const scrollRef = useRef<HTMLDivElement>(null)
   const zoomRef = useRef(zoom)
   zoomRef.current = zoom
@@ -355,7 +345,7 @@ export default function FloorPlanAdmin({
           dy: 0,
         })
     } else {
-      const v = isWallTool(tool) ? vertexAt(e) : c
+      const v = tool === "partition" ? vertexAt(e) : c
       setDrag({ kind: "draw", start: v, end: v })
     }
   }
@@ -370,7 +360,7 @@ export default function FloorPlanAdmin({
     altRef.current = e.altKey
     if (!drag) return
     const c = cellAt(e)
-    if (drag.kind === "draw") setDrag({ ...drag, end: isWallTool(tool) ? vertexAt(e) : c })
+    if (drag.kind === "draw") setDrag({ ...drag, end: tool === "partition" ? vertexAt(e) : c })
     else if (drag.kind === "move") {
       const it = layout.items.find((i) => i.id === drag.id)
       if (it && isPartition(it)) {
@@ -380,7 +370,7 @@ export default function FloorPlanAdmin({
     } else {
       const it = layout.items.find((i) => i.id === drag.id)
       if (it && isPartition(it)) {
-        // 파티션: 놓인 방향으로만 1.2칸(1장)씩 늘이고 줄인다
+        // 파티션: 놓인 방향으로만 1장씩 늘이고 줄인다
         const p = posAt(e)
         const n = Math.max(1, Math.round((it.w ? p.x - it.x : p.y - it.y) / panelOf(it)))
         setDrag({ ...drag, w: it.w ? n : 0, h: it.w ? 0 : n })
@@ -410,13 +400,8 @@ export default function FloorPlanAdmin({
     const w = Math.abs(d.start.x - d.end.x) + 1
     const h = Math.abs(d.start.y - d.end.y) + 1
     if (tool === "select") return
-    if (isWallTool(tool)) {
-      const wall = partitionOf(
-        d.start,
-        d.end,
-        altRef.current,
-        tool === "partition1" ? 1 : PARTITION,
-      )
+    if (tool === "partition") {
+      const wall = partitionOf(d.start, d.end, altRef.current)
       if (!fits(layout, wall)) {
         setNotice({ kind: "error", text: "격자 밖으로 나가서 파티션을 놓을 수 없습니다." })
         return
@@ -476,13 +461,8 @@ export default function FloorPlanAdmin({
   // 끌고 있는 동안 보여 줄 미리보기
   let preview: { x: number; y: number; w: number; h: number; ok: boolean; line?: boolean } | null =
     null
-  if (drag?.kind === "draw" && isWallTool(tool)) {
-    const wall = partitionOf(
-      drag.start,
-      drag.end,
-      altRef.current,
-      tool === "partition1" ? 1 : PARTITION,
-    )
+  if (drag?.kind === "draw" && tool === "partition") {
+    const wall = partitionOf(drag.start, drag.end, altRef.current)
     preview = { ...extentOf(wall), ok: fits(layout, wall), line: true }
   } else if (drag?.kind === "draw") {
     const x = Math.min(drag.start.x, drag.end.x)
@@ -610,11 +590,14 @@ export default function FloorPlanAdmin({
     .sort((a, b) => a.no.localeCompare(b.no, undefined, { numeric: true }))
   const dupNos = new Set(booths.map((b) => b.no).filter((n, i, arr) => n && arr.indexOf(n) !== i))
   const activeHint = TOOLS.find((t) => t.key === tool)?.hint
-  /** 파티션 장 수 합계 (한 장 길이별) */
-  const panelCount = new Map<number, number>(PANELS.map((m) => [m, 0]))
+  /** 파티션 합계 (장 수·총 길이) */
+  let panelTotal = 0
+  let panelMeters = 0
   for (const i of layout.items)
-    if (isPartition(i))
-      panelCount.set(panelOf(i), (panelCount.get(panelOf(i)) ?? 0) + Math.max(i.w, i.h))
+    if (isPartition(i)) {
+      panelTotal += Math.max(i.w, i.h)
+      panelMeters += Math.max(i.w, i.h) * panelOf(i)
+    }
 
   return (
     <div className="min-h-screen bg-[#f6f5f5] text-[#1a1a1a]">
@@ -854,8 +837,8 @@ export default function FloorPlanAdmin({
                 />
               )}
 
-              {/* 파티션 합계에서 고른 종류를 강조 */}
-              {wallFocus !== null && (
+              {/* 파티션 합계를 누르면 파티션을 강조 */}
+              {wallFocus && (
                 <g pointerEvents="none">
                   <rect
                     width={VW}
@@ -863,23 +846,21 @@ export default function FloorPlanAdmin({
                     style={{ fill: "var(--fp-map)" }}
                     fillOpacity={0.6}
                   />
-                  {layout.items
-                    .filter((i) => isPartition(i) && panelOf(i) === wallFocus)
-                    .map((i) => {
-                      const r = extentOf(i)
-                      return (
-                        <line
-                          key={i.id}
-                          x1={r.x * CELL}
-                          y1={r.y * CELL}
-                          x2={(r.x + r.w) * CELL}
-                          y2={(r.y + r.h) * CELL}
-                          stroke={wallFocus === 1 ? "#2f5fa8" : "#e0662a"}
-                          strokeWidth={2.6}
-                          strokeLinecap="square"
-                        />
-                      )
-                    })}
+                  {layout.items.filter(isPartition).map((i) => {
+                    const r = extentOf(i)
+                    return (
+                      <line
+                        key={i.id}
+                        x1={r.x * CELL}
+                        y1={r.y * CELL}
+                        x2={(r.x + r.w) * CELL}
+                        y2={(r.y + r.h) * CELL}
+                        stroke="#2f5fa8"
+                        strokeWidth={2.6}
+                        strokeLinecap="square"
+                      />
+                    )
+                  })}
                 </g>
               )}
               {preview?.line && (
@@ -1010,22 +991,6 @@ export default function FloorPlanAdmin({
                       >
                         <option value="h">가로</option>
                         <option value="v">세로</option>
-                      </select>
-                    </label>
-                    <label className="col-span-2 block text-[12px] font-bold text-[#666]">
-                      파티션 한 장 길이
-                      <select
-                        className={`${input} mt-1`}
-                        value={panelOf(selected)}
-                        onChange={(e) =>
-                          updateItem(selected.id, { no: Number(e.target.value) === 1 ? "1" : "" })
-                        }
-                      >
-                        {PANELS.map((m) => (
-                          <option key={m} value={m}>
-                            {m}m
-                          </option>
-                        ))}
                       </select>
                     </label>
                     <label className="block text-[12px] font-bold text-[#666]">
@@ -1223,40 +1188,24 @@ export default function FloorPlanAdmin({
           </section>
 
           <section className="bg-white border border-black/10 rounded-lg px-4 py-3">
-            <h2 className="text-[13px] font-extrabold mb-2">
-              파티션 합계{" "}
-              <span className="text-[#888] font-normal">
-                {[...panelCount.values()].reduce((a, b) => a + b, 0)}장
-              </span>
-            </h2>
-            <div className="grid grid-cols-2 gap-2 text-[13px]">
-              {PANELS.map((m) => {
-                const n = panelCount.get(m) ?? 0
-                return (
-                  <button
-                    key={m}
-                    type="button"
-                    onClick={() => setWallFocus(wallFocus === m ? null : m)}
-                    aria-pressed={wallFocus === m}
-                    className={`text-left rounded px-3 py-2 border-2 transition-colors ${
-                      wallFocus === m
-                        ? m === 1
-                          ? "border-[#2f5fa8] bg-[#2f5fa8]/10"
-                          : "border-[#e0662a] bg-[#e0662a]/10"
-                        : "border-transparent bg-[#f6f5f5] hover:border-black/15"
-                    }`}
-                  >
-                    <div className="text-[12px] font-bold text-[#666]">
-                      {m}m 파티션 {wallFocus === m ? "· 표시 중" : "· 눌러서 표시"}
-                    </div>
-                    <div className="mt-0.5">
-                      <b className="text-[16px]">{n}</b>장{" "}
-                      <span className="text-[#888]">· 총 {(n * m).toFixed(1)}m</span>
-                    </div>
-                  </button>
-                )
-              })}
-            </div>
+            <button
+              type="button"
+              onClick={() => setWallFocus(!wallFocus)}
+              aria-pressed={wallFocus}
+              className={`w-full text-left rounded px-3 py-2 border-2 text-[13px] transition-colors ${
+                wallFocus
+                  ? "border-[#2f5fa8] bg-[#2f5fa8]/10"
+                  : "border-transparent bg-[#f6f5f5] hover:border-black/15"
+              }`}
+            >
+              <div className="text-[12px] font-bold text-[#666]">
+                파티션 합계 {wallFocus ? "· 표시 중" : "· 눌러서 표시"}
+              </div>
+              <div className="mt-0.5">
+                <b className="text-[16px]">{panelTotal}</b>장{" "}
+                <span className="text-[#888]">· 총 {Number(panelMeters.toFixed(1))}m</span>
+              </div>
+            </button>
           </section>
 
           <section className="bg-white border border-black/10 rounded-lg">
@@ -1301,22 +1250,22 @@ export default function FloorPlanAdmin({
 }
 
 /**
- * 끈 두 점으로 파티션을 만든다: 더 많이 끈 방향으로, 1.2칸 단위 반올림 (최소 1장).
+ * 끈 두 점으로 파티션을 만든다: 더 많이 끈 방향으로, 1칸(1m) 단위 반올림 (최소 1장).
  * 시작점 a 는 늘 그대로 두어, 왼쪽·위로 끌어도 a 에서 끝나게 한다 (모서리 맞춤).
  * centered 면 a 가 파티션의 가운데가 되도록 양쪽으로 뻗는다 (H자·十자)
  */
-function partitionOf(a: Cell, b: Cell, centered = false, panel = PARTITION): Omit<FloorItem, "id"> {
+function partitionOf(a: Cell, b: Cell, centered = false): Omit<FloorItem, "id"> {
   const horiz = Math.abs(b.x - a.x) >= Math.abs(b.y - a.y)
   const d = horiz ? b.x - a.x : b.y - a.y
-  const n = Math.max(1, Math.round(Math.abs(d) / (centered ? panel / 2 : panel)))
-  const L = n * panel
+  const n = Math.max(1, Math.round(Math.abs(d) / (centered ? 0.5 : 1)))
+  const L = n
   const from = (v: number) => (centered ? v - L / 2 : d < 0 ? v - L : v)
   const x = r2(horiz ? from(a.x) : a.x)
   const y = r2(horiz ? a.y : from(a.y))
   return {
     ...EMPTY,
     type: "partition",
-    no: panel === 1 ? "1" : "",
+    no: "1",
     x,
     y,
     w: horiz ? n : 0,

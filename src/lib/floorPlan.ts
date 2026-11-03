@@ -20,10 +20,8 @@ export type ItemType =
   | "exit"
   | "partition"
 
-/** 파티션(벽) 한 장의 기본 길이. 칸 = 1m 기준 1.2칸(1.2m) */
+/** 예전 파티션 한 장 길이(1.2m). 항목의 no 가 "1" 이면 1m(현재 규격), 비어 있으면 이 값 */
 export const PARTITION = 1.2
-/** 파티션 한 장 길이 종류(m). 항목의 no 에 "1" 이면 1m, 비어 있으면 1.2m */
-export const PANELS = [1.2, 1] as const
 
 export type FloorItem = {
   id: string
