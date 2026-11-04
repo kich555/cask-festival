@@ -23,6 +23,7 @@ import {
   resolveItems,
   SECTIONS,
 } from "@/lib/floorPlan"
+import { downloadSvgAsPng } from "./downloadSvg"
 
 type Tool = "select" | ItemType
 type Cell = { x: number; y: number }
@@ -166,6 +167,9 @@ export default function FloorPlanAdmin({
   const [visibility, setVisibility] = useState(initialVisibility)
   const [toggling, setToggling] = useState<Target | null>(null)
   const svgRef = useRef<SVGSVGElement>(null)
+  /** 다운로드 중에만 격자·선택 표시 없는 도면을 숨겨서 그려 이미지로 만든다 */
+  const [exporting, setExporting] = useState(false)
+  const exportRef = useRef<SVGSVGElement>(null)
   /** Option(Alt)을 누른 채 파티션을 그리면 시작점을 가운데로 */
   const altRef = useRef(false)
 
@@ -175,6 +179,14 @@ export default function FloorPlanAdmin({
     () => resolveItems(layout, brands).sort((a, b) => layerOf(a) - layerOf(b)),
     [layout, brands],
   )
+  useEffect(() => {
+    if (!exporting || !exportRef.current) return
+    downloadSvgAsPng(exportRef.current, `CC2026_부스배치도_${lang === "ko" ? "국문" : "영문"}.png`)
+      .catch((e) =>
+        setNotice({ kind: "error", text: e instanceof Error ? e.message : "다운로드 실패" }),
+      )
+      .finally(() => setExporting(false))
+  }, [exporting, lang])
   const selected = layout.items.find((i) => i.id === selectedId) ?? null
   const brandBySlug = useMemo(() => new Map(brands.map((b) => [b.slug, b])), [brands])
   const usedBy = useMemo(() => {
@@ -641,6 +653,15 @@ export default function FloorPlanAdmin({
           })}
           <button
             type="button"
+            onClick={() => setExporting(true)}
+            disabled={exporting}
+            title="지금 화면의 배치를 현재 언어(국문/영문)로 저장합니다. 저장하지 않은 수정도 포함됩니다."
+            className="border border-white/30 rounded px-3 py-2 text-[13px] font-bold disabled:opacity-40"
+          >
+            {exporting ? "만드는 중…" : "배치도 다운로드"}
+          </button>
+          <button
+            type="button"
             onClick={save}
             disabled={!dirty || saving}
             className="bg-[#7d0b1c] text-white rounded px-5 py-2 text-[13px] font-bold disabled:opacity-40"
@@ -649,6 +670,26 @@ export default function FloorPlanAdmin({
           </button>
         </div>
       </header>
+
+      {exporting && (
+        <div className="hidden">
+          <svg
+            ref={exportRef}
+            viewBox={`0 0 ${layout.cols * CELL} ${layout.rows * CELL}`}
+            className="fp-theme fp-light"
+            aria-hidden="true"
+          >
+            <rect
+              width={layout.cols * CELL}
+              height={layout.rows * CELL}
+              style={{ fill: "var(--fp-map)" }}
+            />
+            {items.map((it) => (
+              <FloorShape key={it.id} item={it} lang={lang} />
+            ))}
+          </svg>
+        </div>
+      )}
 
       <div className="max-w-[1600px] mx-auto px-5 md:px-8 py-5 grid xl:grid-cols-[minmax(0,1fr)_380px] gap-5 items-start">
         {/* 편집 캔버스 */}
