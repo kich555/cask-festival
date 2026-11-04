@@ -99,6 +99,10 @@ export interface Content2026 {
       title: string
     }
     kinds: { masterclass: string; tasting: string; lecture: string }
+    detail: string
+    speakerLabel: string
+    tapHint: string
+    close: string
     notice: { lead: string; items: string[] }
   }
   brandsP: {
@@ -217,7 +221,7 @@ export const content2026: Record<"ko" | "en", Content2026> = {
     },
     masterclass: {
       eyebrow: "Master Class & Tasting Session",
-      title: "마스터클래스 & 테이스팅",
+      title: "프로그램 시간표",
       tbd: "2026 마스터클래스 라인업 - 추후 공개 예정",
     },
     exhibitor: {
@@ -349,6 +353,10 @@ export const content2026: Record<"ko" | "en", Content2026> = {
         title: "강연 제목",
       },
       kinds: { masterclass: "마스터클래스", tasting: "테이스팅 세션", lecture: "강연" },
+      detail: "자세히 보기",
+      speakerLabel: "강연자",
+      tapHint: "세션을 누르면 자세히 볼 수 있습니다.",
+      close: "닫기",
       notice: {
         lead: "토요일과 일요일의 프로그램 시작 시각이 상이하오니, 요일별 진행 시간을 반드시 확인해주세요.",
         items: [
@@ -465,7 +473,7 @@ export const content2026: Record<"ko" | "en", Content2026> = {
     },
     masterclass: {
       eyebrow: "Master Class & Tasting Session",
-      title: "Master Class & Tasting Session",
+      title: "Program Timetable",
       tbd: "2026 Master Class lineup — coming soon",
     },
     exhibitor: {
@@ -598,6 +606,10 @@ export const content2026: Record<"ko" | "en", Content2026> = {
         title: "Title",
       },
       kinds: { masterclass: "Master Class", tasting: "Tasting Session", lecture: "Lecture" },
+      detail: "Details",
+      speakerLabel: "Speaker",
+      tapHint: "Tap a session for details.",
+      close: "Close",
       notice: {
         lead: "Program start times differ between Saturday and Sunday. Please check the schedule for each day.",
         items: [
