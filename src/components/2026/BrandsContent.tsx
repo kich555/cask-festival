@@ -34,7 +34,7 @@ function IconLink({
 /** 검색용: 대소문자·띄어쓰기·기호 차이를 무시한다 */
 const norm = (s: string) => s.toLowerCase().replace(/[\s·.&'_\-×()]/g, "")
 
-function Inner({ brands }: { brands: Brand[] }) {
+function Inner({ brands, hasPending }: { brands: Brand[]; hasPending: boolean }) {
   const { c, lang } = useContent2026()
   const b = c.brandsP
 
@@ -72,12 +72,18 @@ function Inner({ brands }: { brands: Brand[] }) {
         {/* 검색: 업체명(국문·영문). 버튼·엔터로 검색, 비우면 바로 전체 */}
         <Reveal immediate>
           <form
-            className="mb-5 md:mb-6 flex"
+            className="mb-5 md:mb-6 flex items-center"
             onSubmit={(e) => {
               e.preventDefault()
               setQuery(input)
             }}
           >
+            {/* 게시 예정 업체가 없으면(전체 등록 완료) 총 개수를 보여 준다 */}
+            {!hasPending && (
+              <p className="shrink-0 mr-3 md:mr-5 text-[13px] md:text-[15px] font-bold text-[var(--c-muted)]">
+                {b.total.replace("{n}", String(sorted.length))}
+              </p>
+            )}
             <input
               type="search"
               value={input}
@@ -101,7 +107,7 @@ function Inner({ brands }: { brands: Brand[] }) {
         )}
         {/* 표 형태: 칸마다 테두리를 두르고 -1px 겹쳐 선이 한 줄로 보이게 한다. 브랜드가 있는 칸까지만 선이 그려진다. */}
         <Reveal immediate delay={0.1}>
-          <ul className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 pt-px pl-px">
+          <ul className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-5 pt-px pl-px">
             {shown.map((brand) => {
               const primary =
                 lang === "ko" ? brand.nameKo || brand.nameEn : brand.nameEn || brand.nameKo
@@ -124,7 +130,7 @@ function Inner({ brands }: { brands: Brand[] }) {
                         src={brand.logo}
                         alt={primary}
                         fill
-                        sizes="(max-width: 640px) 30vw, (max-width: 1024px) 22vw, 160px"
+                        sizes="(max-width: 640px) 30vw, (max-width: 1024px) 22vw, 200px"
                         className="object-contain p-2"
                       />
                     ) : (
@@ -172,7 +178,8 @@ function Inner({ brands }: { brands: Brand[] }) {
           </ul>
         </Reveal>
 
-        {!q && (
+        {/* 게시 예정 업체가 admin 에 남아 있을 때만 표시한다 */}
+        {!q && hasPending && (
           <p className="text-center text-[var(--c-faint)] text-[14px] md:text-[15px] font-semibold tracking-[0.12em] mt-10 md:mt-12">
             {b.andMore}
           </p>
@@ -182,10 +189,16 @@ function Inner({ brands }: { brands: Brand[] }) {
   )
 }
 
-export default function BrandsContent({ brands }: { brands: Brand[] }) {
+export default function BrandsContent({
+  brands,
+  hasPending,
+}: {
+  brands: Brand[]
+  hasPending: boolean
+}) {
   return (
     <Suspense fallback={null}>
-      <Inner brands={brands} />
+      <Inner brands={brands} hasPending={hasPending} />
     </Suspense>
   )
 }

@@ -106,6 +106,7 @@ export interface Content2026 {
     subtitle: string
     booth: string
     andMore: string
+    total: string
     empty: string
     emptyDesc: string
     searchPh: string
@@ -363,6 +364,7 @@ export const content2026: Record<"ko" | "en", Content2026> = {
       subtitle: "캐스크 카니발 2026에 함께하는 브랜드를 소개합니다.",
       booth: "부스 {n}개",
       andMore: "and more",
+      total: "총 {n}개 브랜드",
       empty: "참가 업체는 곧 공개됩니다.",
       emptyDesc: "확정되는 대로 순차적으로 업데이트됩니다.",
       searchPh: "업체명 검색",
@@ -611,6 +613,7 @@ export const content2026: Record<"ko" | "en", Content2026> = {
       subtitle: "Brands joining CASK CARNIVAL 2026.",
       booth: "{n} booth(s)",
       andMore: "and more",
+      total: "{n} brands",
       empty: "Exhibitors will be announced soon.",
       emptyDesc: "This page is updated as brands are confirmed.",
       searchPh: "Search brand",

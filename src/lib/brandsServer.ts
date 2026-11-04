@@ -19,3 +19,18 @@ export async function getBrands(): Promise<Brand[]> {
     return fallbackBrands as Brand[]
   }
 }
+
+/** 게시 예정(숨김) 업체가 남아 있는지. 조회에 실패하면 없는 것으로 본다. */
+export async function hasPendingBrands(): Promise<boolean> {
+  try {
+    const { count, error } = await getSupabaseAdmin()
+      .from(BRAND_TABLE)
+      .select("slug", { count: "exact", head: true })
+      .eq("visible", false)
+    if (error) throw error
+    return (count ?? 0) > 0
+  } catch (e) {
+    console.error("[brands] 게시 예정 업체 조회 실패:", e)
+    return false
+  }
+}

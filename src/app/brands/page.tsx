@@ -2,7 +2,7 @@ import type { Metadata } from "next"
 import BrandsContent from "@/components/2026/BrandsContent"
 import Footer2026 from "@/components/2026/Footer2026"
 import Nav2026 from "@/components/2026/Nav2026"
-import { getBrands } from "@/lib/brandsServer"
+import { getBrands, hasPendingBrands } from "@/lib/brandsServer"
 
 export const metadata: Metadata = {
   title: "참가 업체",
@@ -17,13 +17,13 @@ export const metadata: Metadata = {
 export const revalidate = 60
 
 export default async function BrandsPage() {
-  const brands = await getBrands()
+  const [brands, hasPending] = await Promise.all([getBrands(), hasPendingBrands()])
 
   return (
     <div className="min-h-screen bg-[var(--c-bg)] pt-[88px] flex flex-col">
       <Nav2026 />
       <main className="flex-1">
-        <BrandsContent brands={brands} />
+        <BrandsContent brands={brands} hasPending={hasPending} />
       </main>
       <Footer2026 />
     </div>
