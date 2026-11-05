@@ -107,7 +107,7 @@ function Inner({ brands, hasPending }: { brands: Brand[]; hasPending: boolean })
         )}
         {/* 표 형태: 칸마다 테두리를 두르고 -1px 겹쳐 선이 한 줄로 보이게 한다. 브랜드가 있는 칸까지만 선이 그려진다. */}
         <Reveal immediate delay={0.1}>
-          <ul className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-5 pt-px pl-px">
+          <ul className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-7 pt-px pl-px">
             {shown.map((brand) => {
               const primary =
                 lang === "ko" ? brand.nameKo || brand.nameEn : brand.nameEn || brand.nameKo
@@ -130,7 +130,7 @@ function Inner({ brands, hasPending }: { brands: Brand[]; hasPending: boolean })
                         src={brand.logo}
                         alt={primary}
                         fill
-                        sizes="(max-width: 640px) 30vw, (max-width: 1024px) 22vw, 200px"
+                        sizes="(max-width: 640px) 30vw, (max-width: 1024px) 22vw, 150px"
                         className="object-contain p-2"
                       />
                     ) : (
