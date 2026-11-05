@@ -413,12 +413,20 @@ export default function ExhibitorAdmin({ rows }: { rows: ExhibitorOverview[] }) 
               </a>
             </p>
           </div>
-          <a
-            href="/api/admin/exhibitor/export"
-            className="bg-[#1a1a1a] text-white rounded px-4 py-2.5 text-[14px] font-bold"
-          >
-            엑셀 다운로드
-          </a>
+          <div className="flex flex-wrap gap-2">
+            <a
+              href="/api/admin/exhibitor/products-export"
+              className="bg-white text-[#1a1a1a] border border-[#1a1a1a] rounded px-4 py-2.5 text-[14px] font-bold"
+            >
+              출품 제품 다운로드
+            </a>
+            <a
+              href="/api/admin/exhibitor/export"
+              className="bg-[#1a1a1a] text-white rounded px-4 py-2.5 text-[14px] font-bold"
+            >
+              엑셀 다운로드
+            </a>
+          </div>
         </div>
 
         {todo > 0 && filter !== "todo" && (
