@@ -87,6 +87,12 @@ export default function BrandsAdmin({ initialRows }: { initialRows: BrandRow[] }
               노출중인 브랜드만 참가업체 페이지에 보입니다
             </p>
           </div>
+          <a
+            href="/api/admin/brands/export"
+            className="border border-white/40 text-white rounded px-4 py-2 text-[13px] font-bold"
+          >
+            엑셀 다운로드
+          </a>
           <button
             type="button"
             onClick={() => setEditing(null)}
