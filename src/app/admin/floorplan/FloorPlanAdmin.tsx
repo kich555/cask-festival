@@ -22,6 +22,8 @@ import {
   panelOf,
   resolveItems,
   SECTIONS,
+  TABLE_SIZES,
+  tableSizeLabel,
 } from "@/lib/floorPlan"
 import { downloadSvgAsPng } from "./downloadSvg"
 
@@ -54,11 +56,19 @@ const TOOLS: { key: Tool; label: string; hint: string }[] = [
   { key: "entrance", label: "입구", hint: "길찾기 기본 출발점이 됩니다." },
   { key: "exit", label: "출구", hint: "끌어서 출구 위치를 그립니다." },
   {
+    key: "table",
+    label: "테이블",
+    hint: "규격을 고르고 누른 자리에 테이블을 놓습니다. 10cm 단위로 옮길 수 있고 부스 위에도 놓을 수 있습니다. 참가사 페이지에만 보이고 홈페이지에는 보이지 않습니다.",
+  },
+  {
     key: "partition",
     label: "파티션",
     hint: "끌면 1칸(1m) 단위로 벽이 그려집니다. 시작점은 다른 파티션의 끝·선 위나 격자 교차점에 붙으니, 모서리를 맞출 땐 기존 파티션 끝에서 시작해 끌어 주세요. Option(Alt)을 누른 채 끌면 시작점이 가운데가 됩니다(H자). 부스와 겹쳐도 됩니다.",
   },
 ]
+
+/** 10cm 단위로 움직이는 항목 (파티션·테이블) */
+const isFine = (i: { type: ItemType }) => i.type === "partition" || i.type === "table"
 
 /** 파티션을 옮기는 가장 작은 단위 (0.1칸 = 10cm) */
 const FINE = 0.1
@@ -92,6 +102,16 @@ function fits(layout: Layout, r: FloorItem | Omit<FloorItem, "id">, ignore?: str
       e.y + e.h <= layout.rows + 1e-6
     )
   }
+  // 테이블은 규격 크기(소수)라 격자 안이기만 하면 된다. 부스 위에도 놓는다
+  if (r.type === "table")
+    return (
+      r.x >= 0 &&
+      r.y >= 0 &&
+      r.w > 0 &&
+      r.h > 0 &&
+      r.x + r.w <= layout.cols + 1e-6 &&
+      r.y + r.h <= layout.rows + 1e-6
+    )
   if (r.x < 0 || r.y < 0 || r.w < 1 || r.h < 1) return false
   if (r.x + r.w > layout.cols || r.y + r.h > layout.rows) return false
   // 구역은 바닥 공간이라 무엇과도 겹쳐도 된다
@@ -119,6 +139,12 @@ export default function FloorPlanAdmin({
   const [tool, setTool] = useState<Tool>("select")
   /** 새 부스에 붙일 번호 섹션 (A01, B01 …) */
   const [section, setSection] = useState("A")
+  /** 새 테이블 규격 (TABLE_SIZES 순번) */
+  const [tableSize, setTableSize] = useState(0)
+  /** 새 테이블을 세로로 놓을지 (R 키로 바꿈) */
+  const [tableVert, setTableVert] = useState(false)
+  /** 테이블 도구일 때 놓일 자리를 미리 보여 줄 포인터 위치 (칸 단위) */
+  const [hover, setHover] = useState<{ x: number; y: number } | null>(null)
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const [drag, setDrag] = useState<Drag | null>(null)
   const [lang, setLang] = useState<"ko" | "en">("ko")
@@ -239,6 +265,10 @@ export default function FloorPlanAdmin({
         undo()
         return
       }
+      if (tool === "table" && e.key.toLowerCase() === "r" && !e.metaKey && !e.ctrlKey) {
+        setTableVert((v) => !v)
+        return
+      }
       if (!selected) return
       if (e.key === "Delete" || e.key === "Backspace") {
         e.preventDefault()
@@ -250,7 +280,7 @@ export default function FloorPlanAdmin({
       if (d) {
         e.preventDefault()
         // Shift 를 누르면 부스 한 개(3칸)씩. 파티션은 10cm(0.1칸)씩, Shift 면 한 칸
-        const wall = isPartition(selected)
+        const wall = isFine(selected)
         const step = wall ? (e.shiftKey ? 1 : FINE) : e.shiftKey ? BOOTH : 1
         const next = {
           ...selected,
@@ -263,7 +293,7 @@ export default function FloorPlanAdmin({
     }
     window.addEventListener("keydown", onKey)
     return () => window.removeEventListener("keydown", onKey)
-  }, [selected, layout, commit, undo, removeItem])
+  }, [selected, layout, commit, undo, removeItem, tool])
 
   // ── 캔버스 조작 ──
   const cellAt = (e: React.PointerEvent): Cell => {
@@ -330,12 +360,30 @@ export default function FloorPlanAdmin({
         p.x >= r.x - 0.4 && p.x <= r.x + r.w + 0.4 && p.y >= r.y - 0.4 && p.y <= r.y + r.h + 0.4
       )
     })
-  /** 누른 칸의 항목. 구역 위에 부스가 있으면 부스를 고른다 */
-  const itemAt = (c: Cell) => {
+  /** 누른 칸의 항목. 위에 그려진 테이블 → 부스·시설 → 구역 순으로 고른다 */
+  const itemAt = (c: Cell, p: { x: number; y: number }) => {
+    // 테이블은 소수 크기라 칸이 아니라 포인터 위치로 고른다
+    const table = layout.items.find(
+      (i) => i.type === "table" && p.x >= i.x && p.x < i.x + i.w && p.y >= i.y && p.y < i.y + i.h,
+    )
+    if (table) return table
     const hits = layout.items.filter(
-      (i) => c.x >= i.x && c.x < i.x + i.w && c.y >= i.y && c.y < i.y + i.h,
+      (i) => i.type !== "table" && c.x >= i.x && c.x < i.x + i.w && c.y >= i.y && c.y < i.y + i.h,
     )
     return hits.find(occupies) ?? hits[0]
+  }
+
+  /** 포인터 자리를 가운데로 하는 새 테이블 자리 (10cm 단위, 격자 안으로) */
+  const tableAt = (p: { x: number; y: number }) => {
+    const s = TABLE_SIZES[tableSize]
+    const w = tableVert ? s.h : s.w
+    const h = tableVert ? s.w : s.h
+    return {
+      x: r2(Math.min(layout.cols - w, Math.max(0, snapFine(p.x - w / 2)))),
+      y: r2(Math.min(layout.rows - h, Math.max(0, snapFine(p.y - h / 2)))),
+      w,
+      h,
+    }
   }
 
   const onDown = (e: React.PointerEvent) => {
@@ -345,17 +393,21 @@ export default function FloorPlanAdmin({
     const c = cellAt(e)
     setNotice(null)
     if (tool === "select") {
-      const hit = partitionAt(posAt(e)) ?? itemAt(c)
+      const hit = partitionAt(posAt(e)) ?? itemAt(c, posAt(e))
       setSelectedId(hit?.id ?? null)
       // 파티션은 소수 위치를 그대로 잡아 10cm 단위로 옮긴다
       if (hit)
         setDrag({
           kind: "move",
           id: hit.id,
-          grab: isPartition(hit) ? posAt(e) : c,
+          grab: isFine(hit) ? posAt(e) : c,
           dx: 0,
           dy: 0,
         })
+    } else if (tool === "table") {
+      const item: FloorItem = { ...EMPTY, id: uid(), type: "table", ...tableAt(posAt(e)) }
+      commit({ ...layout, items: [...layout.items, item] })
+      setSelectedId(item.id)
     } else {
       const v = tool === "partition" ? vertexAt(e) : c
       setDrag({ kind: "draw", start: v, end: v })
@@ -370,12 +422,13 @@ export default function FloorPlanAdmin({
 
   const onMove = (e: React.PointerEvent) => {
     altRef.current = e.altKey
+    if (tool === "table") setHover(posAt(e))
     if (!drag) return
     const c = cellAt(e)
     if (drag.kind === "draw") setDrag({ ...drag, end: tool === "partition" ? vertexAt(e) : c })
     else if (drag.kind === "move") {
       const it = layout.items.find((i) => i.id === drag.id)
-      if (it && isPartition(it)) {
+      if (it && isFine(it)) {
         const p = posAt(e)
         setDrag({ ...drag, dx: snapFine(p.x - drag.grab.x), dy: snapFine(p.y - drag.grab.y) })
       } else setDrag({ ...drag, dx: c.x - drag.grab.x, dy: c.y - drag.grab.y })
@@ -729,6 +782,30 @@ export default function FloorPlanAdmin({
                 </span>
               </label>
             )}
+            {tool === "table" && (
+              <label className="flex items-center gap-1.5 text-[13px] font-bold ml-1">
+                규격
+                <select
+                  value={tableSize}
+                  onChange={(e) => setTableSize(Number(e.target.value))}
+                  className="border border-black/15 rounded px-2 py-1.5 bg-white"
+                >
+                  {TABLE_SIZES.map((s, i) => (
+                    <option key={s.label} value={i}>
+                      {s.label}
+                    </option>
+                  ))}
+                </select>
+                <button
+                  type="button"
+                  onClick={() => setTableVert(!tableVert)}
+                  className="border border-black/15 rounded px-2.5 py-1.5 bg-white"
+                  title="R 키로도 바꿀 수 있습니다"
+                >
+                  {tableVert ? "세로" : "가로"} (R)
+                </button>
+              </label>
+            )}
             <span className="flex-1" />
             {(["ko", "en"] as const).map((l) => (
               <button
@@ -790,6 +867,7 @@ export default function FloorPlanAdmin({
               onPointerMove={onMove}
               onPointerUp={onUp}
               onPointerCancel={() => setDrag(null)}
+              onPointerLeave={() => setHover(null)}
               role="application"
               aria-label="부스 배치 편집"
             >
@@ -864,7 +942,7 @@ export default function FloorPlanAdmin({
                 </g>
               ))}
 
-              {selected && !drag && (
+              {selected && !drag && selected.type !== "table" && (
                 <rect
                   x={(selected.x + extentOf(selected).w) * CELL - (isPartition(selected) ? 2 : 4)}
                   y={(selected.y + extentOf(selected).h) * CELL - (isPartition(selected) ? 2 : 4)}
@@ -931,6 +1009,37 @@ export default function FloorPlanAdmin({
                   pointerEvents="none"
                 />
               )}
+              {/* 테이블 도구: 누르기 전에 놓일 자리와 규격을 보여 준다 */}
+              {tool === "table" &&
+                hover &&
+                !drag &&
+                (() => {
+                  const t = tableAt(hover)
+                  return (
+                    <g pointerEvents="none">
+                      <rect
+                        x={t.x * CELL}
+                        y={t.y * CELL}
+                        width={t.w * CELL}
+                        height={t.h * CELL}
+                        style={{ fill: "var(--fp-table)", stroke: "var(--fp-accent)" }}
+                        fillOpacity={0.75}
+                        strokeWidth={0.6}
+                        strokeDasharray="2 1.2"
+                      />
+                      <text
+                        x={(t.x + t.w / 2) * CELL}
+                        y={t.y * CELL - 1.5}
+                        fontSize={3.2}
+                        fontWeight={700}
+                        textAnchor="middle"
+                        style={{ fill: "var(--fp-text)" }}
+                      >
+                        {t.w}×{t.h}m
+                      </text>
+                    </g>
+                  )
+                })()}
             </svg>
           </div>
 
@@ -1085,6 +1194,61 @@ export default function FloorPlanAdmin({
                       끝 기준이고 한 칸 = 1m입니다.
                     </p>
                   </div>
+                ) : selected.type === "table" ? (
+                  <div className="space-y-2">
+                    <div className="grid grid-cols-[1fr_auto] gap-2 items-end">
+                      <label className="block text-[12px] font-bold text-[#666]">
+                        규격
+                        <select
+                          className={`${input} mt-1`}
+                          value={TABLE_SIZES.findIndex((s) => tableSizeLabel(selected) === s.label)}
+                          onChange={(e) => {
+                            const s = TABLE_SIZES[Number(e.target.value)]
+                            // 세로로 돌려 둔 테이블은 세로 방향을 유지
+                            const vert = selected.h > selected.w
+                            updateItem(selected.id, vert ? { w: s.h, h: s.w } : { w: s.w, h: s.h })
+                          }}
+                        >
+                          {TABLE_SIZES.map((s, i) => (
+                            <option key={s.label} value={i}>
+                              {s.label}
+                            </option>
+                          ))}
+                        </select>
+                      </label>
+                      <button
+                        type="button"
+                        onClick={() => updateItem(selected.id, { w: selected.h, h: selected.w })}
+                        className="border border-black/15 rounded px-3 py-1.5 text-[13px] font-bold bg-white hover:border-[#7d0b1c]"
+                      >
+                        90° 돌리기
+                      </button>
+                    </div>
+                    <div className="grid grid-cols-2 gap-2">
+                      <label className="block text-[12px] font-bold text-[#666]">
+                        이름 (선택)
+                        <input
+                          className={`${input} mt-1`}
+                          placeholder="예: T1"
+                          value={selected.ko}
+                          onChange={(e) => updateItem(selected.id, { ko: e.target.value })}
+                        />
+                      </label>
+                      <label className="block text-[12px] font-bold text-[#666]">
+                        영문 이름
+                        <input
+                          className={`${input} mt-1`}
+                          placeholder="T1"
+                          value={selected.en}
+                          onChange={(e) => updateItem(selected.id, { en: e.target.value })}
+                        />
+                      </label>
+                    </div>
+                    <p className="text-[12px] text-[#999]">
+                      끌거나 방향키로 10cm씩, Shift+방향키로 1m씩 옮깁니다. 홈페이지에는 보이지 않고
+                      참가사 페이지에만 보입니다.
+                    </p>
+                  </div>
                 ) : (
                   <>
                     <label className="block text-[12px] font-bold text-[#666]">
@@ -1105,7 +1269,7 @@ export default function FloorPlanAdmin({
                         }}
                       >
                         {Object.entries(ITEM_TYPES)
-                          .filter(([k]) => k !== "partition")
+                          .filter(([k]) => k !== "partition" && k !== "table")
                           .map(([k, v]) => (
                             <option key={k} value={k}>
                               {v.label}

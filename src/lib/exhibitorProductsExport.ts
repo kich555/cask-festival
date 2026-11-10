@@ -1,8 +1,9 @@
 // 올로로소 셰리 캐스크 출품 제품 엑셀 (사진 제외)
 import ExcelJS from "exceljs"
-import type { ExhibitorProduct } from "./exhibitorRecord"
+import { compareBoothNos, type ExhibitorProduct } from "./exhibitorRecord"
 
 export type ProductExportBrand = {
+  booth_nos: string[]
   name_ko: string
   name_en: string | null
   website: string | null
@@ -13,11 +14,15 @@ export type ProductExportBrand = {
 export function buildProductsWorkbook(brands: ProductExportBrand[]) {
   const sorted = brands
     .filter((b) => b.products.length > 0)
-    .sort((a, b) => a.name_ko.localeCompare(b.name_ko, "ko"))
+    .sort(
+      (a, b) =>
+        compareBoothNos(a.booth_nos, b.booth_nos) || a.name_ko.localeCompare(b.name_ko, "ko"),
+    )
 
   const wb = new ExcelJS.Workbook()
   const sheet = wb.addWorksheet("올로로소 출품 제품")
   sheet.columns = [
+    { header: "부스번호", width: 12 },
     { header: "업체명(한글)", width: 22 },
     { header: "업체명(영문)", width: 24 },
     { header: "홈페이지", width: 28 },
@@ -36,6 +41,7 @@ export function buildProductsWorkbook(brands: ProductExportBrand[]) {
   for (const b of sorted) {
     for (const p of b.products) {
       const row = sheet.addRow([
+        b.booth_nos.join(", "),
         b.name_ko,
         b.name_en ?? "",
         b.website ?? "",

@@ -224,16 +224,27 @@ export function FloorShape({
   const strong = item.type === "room"
   const big = Math.min(9, Math.max(5, Math.min(r.w, r.h) / 4))
   const { lines, size } = fitLabel(name, r.w, r.h, big, 4)
-  const fill = selected ? v("sel") : item.type === "zone" ? v("zone") : v("room")
+  const fill = selected
+    ? v("sel")
+    : item.type === "zone"
+      ? v("zone")
+      : item.type === "table"
+        ? v("table")
+        : v("room")
   const text = selected ? v("sel-text") : strong ? v("text") : v("fac-text")
+  // 테이블은 실제 크기(1m = 한 칸)가 보이도록 거의 여백 없이 그린다
+  const inset = item.type === "table" ? 0.2 : 0.8
   return (
     <g>
       <rect
-        x={r.x + 0.8}
-        y={r.y + 0.8}
-        width={r.w - 1.6}
-        height={r.h - 1.6}
-        style={{ fill, stroke: v(selected ? "sel" : "fac-line") }}
+        x={r.x + inset}
+        y={r.y + inset}
+        width={r.w - inset * 2}
+        height={r.h - inset * 2}
+        style={{
+          fill,
+          stroke: v(selected ? "sel" : item.type === "table" ? "table-line" : "fac-line"),
+        }}
         strokeWidth={0.7}
         strokeDasharray={item.type === "zone" ? "3 2" : undefined}
       />

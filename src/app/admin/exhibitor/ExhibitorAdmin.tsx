@@ -3,6 +3,7 @@
 import { useState } from "react"
 import type { ExhibitorOverview } from "@/lib/exhibitorAdmin"
 import {
+  compareBoothNos,
   currentExtra,
   EXTRA_ITEMS,
   type ExhibitorLogKind,
@@ -350,6 +351,11 @@ const SORTS = {
       lastActivity(b).localeCompare(lastActivity(a)) || byName(a, b),
   },
   name: { label: "업체명순", cmp: byName },
+  booth: {
+    label: "부스번호순",
+    cmp: (a: ExhibitorOverview, b: ExhibitorOverview) =>
+      compareBoothNos(a.booth_nos, b.booth_nos) || byName(a, b),
+  },
   amount: {
     label: "신청 금액순",
     cmp: (a: ExhibitorOverview, b: ExhibitorOverview) =>
@@ -465,7 +471,11 @@ export default function ExhibitorAdmin({ rows }: { rows: ExhibitorOverview[] }) 
             <button
               key={k}
               type="button"
-              onClick={() => setFilter(k)}
+              onClick={() => {
+                setFilter(k)
+                // 출품 제품은 부스 순서로 훑어보는 경우가 많다
+                if (k === "products") setSort("booth")
+              }}
               className={`px-3 py-1.5 rounded-full text-[13px] font-bold ${
                 filter === k
                   ? "bg-[#7d0b1c] text-white"
@@ -484,6 +494,7 @@ export default function ExhibitorAdmin({ rows }: { rows: ExhibitorOverview[] }) 
           <div className="hidden md:flex items-center gap-4 px-5 py-2 text-[12px] text-[#999] bg-black/[0.02]">
             <span className="w-[72px] text-center">부스 표기</span>
             <span className="w-[84px] text-center">부대시설</span>
+            <span className="w-14 shrink-0">부스</span>
             <span className="w-64 shrink-0">업체명</span>
             <span className="flex-1">신청 내용</span>
             <span className="w-28 text-right">금액(VAT 포함)</span>
@@ -513,6 +524,14 @@ export default function ExhibitorAdmin({ rows }: { rows: ExhibitorOverview[] }) 
                     ) : (
                       <Tag tone="gray">미신청</Tag>
                     )}
+                  </span>
+                  <span
+                    className="w-14 shrink-0 truncate text-[13px] font-bold tabular-nums text-[#555]"
+                    title={r.booth_nos.join(", ")}
+                  >
+                    {r.booth_nos.length
+                      ? `${r.booth_nos[0]}${r.booth_nos.length > 1 ? ` 외 ${r.booth_nos.length - 1}` : ""}`
+                      : "-"}
                   </span>
                   <span className="w-64 shrink-0 flex items-baseline min-w-0 font-bold">
                     <span className="truncate">{r.defaults.name_ko}</span>
@@ -592,7 +611,9 @@ export default function ExhibitorAdmin({ rows }: { rows: ExhibitorOverview[] }) 
                       )}
                       <BoothEdit r={r} />
                       <p className="mt-2 text-[12px] text-[#999]">
-                        부스 {r.defaults.booths}개 · 아이디 {r.login_id}
+                        부스 {r.defaults.booths}개
+                        {r.booth_nos.length ? ` (${r.booth_nos.join(", ")})` : ""} · 아이디{" "}
+                        {r.login_id}
                       </p>
                     </div>
                     <div className="bg-black/[0.03] rounded p-4">
@@ -658,6 +679,7 @@ export default function ExhibitorAdmin({ rows }: { rows: ExhibitorOverview[] }) 
                     {r.products?.length ? (
                       <div className="md:col-span-2 bg-black/[0.03] rounded p-4">
                         <p className="font-bold mb-3">
+                          {r.booth_nos.length ? `[${r.booth_nos.join(", ")}] ` : ""}
                           올로로소 셰리 캐스크 출품 제품 ({r.products.length}){" "}
                           {r.products_updated_at && (
                             <span className="font-normal text-[12px] text-[#999]">

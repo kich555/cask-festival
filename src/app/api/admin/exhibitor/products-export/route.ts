@@ -18,6 +18,7 @@ export async function GET() {
 
   const wb = buildProductsWorkbook(
     rows.map((r) => ({
+      booth_nos: r.booth_nos,
       name_ko: r.defaults.name_ko,
       name_en: r.defaults.name_en,
       website: bySlug.get(r.brand_slug)?.website ?? null,

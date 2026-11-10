@@ -1,36 +1,47 @@
 import "server-only"
 import {
   type BoothDefaults,
+  compareBoothNo,
   EXHIBITOR_LOG_TABLE,
   EXHIBITOR_STATE_COLUMNS,
   EXHIBITOR_TABLE,
   type ExhibitorLogRow,
   type ExhibitorState,
 } from "./exhibitorRecord"
+import { getLayout } from "./floorPlanServer"
 import { BRAND_TABLE, getSupabaseAdmin } from "./supabaseAdmin"
 
 export type ExhibitorOverview = ExhibitorState & {
   defaults: BoothDefaults
+  /** 배치도에서 이 업체에 배정된 부스 번호 (번호순) */
+  booth_nos: string[]
   logs: ExhibitorLogRow[]
 }
 
 /** 계정이 있는 모든 업체 (수정 요청 → 미확인 → 승인 순, 같은 그룹은 이름순) */
 export async function loadExhibitorOverview(): Promise<ExhibitorOverview[]> {
   const db = getSupabaseAdmin()
-  const [accounts, brands, logs] = await Promise.all([
+  const [accounts, brands, logs, layout] = await Promise.all([
     db.from(EXHIBITOR_TABLE).select(EXHIBITOR_STATE_COLUMNS),
     db.from(BRAND_TABLE).select("slug,name_ko,name_en,booths"),
     db.from(EXHIBITOR_LOG_TABLE).select("*").order("created_at", { ascending: false }),
+    getLayout(),
   ])
   if (accounts.error) throw accounts.error
   const logRows = (logs.data ?? []) as ExhibitorLogRow[]
   const bySlug = new Map((brands.data ?? []).map((b) => [b.slug, b]))
+  const boothNos = new Map<string, string[]>()
+  for (const i of layout.items) {
+    if (i.type !== "booth" || !i.brand || !i.no) continue
+    boothNos.set(i.brand, [...(boothNos.get(i.brand) ?? []), i.no])
+  }
   const rank = (s: ExhibitorState["booth_status"]) => (s === "revised" ? 0 : s ? 2 : 1)
   return (accounts.data as unknown as ExhibitorState[])
     .map((a) => {
       const b = bySlug.get(a.brand_slug)
       return {
         ...a,
+        booth_nos: (boothNos.get(a.brand_slug) ?? []).sort(compareBoothNo),
         logs: logRows.filter((l) => l.brand_slug === a.brand_slug),
         defaults: {
           name_ko: b?.name_ko ?? a.brand_slug,

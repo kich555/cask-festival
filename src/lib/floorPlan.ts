@@ -19,6 +19,7 @@ export type ItemType =
   | "entrance"
   | "exit"
   | "partition"
+  | "table"
 
 /** 예전 파티션 한 장 길이(1.2m). 항목의 no 가 "1" 이면 1m(현재 규격), 비어 있으면 이 값 */
 export const PARTITION = 1.2
@@ -56,6 +57,7 @@ export const ITEM_TYPES: Record<
   entrance: { label: "입구", ko: "입구", en: "ENTRANCE", walkable: true },
   exit: { label: "출구", ko: "출구", en: "EXIT", walkable: true },
   partition: { label: "파티션(벽)", ko: "", en: "", walkable: true },
+  table: { label: "테이블", ko: "", en: "", walkable: false },
 }
 
 /**
@@ -66,13 +68,26 @@ export const isPartition = (i: { type: ItemType }) => i.type === "partition"
 
 /**
  * 칸을 차지하는지. 구역(칠링 존 등)은 바닥 공간이라 그 위에 부스·시설을 겹쳐 놓을 수 있고,
- * 파티션은 선이라 역시 칸을 차지하지 않는다
+ * 파티션은 선이라 역시 칸을 차지하지 않는다. 테이블은 부스 안에도 놓을 수 있게 겹침을 허용한다
  */
-export const occupies = (i: { type: ItemType }) => i.type !== "zone" && i.type !== "partition"
+export const occupies = (i: { type: ItemType }) =>
+  i.type !== "zone" && i.type !== "partition" && i.type !== "table"
 
-/** 그리는 순서: 구역(바닥) → 부스·시설 → 파티션(벽) */
+/** 테이블 규격 (m = 칸). 가로로 놓은 기준이고, admin 에서 90° 돌릴 수 있다 */
+export const TABLE_SIZES = [
+  { label: "1×0.5m", w: 1, h: 0.5 },
+  { label: "1×0.5m 2개 묶음", w: 2, h: 0.5 },
+  { label: "듀라테이블 1.5×0.76m", w: 1.5, h: 0.76 },
+] as const
+
+/** 테이블 크기에 맞는 규격 이름 (돌린 것 포함) */
+export const tableSizeLabel = (i: { w: number; h: number }) =>
+  TABLE_SIZES.find((s) => (s.w === i.w && s.h === i.h) || (s.w === i.h && s.h === i.w))?.label ??
+  `${i.w}×${i.h}m`
+
+/** 그리는 순서: 구역(바닥) → 부스·시설 → 테이블 → 파티션(벽) */
 export const layerOf = (i: { type: ItemType }) =>
-  i.type === "zone" ? 0 : i.type === "partition" ? 2 : 1
+  i.type === "zone" ? 0 : i.type === "table" ? 1.5 : i.type === "partition" ? 2 : 1
 
 /** 파티션이 차지하는 범위(칸 단위, 소수 가능). 다른 항목은 그대로 */
 export function extentOf(i: FloorItem | Omit<FloorItem, "id">): Rect {
@@ -1102,6 +1117,30 @@ export function parseLayout(raw: unknown): Layout | null {
         brand: null,
         ko: "",
         en: "",
+      })
+      continue
+    }
+    if (type === "table") {
+      // 규격 크기가 소수라 위치·크기를 소수 둘째 자리까지 그대로 둔다
+      const dec = (v: unknown, min: number, max: number) =>
+        Math.min(max, Math.max(min, Math.round((Number(v) || 0) * 100) / 100))
+      const w = dec(r.w, 0.1, cols)
+      const h = dec(r.h, 0.1, rows)
+      let id = clip(r.id, 40) || `i${items.length}`
+      while (ids.has(id)) id = `${id}_`
+      ids.add(id)
+      items.push({
+        id,
+        type,
+        no: "",
+        x: dec(r.x, 0, cols - w),
+        y: dec(r.y, 0, rows - h),
+        w,
+        h,
+        brand: null,
+        ko: clip(r.ko),
+        en: clip(r.en),
+        ...(r.hidden === true ? { hidden: true } : {}),
       })
       continue
     }

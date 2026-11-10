@@ -139,6 +139,13 @@ export const EXHIBITOR_STATE_COLUMNS =
   "brand_slug,login_id,booth_status,booth_name_ko,booth_name_en,booth_note,booth_confirmed_at,extra_items,water_location,extra_note,extra_submitted_at,booth_ack_at,extra_pending,extra_pending_at,extra_decision,extra_decided_at,password_changed_at,paid_at,paid_amount,products,products_updated_at,draft,draft_saved_at,submitted_at"
 
 /** 등록된 기본 부스 정보 (brands 테이블 기준) */
+/** 부스 번호 정렬 (A2 < A10 < B1) */
+export const compareBoothNo = (a: string, b: string) => a.localeCompare(b, "en", { numeric: true })
+
+/** 첫 부스 번호순, 부스가 없는 업체는 맨 뒤 */
+export const compareBoothNos = (a: string[], b: string[]) =>
+  a[0] && b[0] ? compareBoothNo(a[0], b[0]) : Number(!a[0]) - Number(!b[0])
+
 export type BoothDefaults = {
   name_ko: string
   name_en: string | null

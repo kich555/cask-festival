@@ -38,7 +38,7 @@ export default async function FloorPlanPage() {
     )
   }
   const [layout, brands, days] = await Promise.all([
-    getPublicLayout({ walls: false }),
+    getPublicLayout({ walls: false, tables: false }),
     getFloorBrands(),
     getProgram(),
   ])
