@@ -641,7 +641,6 @@ export default function FloorPlanMap({
                 detail={detail}
                 flush={flushOf(it)}
                 nameMax={nameMax}
-                numberOnly={!desktop}
               />
             </g>
           ))}
