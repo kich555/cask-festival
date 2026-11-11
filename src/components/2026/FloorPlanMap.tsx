@@ -313,7 +313,8 @@ export default function FloorPlanMap({
   focus?: FocusTarget | null
   /** 지도 상자 높이를 CSS 로 정한다 (예: "h-[60svh]"). 처음엔 세로를 꽉 채워 크게 보여 준다 */
   fill?: string
-  onSelect?: (id: string) => void
+  /** 누른 부스 id 와 누른 곳의 화면 세로 위치(clientY) */
+  onSelect?: (id: string, clientY: number) => void
   /**
    * 파티션 대신 부스(·룸)가 놓인 곳을 큰 사각형 테두리로 두른다 (홈페이지).
    * 파티션은 그리지 않고, 입구·출구 옆에서 선을 어디까지 끊을지 정하는 데만 쓴다
@@ -540,9 +541,9 @@ export default function FloorPlanMap({
     fly(clamp({ s, x: width / 2 - cx * s, y: height / 2 - cy * s }))
   }, [focus?.key, width, height])
 
-  const pick = (id: string) => {
+  const pick = (id: string, e: React.MouseEvent) => {
     if (moved.current) return
-    onSelect?.(id)
+    onSelect?.(id, e.clientY)
   }
 
   const sel = new Set(selected)
@@ -631,7 +632,7 @@ export default function FloorPlanMap({
             // biome-ignore lint/a11y/noStaticElementInteractions: 지도 클릭은 보조 수단, 같은 기능을 목록에서 제공한다
             <g
               key={it.id}
-              onClick={GATES.has(it.type) ? undefined : () => pick(it.id)}
+              onClick={GATES.has(it.type) ? undefined : (e) => pick(it.id, e)}
               className={GATES.has(it.type) ? undefined : "cursor-pointer"}
             >
               <FloorShape

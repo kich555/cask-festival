@@ -149,11 +149,17 @@ function Inner({ layout, brands, days, embedded = false, initialBrand, outline }
       (!q || norm(p.item.no).includes(q) || norm(p.name).includes(q) || norm(p.sub).includes(q)),
   )
 
+  /** 모바일 정보 시트를 화면 위쪽에 띄울지 (아래쪽 부스를 눌렀을 때) */
+  const [sheetTop, setSheetTop] = useState(false)
   const select = (id: string, move = true) => {
     const p = byId.get(id)
     if (!p) return
     setSelected(id)
-    if (move) setFocus({ rect: p.item, key: Date.now() })
+    // 목록에서 고르면 지도가 그 부스로 옮겨 가므로 시트는 아래에
+    if (move) {
+      setSheetTop(false)
+      setFocus({ rect: p.item, key: Date.now() })
+    }
   }
 
   // 참가사 페이지: 본인 부스를 처음부터 골라 둔다
@@ -294,7 +300,11 @@ function Inner({ layout, brands, days, embedded = false, initialBrand, outline }
               selected={highlight}
               fill="max-lg:pointer-coarse:h-[max(380px,62svh)]"
               focus={focus}
-              onSelect={(id) => select(id, false)}
+              onSelect={(id, y) => {
+                // 화면 아래쪽 부스를 누르면 정보 시트를 위에 띄워 부스를 가리지 않게
+                setSheetTop(y > window.innerHeight / 2)
+                select(id, false)
+              }}
               outline={outline}
             />
           </div>
@@ -323,8 +333,16 @@ function Inner({ layout, brands, days, embedded = false, initialBrand, outline }
 
       {/* 선택한 부스: 모바일은 하단 시트, PC 는 목록 위 카드 */}
       {sel && (
-        <div className="lg:hidden fixed inset-x-0 bottom-0 z-40">
-          <div className="mx-auto max-w-[560px] border border-[var(--fp-line)] bg-[var(--fp-surface)] text-[var(--fp-text)] shadow-[0_-6px_24px_rgba(0,0,0,0.18)] max-h-[55svh] overflow-y-auto px-4 pt-4 pb-[calc(16px+env(safe-area-inset-bottom))]">
+        <div
+          className={`lg:hidden fixed inset-x-0 z-40 ${sheetTop ? (embedded ? "top-0" : "top-[88px]") : "bottom-0"}`}
+        >
+          <div
+            className={`mx-auto max-w-[560px] border border-[var(--fp-line)] bg-[var(--fp-surface)] text-[var(--fp-text)] max-h-[55svh] overflow-y-auto px-4 pt-4 ${
+              sheetTop
+                ? "shadow-[0_6px_24px_rgba(0,0,0,0.18)] pb-4"
+                : "shadow-[0_-6px_24px_rgba(0,0,0,0.18)] pb-[calc(16px+env(safe-area-inset-bottom))]"
+            }`}
+          >
             {card}
           </div>
         </div>
