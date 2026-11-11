@@ -38,7 +38,7 @@ export default async function FloorPlanPage() {
     )
   }
   const [layout, brands, days] = await Promise.all([
-    getPublicLayout({ walls: false, tables: false }),
+    getPublicLayout({ tables: false }),
     getFloorBrands(),
     getProgram(),
   ])
@@ -47,7 +47,7 @@ export default async function FloorPlanPage() {
     <div className="min-h-screen fp-theme pt-[88px] flex flex-col">
       <Nav2026 />
       <main className="flex-1 flex flex-col">
-        <FloorPlanContent layout={layout} brands={brands} days={days} />
+        <FloorPlanContent layout={layout} brands={brands} days={days} outline />
       </main>
       <Footer2026 />
     </div>

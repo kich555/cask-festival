@@ -11,6 +11,7 @@ import {
   extentOf,
   type FloorItem,
   fitLabel,
+  type ItemType,
   type Layout,
   layerOf,
   panelOf,
@@ -92,6 +93,13 @@ function Gate({ item, name }: { item: ResolvedItem; name: string }) {
   const cx = r.x + r.w / 2
   const cy = r.y + r.h / 2
   const t = 6 // 삼각형 반 폭
+  // '프로그램 입구'처럼 긴 이름은 단어마다 줄을 나눠 입구·출구 글자와 비슷한 크기로 (조금 작게)
+  const lines = name.length > 4 && name.includes(" ") ? name.split(" ") : [name]
+  const longest = Math.max(...lines.map((l) => l.length))
+  const size =
+    lines.length > 1
+      ? Math.min(7, Math.max(r.w, 30) / (longest * 0.75))
+      : Math.min(8, r.w / (name.length * 0.75))
   const top = cy - 12
   const bottom = cy - 2
   const d =
@@ -102,10 +110,11 @@ function Gate({ item, name }: { item: ResolvedItem; name: string }) {
     <g pointerEvents="none">
       <path d={d} style={{ fill: v("accent") }} strokeLinejoin="round" />
       <Lines
-        lines={[name]}
+        lines={lines}
         x={cx}
-        y={cy + 7}
-        size={Math.min(8, r.w / (name.length * 0.75))}
+        // 여러 줄이면 첫 줄이 삼각형 바로 아래에 오도록 내린다
+        y={cy + 7 + ((lines.length - 1) * size * 1.18) / 2}
+        size={size}
         fill={v("accent")}
         weight={800}
       />
@@ -152,16 +161,21 @@ function Partition({ item, selected }: { item: FloorItem; selected?: boolean }) 
 }
 
 /** 항목 하나 (부스·룸·시설). detail 이 참이면 부스 번호도 함께 */
+type Flush = { l: boolean; r: boolean; t: boolean; b: boolean }
+
 export function FloorShape({
   item,
   lang,
   selected,
   detail = true,
+  flush,
 }: {
   item: ResolvedItem
   lang: "ko" | "en"
   selected?: boolean
   detail?: boolean
+  /** 바깥 테두리에 닿은 변. 그 변은 안쪽으로 들이지 않고 테두리 선과 겹쳐 그린다 */
+  flush?: Flush
 }) {
   if (item.type === "partition") return <Partition item={item} selected={selected} />
   const r = toPx(item)
@@ -177,10 +191,10 @@ export function FloorShape({
     return (
       <g>
         <rect
-          x={r.x + 0.6}
-          y={r.y + 0.6}
-          width={r.w - 1.2}
-          height={r.h - 1.2}
+          x={r.x + (flush?.l ? 0 : 0.6)}
+          y={r.y + (flush?.t ? 0 : 0.6)}
+          width={r.w - (flush?.l ? 0 : 0.6) - (flush?.r ? 0 : 0.6)}
+          height={r.h - (flush?.t ? 0 : 0.6) - (flush?.b ? 0 : 0.6)}
           style={{
             fill: v(selected ? "sel" : "booth"),
             stroke: v(selected ? "sel" : "booth-line"),
@@ -237,10 +251,10 @@ export function FloorShape({
   return (
     <g>
       <rect
-        x={r.x + inset}
-        y={r.y + inset}
-        width={r.w - inset * 2}
-        height={r.h - inset * 2}
+        x={r.x + (flush?.l ? 0 : inset)}
+        y={r.y + (flush?.t ? 0 : inset)}
+        width={r.w - (flush?.l ? 0 : inset) - (flush?.r ? 0 : inset)}
+        height={r.h - (flush?.t ? 0 : inset) - (flush?.b ? 0 : inset)}
         style={{
           fill,
           stroke: v(selected ? "sel" : item.type === "table" ? "table-line" : "fac-line"),
@@ -252,7 +266,7 @@ export function FloorShape({
         <>
           {/* 마크는 칸 폭의 절반 정도, 글자는 부스명과 같은 크기 */}
           <ToiletIcon x={cx} y={cy - 4} k={Math.min(1.1, (r.w - 8) / 12)} fill={text} />
-          <Lines lines={[name]} x={cx} y={cy + 9} size={BOOTH_NAME_MAX} fill={text} />
+          <Lines lines={[name]} x={cx} y={cy + 9} size={BOOTH_NAME_MAX + 1} fill={text} />
         </>
       ) : (
         <Lines lines={lines} x={cx} y={cy} size={size} fill={text} />
@@ -271,6 +285,7 @@ export default function FloorPlanMap({
   focus,
   fill,
   onSelect,
+  outline = false,
 }: {
   layout: Layout
   items: ResolvedItem[]
@@ -282,6 +297,11 @@ export default function FloorPlanMap({
   /** 지도 상자 높이를 CSS 로 정한다 (예: "h-[60svh]"). 처음엔 세로를 꽉 채워 크게 보여 준다 */
   fill?: string
   onSelect?: (id: string) => void
+  /**
+   * 파티션 대신 부스(·룸)가 놓인 곳을 큰 사각형 테두리로 두른다 (홈페이지).
+   * 파티션은 그리지 않고, 입구·출구 옆에서 선을 어디까지 끊을지 정하는 데만 쓴다
+   */
+  outline?: boolean
 }) {
   const VW = layout.cols * CELL
   const VH = layout.rows * CELL
@@ -496,9 +516,36 @@ export default function FloorPlanMap({
   const viewBox = `${-view.x / k} ${-view.y / k} ${width / k || VW} ${height / k || VH}`
   // 선택된 항목을 맨 위에 그려 테두리가 이웃 칸에 가리지 않게
   // 구역(바닥)은 맨 아래, 파티션(벽)은 부스 테두리 위에 보이도록 가장 위에
-  const ordered = [...items].sort(
+  const shown = outline ? items.filter((i) => i.type !== "partition") : items
+  const ordered = [...shown].sort(
     (a, b) => layerOf(a) - layerOf(b) || Number(sel.has(a.id)) - Number(sel.has(b.id)),
   )
+  // 홈페이지: 부스가 놓인 곳 전체를 큰 사각형 테두리로 두른다. 입구·출구가 걸치는 곳은 선을 끊는다
+  const hall = outline ? hallOutline(items) : null
+  // 바깥에 룸까지 감싸는 선을 한 번 더 (겹치는 변은 같은 선이라 하나로 보인다)
+  const outer = outline ? hallOutline(items, ["booth", "room"]) : null
+  // 테두리에 닿은 부스·룸은 그 변을 테두리 선에 붙여 선이 이중으로 보이지 않게 한다
+  const touch = (i: ResolvedItem, b: Rect | undefined) => ({
+    l: i.x === b?.x,
+    r: i.x + i.w === (b ? b.x + b.w : null),
+    t: i.y === b?.y,
+    b: i.y + i.h === (b ? b.y + b.h : null),
+  })
+  const flushOf = (i: ResolvedItem): Flush | undefined => {
+    if (!hall) return undefined
+    if (outer?.attached.has(i.id)) return { l: true, r: true, t: true, b: true }
+    if (i.type !== "booth" && i.type !== "room") return undefined
+    const a = touch(i, outer?.box)
+    const c = i.type === "booth" ? touch(i, hall.box) : a
+    // 룸 사이 구분선에 닿은 변도 붙인다
+    const j = outer?.joins ?? []
+    return {
+      l: a.l || c.l || j.includes(i.x),
+      r: a.r || c.r || j.includes(i.x + i.w),
+      t: a.t || c.t,
+      b: a.b || c.b,
+    }
+  }
 
   return (
     <div>
@@ -531,9 +578,26 @@ export default function FloorPlanMap({
               onClick={GATES.has(it.type) ? undefined : () => pick(it.id)}
               className={GATES.has(it.type) ? undefined : "cursor-pointer"}
             >
-              <FloorShape item={it} lang={lang} selected={sel.has(it.id)} detail={detail} />
+              <FloorShape
+                item={outer?.attached.has(it.id) ? { ...it, ...outer.attached.get(it.id) } : it}
+                lang={lang}
+                selected={sel.has(it.id)}
+                detail={detail}
+                flush={flushOf(it)}
+              />
             </g>
           ))}
+          {/* 테두리는 부스·룸 위에 그려 붙은 변까지 한 가지 색으로 보이게 한다 */}
+          {hall && (
+            <path
+              d={hall.d + (outer?.d ?? "")}
+              fill="none"
+              style={{ stroke: v("fac-line") }}
+              strokeWidth={0.7}
+              strokeLinecap="square"
+              pointerEvents="none"
+            />
+          )}
         </svg>
         {/* 왼쪽 위: 미니맵(보고 있는 범위·선택한 부스) */}
         <div
@@ -544,7 +608,7 @@ export default function FloorPlanMap({
           {(!desktop || (view.s > minS + 0.01 && !homing)) && width > 0 && (
             <MiniMap
               label={lang === "ko" ? "전체 도면" : "OVERVIEW"}
-              items={items}
+              items={shown}
               selected={sel}
               VW={VW}
               VH={VH}
@@ -680,6 +744,82 @@ function MiniMap({
       </svg>
     </div>
   )
+}
+
+type Outline = { d: string; box: Rect; joins: number[]; attached: Map<string, Rect> }
+
+/**
+ * kinds(기본: 부스) 전체를 두르는 사각형 테두리(px 경로). 입구·출구가 걸친 변은
+ * 그 양옆에서 가장 가까운 부스(예: 인포·택배 부스)나 같은 선 위 파티션 끝까지 선을 비운다
+ */
+function hallOutline(items: ResolvedItem[], kinds: ItemType[] = ["booth"]): Outline | null {
+  const booths = items.filter((i) => kinds.includes(i.type))
+  if (!booths.length) return null
+  const x0 = Math.min(...booths.map((i) => i.x))
+  const y0 = Math.min(...booths.map((i) => i.y))
+  const x1 = Math.max(...booths.map((i) => i.x + i.w))
+  const y1 = Math.max(...booths.map((i) => i.y + i.h))
+  const gates = items.filter((i) => i.type === "entrance" || i.type === "exit")
+  const walls = items.filter((i) => i.type === "partition")
+  // 룸까지 두를 때는 오른쪽 위 빈 곳을 감싸지 않는다: 윗변은 가장 오른쪽 룸에서, 오른쪽 변은
+  // 그 변에 닿은 첫 항목부터 (그 사이는 안쪽 부스 테두리가 마감한다)
+  const rooms = kinds.includes("room")
+  const topTo = rooms ? Math.max(...booths.filter((i) => i.y === y0).map((i) => i.x + i.w)) : x1
+  const rightFrom = rooms ? Math.min(...booths.filter((i) => i.x + i.w === x1).map((i) => i.y)) : y0
+  const sides = [
+    { horiz: true, at: y0, from: x0, to: topTo },
+    { horiz: true, at: y1, from: x0, to: x1 },
+    { horiz: false, at: x0, from: y0, to: y1 },
+    { horiz: false, at: x1, from: rightFrom, to: y1 },
+  ]
+  let d = ""
+  for (const s of sides) {
+    const on = (i: ResolvedItem) =>
+      s.horiz ? i.y <= s.at && i.y + i.h >= s.at : i.x <= s.at && i.x + i.w >= s.at
+    const span = (i: Rect) => (s.horiz ? [i.x, i.x + i.w] : [i.y, i.y + i.h])
+    // 이 변에 닿은 부스 구간과, 이 변 위에 놓인 파티션 구간
+    const edge = [
+      ...booths.filter(on),
+      ...walls.map(extentOf).filter((e) => (s.horiz ? !e.h && e.y === s.at : !e.w && e.x === s.at)),
+    ].map(span)
+    // 입구·출구 구간을 양옆 부스 끝까지 넓힌다
+    const cuts = gates
+      .filter(on)
+      .map(span)
+      .map(([a, b]) => [
+        Math.max(s.from, ...edge.filter((e) => e[1] <= a).map((e) => e[1])),
+        Math.min(s.to, ...edge.filter((e) => e[0] >= b).map((e) => e[0])),
+      ])
+      .sort((a, b) => a[0] - b[0])
+    let p = s.from
+    for (const [a, b] of [...cuts, [s.to, s.to]]) {
+      const end = Math.min(a, s.to)
+      if (end > p) {
+        const [ax, ay, bx, by] = s.horiz ? [p, s.at, end, s.at] : [s.at, p, s.at, end]
+        d += `M${ax * CELL} ${ay * CELL}L${bx * CELL} ${by * CELL}`
+      }
+      p = Math.max(p, b)
+    }
+  }
+  const joins: number[] = []
+  const attached = new Map<string, Rect>()
+  if (kinds.includes("room")) {
+    // 룸 옆 세로 파티션이 부스 테두리(윗변)까지 내려오면 그 선을 그대로 이어 그린다 (룸 사이 구분선)
+    const hallTop = Math.min(...items.filter((i) => i.type === "booth").map((i) => i.y))
+    for (const w of walls.map(extentOf)) {
+      if (w.w || w.x <= x0 || w.x >= x1 || w.y >= hallTop || w.y + w.h < hallTop) continue
+      joins.push(w.x)
+      d += `M${w.x * CELL} ${w.y * CELL}L${w.x * CELL} ${hallTop * CELL}`
+    }
+    // 테두리 왼쪽 바깥의 화장실은 테두리에 붙여 그리고, 둘레를 같은 선으로 잇는다
+    for (const t of items) {
+      if (t.type !== "toilet" || t.x + t.w > x0 || t.y < y0 || t.y + t.h > y1) continue
+      attached.set(t.id, { x: t.x, y: t.y, w: x0 - t.x, h: t.h })
+      const [l, r, top, bot] = [t.x * CELL, x0 * CELL, t.y * CELL, (t.y + t.h) * CELL]
+      d += `M${r} ${top}L${l} ${top}L${l} ${bot}L${r} ${bot}`
+    }
+  }
+  return { d, box: { x: x0, y: y0, w: x1 - x0, h: y1 - y0 }, joins, attached }
 }
 
 function zoomView(v: View, at: { x: number; y: number }, factor: number, min: number): View {

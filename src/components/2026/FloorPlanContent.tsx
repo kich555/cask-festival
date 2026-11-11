@@ -118,7 +118,7 @@ function RoomProgram({ hall, days, lang }: { hall: number; days: ProgramDay[]; l
   )
 }
 
-function Inner({ layout, brands, days, embedded = false, initialBrand }: ContentProps) {
+function Inner({ layout, brands, days, embedded = false, initialBrand, outline }: ContentProps) {
   const { c, lang } = useContent2026()
   const t = c.floorP
   const items = useMemo(() => resolveItems(layout, brands), [layout, brands])
@@ -293,6 +293,7 @@ function Inner({ layout, brands, days, embedded = false, initialBrand }: Content
               fill="max-lg:pointer-coarse:h-[max(380px,62svh)]"
               focus={focus}
               onSelect={(id) => select(id, false)}
+              outline={outline}
             />
           </div>
         </div>
@@ -359,6 +360,8 @@ type ContentProps = {
   embedded?: boolean
   /** 처음에 선택해 둘 업체 slug (참가사 본인 부스) */
   initialBrand?: string
+  /** 파티션 대신 큰 테두리선으로 그린다 (홈페이지) */
+  outline?: boolean
 }
 
 export default function FloorPlanContent(props: ContentProps) {
