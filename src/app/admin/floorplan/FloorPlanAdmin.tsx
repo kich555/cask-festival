@@ -148,6 +148,8 @@ export default function FloorPlanAdmin({
   const [layout, setLayoutRaw] = useState(initial)
   const [saved, setSaved] = useState(initial)
   const [history, setHistory] = useState<Layout[]>([])
+  /** 되돌린 것들 (앞으로 가기). 새로 바꾸면 비운다 */
+  const [future, setFuture] = useState<Layout[]>([])
   const [tool, setTool] = useState<Tool>("select")
   /** 새 부스에 붙일 번호 섹션 (A01, B01 …) */
   const [section, setSection] = useState("A")
@@ -250,13 +252,21 @@ export default function FloorPlanAdmin({
   const commit = useCallback((next: Layout) => {
     const prev = layoutRef.current
     setHistory((h) => [...h.slice(-49), prev])
+    setFuture([])
     setLayoutRaw(next)
   }, [])
   const undo = useCallback(() => {
     if (!history.length) return
+    setFuture((f) => [...f, layoutRef.current])
     setLayoutRaw(history[history.length - 1])
     setHistory(history.slice(0, -1))
   }, [history])
+  const redo = useCallback(() => {
+    if (!future.length) return
+    setHistory((h) => [...h.slice(-49), layoutRef.current])
+    setLayoutRaw(future[future.length - 1])
+    setFuture(future.slice(0, -1))
+  }, [future])
 
   const updateItem = (id: string, patch: Partial<FloorItem>) => {
     const cur = layout.items.find((i) => i.id === id)
@@ -278,14 +288,15 @@ export default function FloorPlanAdmin({
     [layout, commit, select],
   )
 
-  // 키보드: Delete 삭제, 방향키 이동, Ctrl/Cmd+Z 되돌리기
+  // 키보드: Delete 삭제, 방향키 이동, Ctrl/Cmd+Z 되돌리기, Ctrl/Cmd+Shift+Z 앞으로 가기
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       const tag = (e.target as HTMLElement)?.tagName
       if (tag === "INPUT" || tag === "SELECT" || tag === "TEXTAREA") return
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "z") {
         e.preventDefault()
-        undo()
+        if (e.shiftKey) redo()
+        else undo()
         return
       }
       if (tool === "table" && e.key.toLowerCase() === "r" && !e.metaKey && !e.ctrlKey) {
@@ -317,7 +328,7 @@ export default function FloorPlanAdmin({
     }
     window.addEventListener("keydown", onKey)
     return () => window.removeEventListener("keydown", onKey)
-  }, [selIds, layout, commit, undo, select, tool])
+  }, [selIds, layout, commit, undo, redo, select, tool])
 
   // ── 캔버스 조작 ──
   const cellAt = (e: React.PointerEvent): Cell => {
@@ -1184,7 +1195,8 @@ export default function FloorPlanAdmin({
           <p className="mt-2 text-[12px] text-[#888]">
             확대: 오른쪽 위 +/− 또는 Ctrl/⌘+휠(트랙패드 오므리기) · 단축키: Delete 삭제 ·
             Shift+클릭·빈 곳 끌기 여러 개 선택 · Esc 선택 해제 · 방향키 한 칸 이동 (Shift+방향키
-            3칸, 파티션은 10cm·Shift 한 칸) · Ctrl/⌘+Z 되돌리기 · 주황 점선 = 부스 번호 중복
+            3칸, 파티션은 10cm·Shift 한 칸) · Ctrl/⌘+Z 되돌리기 · Ctrl/⌘+Shift+Z 앞으로 가기 · 주황
+            점선 = 부스 번호 중복
           </p>
         </div>
 
