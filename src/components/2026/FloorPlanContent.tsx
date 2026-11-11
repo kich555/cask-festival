@@ -120,7 +120,15 @@ function RoomProgram({ hall, days, lang }: { hall: number; days: ProgramDay[]; l
   )
 }
 
-function Inner({ layout, brands, days, embedded = false, initialBrand, outline }: ContentProps) {
+function Inner({
+  layout,
+  brands,
+  days,
+  embedded = false,
+  initialBrand,
+  outline,
+  download,
+}: ContentProps) {
   const { c, lang } = useContent2026()
   const t = c.floorP
   const items = useMemo(() => resolveItems(layout, brands), [layout, brands])
@@ -272,7 +280,14 @@ function Inner({ layout, brands, days, embedded = false, initialBrand, outline }
       >
         {/* 모바일: 지도 위 검색창. 입력하면 결과가 아래로 펼쳐진다 */}
         <div className="lg:hidden relative z-30 pt-2.5">
-          {searchInput}
+          {download ? (
+            <div className="flex gap-2">
+              <div className="flex-1 min-w-0">{searchInput}</div>
+              <DownloadButton href={download} lang={lang} />
+            </div>
+          ) : (
+            searchInput
+          )}
           {q && (
             <ul className="absolute inset-x-0 top-full mt-1.5 max-h-[50svh] overflow-y-auto overscroll-contain border border-[var(--fp-line)] bg-[var(--fp-surface)] shadow-lg divide-y divide-[var(--fp-line)] px-3">
               {rows}
@@ -365,6 +380,42 @@ export function FloorPlanSoon() {
   )
 }
 
+export function DownloadButton({
+  href,
+  lang,
+  label,
+}: {
+  href: string
+  lang: string
+  label?: string
+}) {
+  return (
+    <a
+      href={href}
+      download={
+        lang === "ko" ? "캐스크카니발2026_부스배치도.png" : "CaskCarnival2026_FloorPlan.png"
+      }
+      className="shrink-0 h-12 inline-flex items-center gap-1.5 px-3.5 bg-[var(--fp-accent)] text-white text-[14px] font-bold whitespace-nowrap"
+    >
+      <svg
+        viewBox="0 0 24 24"
+        className="w-4 h-4"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth={2.4}
+        aria-hidden="true"
+      >
+        <path
+          d="M12 4v11m0 0-4.5-4.5M12 15l4.5-4.5M5 20h14"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </svg>
+      {label ?? (lang === "ko" ? "배치도" : "Map")}
+    </a>
+  )
+}
+
 type ContentProps = {
   layout: Layout
   brands: FloorBrand[]
@@ -375,6 +426,8 @@ type ContentProps = {
   initialBrand?: string
   /** 파티션 대신 큰 테두리선으로 그린다 (홈페이지) */
   outline?: boolean
+  /** 배치도 이미지 주소. 주면 모바일 검색창 옆에 다운로드 버튼을 둔다 */
+  download?: string
 }
 
 export default function FloorPlanContent(props: ContentProps) {
