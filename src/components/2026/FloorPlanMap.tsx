@@ -4,7 +4,7 @@
 // 확대는 viewBox 를 바꿔 벡터를 다시 그리므로 글자가 깨지지 않는다.
 // 부스 칸엔 업체명을 그리고, 충분히 확대하면 번호도 함께 보인다.
 // 색은 .fp-theme 의 CSS 변수를 따라 기기의 라이트/다크 모드에 맞춰진다.
-import { useCallback, useEffect, useRef, useState } from "react"
+import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import {
   BOOTH,
   CELL,
@@ -26,6 +26,8 @@ const MAX = 8
 const DETAIL_PX = 64
 /** 부스명 최대 글자 크기 (화장실 등 시설 이름도 같은 크기로) */
 const BOOTH_NAME_MAX = 5.4
+/** 확대해서 번호가 보일 때 부스 위쪽에 비워 둘 높이 */
+const NO_RESERVE = 8
 /** 마우스 화면(데스크톱)은 칸이 작아도 번호를 함께 보여 준다 */
 const DETAIL_PX_DESKTOP = 24
 /** 부스를 고르면 한 칸이 이 크기가 되도록 확대 */
@@ -169,6 +171,7 @@ export function FloorShape({
   selected,
   detail = true,
   flush,
+  nameMax,
 }: {
   item: ResolvedItem
   lang: "ko" | "en"
@@ -176,6 +179,8 @@ export function FloorShape({
   detail?: boolean
   /** 바깥 테두리에 닿은 변. 그 변은 안쪽으로 들이지 않고 테두리 선과 겹쳐 그린다 */
   flush?: Flush
+  /** 부스명 최대 글자 크기. 지도에서 모든 부스가 같은 크기로 보이도록 맞춘 값 */
+  nameMax?: number
 }) {
   if (item.type === "partition") return <Partition item={item} selected={selected} />
   const r = toPx(item)
@@ -184,9 +189,17 @@ export function FloorShape({
   const name = lang === "ko" ? item.nameKo : item.nameEn
 
   if (item.type === "booth") {
-    const { lines, size } = detail
-      ? fitLabel(name, r.w, r.h, BOOTH_NAME_MAX, 8)
-      : fitLabel(name, r.w, r.h, 6.5, 3)
+    const reserve = detail ? NO_RESERVE : 3
+    const { lines, size } = fitLabel(
+      name,
+      r.w,
+      r.h,
+      nameMax ?? (detail ? BOOTH_NAME_MAX : 6.5),
+      reserve,
+    )
+    // 업체명은 부스 한가운데. 다만 왼쪽 위 번호와 겹치면 그만큼만 내린다
+    const half = (lines.length * size * 1.18) / 2
+    const nameY = detail ? Math.max(cy, r.y + NO_RESERVE - 1 + half) : cy
     const textFill = v(selected ? "sel-text" : "text")
     return (
       <g>
@@ -216,7 +229,7 @@ export function FloorShape({
           </text>
         )}
         {name ? (
-          <Lines lines={lines} x={cx} y={detail ? cy + 2.4 : cy} size={size} fill={textFill} />
+          <Lines lines={lines} x={cx} y={nameY} size={size} fill={textFill} />
         ) : (
           <Lines
             lines={[item.no]}
@@ -353,11 +366,33 @@ export default function FloorPlanMap({
     [width, height, planH, minS],
   )
 
-  /** 가장 작게 줄인 화면 (가운데 정렬) */
-  const home = useCallback(
-    (): View => clamp({ s: minS, x: (width - width * minS) / 2, y: (height - planH * minS) / 2 }),
-    [clamp, minS, width, height, planH],
-  )
+  // 부스가 놓인 범위 (칸 단위). 모바일 기본 화면을 여기에 맞춘다
+  const boothArea = useMemo(() => {
+    const b = items.filter((i) => i.type === "booth")
+    if (!b.length) return null
+    const x = Math.min(...b.map((i) => i.x))
+    const y = Math.min(...b.map((i) => i.y))
+    return {
+      x,
+      y,
+      w: Math.max(...b.map((i) => i.x + i.w)) - x,
+      h: Math.max(...b.map((i) => i.y + i.h)) - y,
+    }
+  }, [items])
+
+  /**
+   * 기본 화면. PC 는 가장 작게 줄인 전체(가운데 정렬),
+   * 모바일은 룸을 뺀 부스 범위가 세로로 꽉 차게
+   */
+  const home = useCallback((): View => {
+    if (!desktop && boothArea && unit) {
+      const pad = 0.4
+      const s = Math.min(MAX, Math.max(minS, height / ((boothArea.h + pad * 2) * CELL * unit)))
+      const cx = (boothArea.x + boothArea.w / 2) * CELL * unit
+      return clamp({ s, x: width / 2 - cx * s, y: -(boothArea.y - pad) * CELL * unit * s })
+    }
+    return clamp({ s: minS, x: (width - width * minS) / 2, y: (height - planH * minS) / 2 })
+  }, [clamp, minS, width, height, planH, desktop, boothArea, unit])
 
   // 상자 크기가 정해지거나 바뀌면: 아직 만지지 않았으면 기본 화면, 만졌으면 범위만 다시 맞춘다
   // 만졌으면 보던 위치·배율을 새 크기에 비례해 그대로 유지
@@ -507,10 +542,27 @@ export default function FloorPlanMap({
   }
 
   const sel = new Set(selected)
+  // 부스명 크기를 부스마다 따로 맞추면 들쭉날쭉해 보이므로, 대부분(75%)의 이름이 들어가는 크기 하나로
+  // 맞춘다. 그보다 긴 이름만 각자 더 줄어든다
+  const nameSize = useMemo(() => {
+    const common = (max: number, reserve: number) => {
+      const sizes = items
+        .filter((i) => i.type === "booth")
+        .map((i) => {
+          const r = toPx(i)
+          const name = lang === "ko" ? i.nameKo : i.nameEn
+          return name ? fitLabel(name, r.w, r.h, max, reserve).size : max
+        })
+        .sort((a, b) => a - b)
+      return sizes.length ? sizes[Math.floor(sizes.length * 0.25)] : max
+    }
+    return { detail: common(BOOTH_NAME_MAX, NO_RESERVE), overview: common(6.5, 3) }
+  }, [items, lang])
   const btn =
     "w-8 h-8 bg-[var(--fp-surface)]/85 backdrop-blur text-[var(--fp-text)] border border-[var(--fp-line)] shadow-sm text-[17px] font-bold flex items-center justify-center active:scale-95"
   const center = () => ({ x: width / 2, y: height / 2 })
   const detail = BOOTH * CELL * unit * view.s >= (desktop ? DETAIL_PX_DESKTOP : DETAIL_PX)
+  const nameMax = detail ? nameSize.detail : nameSize.overview
   // viewBox: 화면 좌표(view)를 도면 좌표로 바꾼 보이는 범위
   const k = unit * view.s || 1
   const viewBox = `${-view.x / k} ${-view.y / k} ${width / k || VW} ${height / k || VH}`
@@ -584,6 +636,7 @@ export default function FloorPlanMap({
                 selected={sel.has(it.id)}
                 detail={detail}
                 flush={flushOf(it)}
+                nameMax={nameMax}
               />
             </g>
           ))}
