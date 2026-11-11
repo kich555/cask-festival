@@ -43,7 +43,9 @@ function buildPlaces(items: ResolvedItem[], lang: Lang): Place[] {
       facilities.push({ id: it.id, name, sub: "", item: it, booth: false })
     }
   }
-  return [...booths.sort(byNo), ...facilities]
+  // 인포메이션처럼 숫자 없는 번호(I)는 목록 맨 위에
+  const info = (p: Place) => Number(!/^[A-Za-z]+$/.test(p.item.no))
+  return [...booths.sort((a, b) => info(a) - info(b) || byNo(a, b)), ...facilities]
 }
 
 function Logo({ brand, size = 40 }: { brand: FloorBrand | null; size?: number }) {
