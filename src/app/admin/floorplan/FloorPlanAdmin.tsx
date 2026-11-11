@@ -31,14 +31,16 @@ type Tool = "select" | ItemType
 type Cell = { x: number; y: number }
 type Drag =
   | { kind: "draw"; start: Cell; end: Cell }
-  | { kind: "move"; id: string; grab: Cell; dx: number; dy: number }
+  | { kind: "move"; ids: string[]; fine: boolean; grab: Cell; dx: number; dy: number }
+  /** 빈 곳(또는 Shift)에서 끌어 여러 항목 고르기. add 면 기존 선택에 더한다 */
+  | { kind: "marquee"; start: Cell; end: Cell; add: boolean; hit: string | null }
   | { kind: "resize"; id: string; w: number; h: number }
 
 const TOOLS: { key: Tool; label: string; hint: string }[] = [
   {
     key: "select",
     label: "선택·이동",
-    hint: "항목을 눌러 선택하고 끌어서 옮깁니다. 오른쪽 아래 모서리를 끌면 크기 조절.",
+    hint: "항목을 눌러 선택하고 끌어서 옮깁니다. 오른쪽 아래 모서리를 끌면 크기 조절. 빈 곳에서 끌면(구역 위에서는 Shift+끌기) 사각형 안에 다 들어간 항목을 여러 개 골라 한꺼번에 옮깁니다. Shift+클릭으로 하나씩 더하거나 뺍니다.",
   },
   {
     key: "booth",
@@ -90,7 +92,7 @@ const cellsOf = (r: { x: number; y: number; w: number; h: number }) => {
 }
 
 /** 다른 항목과 겹치지 않고 격자 안에 들어가는지. 파티션은 격자 안이기만 하면 된다 */
-function fits(layout: Layout, r: FloorItem | Omit<FloorItem, "id">, ignore?: string) {
+function fits(layout: Layout, r: FloorItem | Omit<FloorItem, "id">, ignore?: string | string[]) {
   if (isPartition(r)) {
     const e = extentOf(r)
     return (
@@ -116,8 +118,18 @@ function fits(layout: Layout, r: FloorItem | Omit<FloorItem, "id">, ignore?: str
   if (r.x + r.w > layout.cols || r.y + r.h > layout.rows) return false
   // 구역은 바닥 공간이라 무엇과도 겹쳐도 된다
   if (!occupies(r)) return true
-  const taken = new Set(layout.items.filter((i) => i.id !== ignore && occupies(i)).flatMap(cellsOf))
+  const skip = new Set([ignore ?? []].flat())
+  const taken = new Set(layout.items.filter((i) => !skip.has(i.id) && occupies(i)).flatMap(cellsOf))
   return cellsOf(r).every((c) => !taken.has(c))
+}
+
+/** 여러 항목을 함께 옮긴 배치. 하나라도 격자를 벗어나거나 다른 항목과 겹치면 null */
+function moveItems(layout: Layout, ids: string[], dx: number, dy: number): Layout | null {
+  const set = new Set(ids)
+  const items = layout.items.map((i) =>
+    set.has(i.id) ? { ...i, x: r2(i.x + dx), y: r2(i.y + dy) } : i,
+  )
+  return items.every((i) => !set.has(i.id) || fits(layout, i, ids)) ? { ...layout, items } : null
 }
 
 type Target = "site" | "exhibitor"
@@ -146,6 +158,17 @@ export default function FloorPlanAdmin({
   /** 테이블 도구일 때 놓일 자리를 미리 보여 줄 포인터 위치 (칸 단위) */
   const [hover, setHover] = useState<{ x: number; y: number } | null>(null)
   const [selectedId, setSelectedId] = useState<string | null>(null)
+  /** 여러 개 골랐을 때(2개 이상). 이때 selectedId 는 비워 둔다 */
+  const [group, setGroup] = useState<string[]>([])
+  const select = useCallback((id: string | null) => {
+    setSelectedId(id)
+    setGroup([])
+  }, [])
+  const selectMany = useCallback((ids: string[]) => {
+    setSelectedId(ids.length === 1 ? ids[0] : null)
+    setGroup(ids.length > 1 ? ids : [])
+  }, [])
+  const selIds = group.length ? group : selectedId ? [selectedId] : []
   const [drag, setDrag] = useState<Drag | null>(null)
   const [lang, setLang] = useState<"ko" | "en">("ko")
   /** 캔버스 확대 배율. 확대하면 캔버스 상자 안에서 스크롤한다 */
@@ -250,9 +273,9 @@ export default function FloorPlanAdmin({
   const removeItem = useCallback(
     (id: string) => {
       commit({ ...layout, items: layout.items.filter((i) => i.id !== id) })
-      setSelectedId(null)
+      select(null)
     },
-    [layout, commit],
+    [layout, commit, select],
   )
 
   // 키보드: Delete 삭제, 방향키 이동, Ctrl/Cmd+Z 되돌리기
@@ -269,31 +292,32 @@ export default function FloorPlanAdmin({
         setTableVert((v) => !v)
         return
       }
-      if (!selected) return
+      if (e.key === "Escape") {
+        select(null)
+        return
+      }
+      if (!selIds.length) return
+      const sel = layout.items.filter((i) => selIds.includes(i.id))
       if (e.key === "Delete" || e.key === "Backspace") {
         e.preventDefault()
-        removeItem(selected.id)
+        commit({ ...layout, items: layout.items.filter((i) => !selIds.includes(i.id)) })
+        select(null)
       }
       const d = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, -1], ArrowDown: [0, 1] }[
         e.key
       ]
       if (d) {
         e.preventDefault()
-        // Shift 를 누르면 부스 한 개(3칸)씩. 파티션은 10cm(0.1칸)씩, Shift 면 한 칸
-        const wall = isFine(selected)
+        // Shift 를 누르면 부스 한 개(3칸)씩. 파티션·테이블만 고르면 10cm(0.1칸)씩, Shift 면 한 칸
+        const wall = sel.every(isFine)
         const step = wall ? (e.shiftKey ? 1 : FINE) : e.shiftKey ? BOOTH : 1
-        const next = {
-          ...selected,
-          x: r2(selected.x + d[0] * step),
-          y: r2(selected.y + d[1] * step),
-        }
-        if (fits(layout, next, selected.id))
-          commit({ ...layout, items: layout.items.map((i) => (i.id === selected.id ? next : i)) })
+        const next = moveItems(layout, selIds, d[0] * step, d[1] * step)
+        if (next) commit(next)
       }
     }
     window.addEventListener("keydown", onKey)
     return () => window.removeEventListener("keydown", onKey)
-  }, [selected, layout, commit, undo, removeItem, tool])
+  }, [selIds, layout, commit, undo, select, tool])
 
   // ── 캔버스 조작 ──
   const cellAt = (e: React.PointerEvent): Cell => {
@@ -393,21 +417,23 @@ export default function FloorPlanAdmin({
     const c = cellAt(e)
     setNotice(null)
     if (tool === "select") {
-      const hit = partitionAt(posAt(e)) ?? itemAt(c, posAt(e))
-      setSelectedId(hit?.id ?? null)
-      // 파티션은 소수 위치를 그대로 잡아 10cm 단위로 옮긴다
-      if (hit)
-        setDrag({
-          kind: "move",
-          id: hit.id,
-          grab: isFine(hit) ? posAt(e) : c,
-          dx: 0,
-          dy: 0,
-        })
+      const p = posAt(e)
+      const hit = partitionAt(p) ?? itemAt(c, p)
+      // 빈 곳이나 Shift: 사각형으로 고르기 (Shift+클릭은 놓을 때 하나 더하기/빼기)
+      if (!hit || e.shiftKey) {
+        setDrag({ kind: "marquee", start: p, end: p, add: e.shiftKey, hit: hit?.id ?? null })
+        return
+      }
+      // 이미 고른 묶음을 누르면 묶음째, 아니면 그 항목만 옮긴다
+      const ids = selIds.includes(hit.id) ? selIds : [hit.id]
+      if (!selIds.includes(hit.id)) select(hit.id)
+      const fine = layout.items.filter((i) => ids.includes(i.id)).every(isFine)
+      // 파티션·테이블은 소수 위치를 그대로 잡아 10cm 단위로 옮긴다
+      setDrag({ kind: "move", ids, fine, grab: fine ? p : c, dx: 0, dy: 0 })
     } else if (tool === "table") {
       const item: FloorItem = { ...EMPTY, id: uid(), type: "table", ...tableAt(posAt(e)) }
       commit({ ...layout, items: [...layout.items, item] })
-      setSelectedId(item.id)
+      select(item.id)
     } else {
       const v = tool === "partition" ? vertexAt(e) : c
       setDrag({ kind: "draw", start: v, end: v })
@@ -426,9 +452,9 @@ export default function FloorPlanAdmin({
     if (!drag) return
     const c = cellAt(e)
     if (drag.kind === "draw") setDrag({ ...drag, end: tool === "partition" ? vertexAt(e) : c })
+    else if (drag.kind === "marquee") setDrag({ ...drag, end: posAt(e) })
     else if (drag.kind === "move") {
-      const it = layout.items.find((i) => i.id === drag.id)
-      if (it && isFine(it)) {
+      if (drag.fine) {
         const p = posAt(e)
         setDrag({ ...drag, dx: snapFine(p.x - drag.grab.x), dy: snapFine(p.y - drag.grab.y) })
       } else setDrag({ ...drag, dx: c.x - drag.grab.x, dy: c.y - drag.grab.y })
@@ -448,10 +474,35 @@ export default function FloorPlanAdmin({
     const d = drag
     setDrag(null)
     if (!d) return
+    if (d.kind === "marquee") {
+      const r = rectOf(d.start, d.end)
+      // 거의 안 끌었으면 클릭: Shift+클릭은 하나 더하기/빼기, 빈 곳 클릭은 선택 해제
+      if (r.w < 0.3 && r.h < 0.3) {
+        if (!d.add) select(null)
+        else if (d.hit)
+          selectMany(
+            selIds.includes(d.hit) ? selIds.filter((id) => id !== d.hit) : [...selIds, d.hit],
+          )
+        return
+      }
+      const inside = layout.items
+        .filter((i) => {
+          const x = extentOf(i)
+          return x.x >= r.x && x.y >= r.y && x.x + x.w <= r.x + r.w && x.y + x.h <= r.y + r.h
+        })
+        .map((i) => i.id)
+      selectMany(d.add ? [...new Set([...selIds, ...inside])] : inside)
+      return
+    }
     if (d.kind === "move") {
       if (d.dx || d.dy) {
-        const it = layout.items.find((i) => i.id === d.id)
-        if (it) updateItem(it.id, { x: r2(it.x + d.dx), y: r2(it.y + d.dy) })
+        const next = moveItems(layout, d.ids, d.dx, d.dy)
+        if (next) commit(next)
+        else
+          setNotice({
+            kind: "error",
+            text: "격자를 벗어나거나 다른 항목과 겹쳐서 옮길 수 없습니다.",
+          })
       }
       return
     }
@@ -473,7 +524,7 @@ export default function FloorPlanAdmin({
       }
       const item = { ...wall, id: uid() }
       commit({ ...layout, items: [...layout.items, item] })
-      setSelectedId(item.id)
+      select(item.id)
       return
     }
     if (tool === "booth") {
@@ -498,7 +549,7 @@ export default function FloorPlanAdmin({
         return
       }
       commit({ ...layout, items: [...layout.items, ...added] })
-      setSelectedId(added[added.length - 1].id)
+      select(added[added.length - 1].id)
       return
     }
     const meta = ITEM_TYPES[tool]
@@ -519,7 +570,7 @@ export default function FloorPlanAdmin({
       return
     }
     commit({ ...layout, items: [...layout.items, item] })
-    setSelectedId(item.id)
+    select(item.id)
     setTool("select")
   }
 
@@ -545,17 +596,37 @@ export default function FloorPlanAdmin({
         ok: slots.some((r) => fits(layout, { ...EMPTY, ...r })),
       }
     } else preview = { x, y, w, h, ok: fits(layout, { ...EMPTY, x, y, w, h }) }
-  } else if (drag?.kind === "move" || drag?.kind === "resize") {
+  } else if (drag?.kind === "move" && (drag.dx || drag.dy)) {
+    const moved = layout.items.filter((i) => drag.ids.includes(i.id))
+    const ok = Boolean(moveItems(layout, drag.ids, drag.dx, drag.dy))
+    if (moved.length === 1) {
+      const it = moved[0]
+      preview = {
+        ...extentOf({ ...it, x: it.x + drag.dx, y: it.y + drag.dy }),
+        ok,
+        line: isPartition(it),
+      }
+    } else if (moved.length) {
+      // 여러 개: 옮겨질 자리 전체를 감싸는 사각형
+      const ex = moved.map(extentOf)
+      const x = Math.min(...ex.map((r) => r.x)) + drag.dx
+      const y = Math.min(...ex.map((r) => r.y)) + drag.dy
+      preview = {
+        x,
+        y,
+        w: Math.max(...ex.map((r) => r.x + r.w)) + drag.dx - x,
+        h: Math.max(...ex.map((r) => r.y + r.h)) + drag.dy - y,
+        ok,
+      }
+    }
+  } else if (drag?.kind === "resize") {
     const it = layout.items.find((i) => i.id === drag.id)
     if (it) {
-      const r =
-        drag.kind === "move"
-          ? { ...it, x: it.x + drag.dx, y: it.y + drag.dy }
-          : { ...it, w: drag.w, h: drag.h }
-      if (drag.kind === "resize" || drag.dx || drag.dy)
-        preview = { ...extentOf(r), ok: fits(layout, r, it.id), line: isPartition(it) }
+      const r = { ...it, w: drag.w, h: drag.h }
+      preview = { ...extentOf(r), ok: fits(layout, r, it.id), line: isPartition(it) }
     }
   }
+  const dragIds = drag?.kind === "move" ? drag.ids : drag?.kind === "resize" ? [drag.id] : []
 
   const resize = (cols: number, rows: number) => {
     const c = Math.min(LIMITS.maxCols, Math.max(LIMITS.minCols, cols || 0))
@@ -917,15 +988,9 @@ export default function FloorPlanAdmin({
               {items.map((it) => (
                 <g
                   key={it.id}
-                  opacity={
-                    drag && "id" in drag && drag.id === it.id && preview
-                      ? 0.35
-                      : it.hidden
-                        ? 0.55
-                        : 1
-                  }
+                  opacity={dragIds.includes(it.id) && preview ? 0.35 : it.hidden ? 0.55 : 1}
                 >
-                  <FloorShape item={it} lang={lang} selected={it.id === selectedId} />
+                  <FloorShape item={it} lang={lang} selected={selIds.includes(it.id)} />
                   {it.type === "booth" && dupNos.has(it.no) && (
                     <rect
                       x={it.x * CELL + 1}
@@ -1009,6 +1074,23 @@ export default function FloorPlanAdmin({
                   pointerEvents="none"
                 />
               )}
+              {drag?.kind === "marquee" &&
+                (() => {
+                  const r = rectOf(drag.start, drag.end)
+                  return (
+                    <rect
+                      x={r.x * CELL}
+                      y={r.y * CELL}
+                      width={r.w * CELL}
+                      height={r.h * CELL}
+                      style={{ fill: "var(--fp-accent-soft)", stroke: "var(--fp-accent)" }}
+                      fillOpacity={0.4}
+                      strokeWidth={0.6}
+                      strokeDasharray="2 1.2"
+                      pointerEvents="none"
+                    />
+                  )
+                })()}
               {/* 테이블 도구: 누르기 전에 놓일 자리와 규격을 보여 준다 */}
               {tool === "table" &&
                 hover &&
@@ -1091,7 +1173,7 @@ export default function FloorPlanAdmin({
                   window.confirm("처음 도면 기준 배치로 되돌릴까요? (저장 전까지는 되돌리기 가능)")
                 ) {
                   commit(DEFAULT_LAYOUT)
-                  setSelectedId(null)
+                  select(null)
                 }
               }}
               className="text-[#888] underline"
@@ -1100,16 +1182,52 @@ export default function FloorPlanAdmin({
             </button>
           </div>
           <p className="mt-2 text-[12px] text-[#888]">
-            확대: 오른쪽 위 +/− 또는 Ctrl/⌘+휠(트랙패드 오므리기) · 단축키: Delete 삭제 · 방향키 한
-            칸 이동 (Shift+방향키 3칸, 파티션은 10cm·Shift 한 칸) · Ctrl/⌘+Z 되돌리기 · 주황 점선 =
-            부스 번호 중복
+            확대: 오른쪽 위 +/− 또는 Ctrl/⌘+휠(트랙패드 오므리기) · 단축키: Delete 삭제 ·
+            Shift+클릭·빈 곳 끌기 여러 개 선택 · Esc 선택 해제 · 방향키 한 칸 이동 (Shift+방향키
+            3칸, 파티션은 10cm·Shift 한 칸) · Ctrl/⌘+Z 되돌리기 · 주황 점선 = 부스 번호 중복
           </p>
         </div>
 
         {/* 오른쪽: 선택 항목 + 부스 목록 */}
         <div className="space-y-4 xl:sticky xl:top-[88px]">
           <section className="bg-white border border-black/10 rounded-lg p-4">
-            {selected ? (
+            {group.length ? (
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <h2 className="text-[14px] font-extrabold">{group.length}개 선택</h2>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      commit({
+                        ...layout,
+                        items: layout.items.filter((i) => !group.includes(i.id)),
+                      })
+                      select(null)
+                    }}
+                    className="text-[12px] font-bold text-[#c0392b] hover:underline"
+                  >
+                    모두 삭제
+                  </button>
+                </div>
+                <p className="text-[13px] text-[#555]">
+                  {Object.entries(
+                    layout.items
+                      .filter((i) => group.includes(i.id))
+                      .reduce<Record<string, number>>((m, i) => {
+                        const k = ITEM_TYPES[i.type].label
+                        m[k] = (m[k] ?? 0) + 1
+                        return m
+                      }, {}),
+                  )
+                    .map(([k, n]) => `${k} ${n}`)
+                    .join(" · ")}
+                </p>
+                <p className="text-[12px] text-[#888]">
+                  고른 항목 중 하나를 끌거나 방향키로 한꺼번에 옮깁니다. Shift+클릭으로 빼거나
+                  더하고, Esc 로 선택을 풉니다.
+                </p>
+              </div>
+            ) : selected ? (
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
                   <h2 className="text-[14px] font-extrabold">
@@ -1426,7 +1544,7 @@ export default function FloorPlanAdmin({
                   <button
                     type="button"
                     onClick={() => {
-                      setSelectedId(b.id)
+                      select(b.id)
                       setTool("select")
                     }}
                     className={`shrink-0 w-11 text-[12px] font-extrabold rounded py-1 ${
@@ -1459,6 +1577,16 @@ export default function FloorPlanAdmin({
  * 시작점 a 는 늘 그대로 두어, 왼쪽·위로 끌어도 a 에서 끝나게 한다 (모서리 맞춤).
  * centered 면 a 가 파티션의 가운데가 되도록 양쪽으로 뻗는다 (H자·十자)
  */
+/** 두 점을 꼭짓점으로 하는 사각형 */
+function rectOf(a: Cell, b: Cell) {
+  return {
+    x: Math.min(a.x, b.x),
+    y: Math.min(a.y, b.y),
+    w: Math.abs(a.x - b.x),
+    h: Math.abs(a.y - b.y),
+  }
+}
+
 function partitionOf(a: Cell, b: Cell, centered = false): Omit<FloorItem, "id"> {
   const horiz = Math.abs(b.x - a.x) >= Math.abs(b.y - a.y)
   const d = horiz ? b.x - a.x : b.y - a.y
