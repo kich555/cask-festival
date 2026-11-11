@@ -430,20 +430,30 @@ export default function FloorPlanMap({
   }, [])
   useEffect(() => stop, [stop])
 
-  // 핀치·Ctrl+휠 확대 (페이지 확대를 막아야 해서 passive: false 로 직접 등록)
+  // 휠 확대 (페이지 스크롤·확대를 막아야 해서 passive: false 로 직접 등록)
   useEffect(() => {
     const el = boxRef.current
     if (!el) return
     const onWheel = (e: WheelEvent) => {
-      // 일반 휠은 페이지 스크롤. 트랙패드 핀치(ctrlKey)나 Ctrl/⌘+휠일 때만 확대
-      if (!e.ctrlKey && !e.metaKey) return
+      // 데스크톱은 지도 위 휠이 곧 확대/축소(지도 밖에서는 페이지 스크롤). 터치 기기는 핀치(ctrlKey)일 때만
+      const fine = matchMedia("(hover: hover) and (pointer: fine)").matches
+      if (!fine && !e.ctrlKey && !e.metaKey) return
       e.preventDefault()
       touched.current = true
       setHoming(false)
       stop()
       const r = el.getBoundingClientRect()
       const at = { x: e.clientX - r.left, y: e.clientY - r.top }
-      setView(clamp(zoomView(viewRef.current, at, Math.exp(-e.deltaY * 0.0018), minS)))
+      setView(
+        clamp(
+          zoomView(
+            viewRef.current,
+            at,
+            Math.exp(-e.deltaY * (e.deltaMode === 1 ? 40 : 1) * 0.0018),
+            minS,
+          ),
+        ),
+      )
     }
     el.addEventListener("wheel", onWheel, { passive: false })
     return () => el.removeEventListener("wheel", onWheel)
