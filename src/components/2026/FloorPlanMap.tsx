@@ -48,7 +48,9 @@ function Lines({
   fill: string
   weight?: number
 }) {
-  const top = y - ((lines.length - 1) * size * 1.18) / 2
+  // dominant-baseline 은 iOS Safari 가 tspan 에 적용하지 않아 글자가 위로 뜬다.
+  // 대신 기준선을 글자 높이의 0.35 만큼 내려 가운데를 맞춘다
+  const top = y - ((lines.length - 1) * size * 1.18) / 2 + size * 0.35
   return (
     <text
       x={x}
@@ -57,7 +59,6 @@ function Lines({
       fontWeight={weight}
       style={{ fill }}
       textAnchor="middle"
-      dominantBaseline="central"
       textRendering="geometricPrecision"
       pointerEvents="none"
     >
@@ -172,6 +173,7 @@ export function FloorShape({
   detail = true,
   flush,
   nameMax,
+  numberOnly = false,
 }: {
   item: ResolvedItem
   lang: "ko" | "en"
@@ -181,6 +183,8 @@ export function FloorShape({
   flush?: Flush
   /** 부스명 최대 글자 크기. 지도에서 모든 부스가 같은 크기로 보이도록 맞춘 값 */
   nameMax?: number
+  /** 부스명 대신 번호만 크게 (모바일: 누르면 아래 시트에 업체 정보) */
+  numberOnly?: boolean
 }) {
   if (item.type === "partition") return <Partition item={item} selected={selected} />
   const r = toPx(item)
@@ -215,7 +219,7 @@ export function FloorShape({
           strokeWidth={0.7}
         />
         {/* 업체명이 기본. 충분히 확대하면 왼쪽 위에 번호도 작게 */}
-        {detail && name && (
+        {detail && name && !numberOnly && (
           <text
             x={r.x + 2.2}
             y={r.y + 4.8}
@@ -228,7 +232,7 @@ export function FloorShape({
             {item.no}
           </text>
         )}
-        {name ? (
+        {name && !numberOnly ? (
           <Lines lines={lines} x={cx} y={nameY} size={size} fill={textFill} />
         ) : (
           <Lines
@@ -236,7 +240,7 @@ export function FloorShape({
             x={cx}
             y={cy}
             size={Math.min(9, (r.w - 4) / (item.no.length * 0.72))}
-            fill={v(selected ? "sel-text" : "booth-no")}
+            fill={v(selected ? "sel-text" : numberOnly ? "text" : "booth-no")}
             weight={800}
           />
         )}
@@ -637,6 +641,7 @@ export default function FloorPlanMap({
                 detail={detail}
                 flush={flushOf(it)}
                 nameMax={nameMax}
+                numberOnly={!desktop}
               />
             </g>
           ))}

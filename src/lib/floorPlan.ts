@@ -1264,8 +1264,9 @@ export const SECTION_AREAS: { id: string; x: number; y: number; w: number; h: nu
   { id: "A", x: 56, y: 15, w: 6, h: 29 },
   { id: "B", x: 20, y: 9, w: 27, h: 9 },
   { id: "C", x: 0, y: 9, w: 20, h: 21 },
-  { id: "D", x: 20, y: 18, w: 18, h: 24 },
-  { id: "E", x: 38, y: 18, w: 18, h: 24 },
+  // 가운데 블록 오른쪽 끝 열(러더·코마스피)까지 D. E 는 그 오른쪽 블록
+  { id: "D", x: 20, y: 18, w: 20, h: 24 },
+  { id: "E", x: 40, y: 18, w: 16, h: 24 },
   { id: "F", x: 0, y: 42, w: 20, h: 8 },
   { id: "G", x: 20, y: 42, w: 24, h: 8 },
 ]
