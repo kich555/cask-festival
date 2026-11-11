@@ -631,8 +631,8 @@ export default function FloorPlanMap({
             // biome-ignore lint/a11y/noStaticElementInteractions: 지도 클릭은 보조 수단, 같은 기능을 목록에서 제공한다
             <g
               key={it.id}
-              onClick={GATES.has(it.type) ? undefined : () => pick(it.id)}
-              className={GATES.has(it.type) ? undefined : "cursor-pointer"}
+              onClick={GATES.has(it.type) || it.type === "zone" ? undefined : () => pick(it.id)}
+              className={GATES.has(it.type) || it.type === "zone" ? undefined : "cursor-pointer"}
             >
               <FloorShape
                 item={outer?.attached.has(it.id) ? { ...it, ...outer.attached.get(it.id) } : it}
