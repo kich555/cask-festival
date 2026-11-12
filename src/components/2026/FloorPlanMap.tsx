@@ -336,11 +336,11 @@ export default function FloorPlanMap({
   }, [])
   const [view, setView] = useState<View>({ s: 1, x: 0, y: 0 })
   const viewRef = useRef(view)
-  // 모바일 미니맵은 지도를 가리므로, 2초간 움직임이 없으면 숨기고 움직이면 다시 보인다
+  // 모바일 미니맵은 지도를 가리므로, 1초간 움직임이 없으면 숨기고 움직이면 다시 보인다
   const [miniIdle, setMiniIdle] = useState(false)
   useEffect(() => {
     setMiniIdle(false)
-    const id = setTimeout(() => setMiniIdle(true), 2000)
+    const id = setTimeout(() => setMiniIdle(true), 1000)
     return () => clearTimeout(id)
   }, [view.s, view.x, view.y])
   viewRef.current = view
@@ -673,7 +673,7 @@ export default function FloorPlanMap({
             />
           )}
         </svg>
-        {/* 왼쪽 위: 미니맵(보고 있는 범위·선택한 부스) */}
+        {/* 미니맵(보고 있는 범위·선택한 부스). 왼쪽 위 */}
         <div
           className={`absolute left-2 top-2 transition-opacity duration-300 ${
             desktop ? "" : miniIdle ? "opacity-0 pointer-events-none" : "opacity-60"

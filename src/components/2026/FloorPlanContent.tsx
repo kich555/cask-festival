@@ -225,13 +225,26 @@ function Inner({
   )
 
   const searchInput = (
-    <input
-      type="search"
-      value={query}
-      onChange={(e) => setQuery(e.target.value)}
-      placeholder={t.searchPh}
-      className="w-full h-12 border border-[var(--fp-line)] bg-[var(--fp-surface)] text-[var(--fp-text)] px-4 text-[16px] placeholder:text-[var(--fp-muted)] focus:outline-none focus:border-[var(--fp-accent)]"
-    />
+    <div className="relative">
+      <svg
+        viewBox="0 0 24 24"
+        className="absolute left-3.5 top-1/2 -translate-y-1/2 w-[18px] h-[18px] text-[var(--fp-muted)] pointer-events-none"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth={2.2}
+        aria-hidden="true"
+      >
+        <circle cx="11" cy="11" r="6.5" />
+        <path d="m16 16 4.5 4.5" strokeLinecap="round" />
+      </svg>
+      <input
+        type="search"
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+        placeholder={t.searchPh}
+        className="w-full h-12 border border-[var(--fp-line)] bg-[var(--fp-surface)] text-[var(--fp-text)] pl-10 pr-4 text-[16px] placeholder:text-[var(--fp-muted)] focus:outline-none focus:border-[var(--fp-accent)]"
+      />
+    </div>
   )
 
   const rows = (
